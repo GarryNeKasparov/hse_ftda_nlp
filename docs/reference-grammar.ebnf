@@ -1,0 +1,6 @@
+(* The initial EBNF sketch has been superseded by reference-grammar.bnf.
+   Use that file as the executable grammar specification.
+   grammar-contract.md defines its token assumptions and scope;
+   grammar-analysis.md records computed properties and example trees.
+   This pointer avoids retaining two inconsistent grammar definitions.
+*)

@@ -1,0 +1,36 @@
+{
+  "started_at_utc": "2026-10-05T12:09:01.685162+00:00",
+  "finished_at_utc": "2026-10-05T12:09:12.163992+00:00",
+  "command": [
+    "/tmp/legal-grammar-venv/bin/python",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests",
+    "-v"
+  ],
+  "workspace": "/home/vipvl/work/hse/nlp/1/homework_1",
+  "python_version": "3.14.4",
+  "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+  "dependencies": {
+    "lark": "1.3.1",
+    "pymorphy3": "2.0.6",
+    "pymorphy3-dicts-ru": "2.4.417150.4580142",
+    "rapidfuzz": "3.14.6"
+  },
+  "duration_seconds": 10.474977866993868,
+  "exit_code": 0,
+  "files_sha256": {
+    "reference_parser.py": "b0090822b1d2304bb470d76ca9a455aa366173ad7ba2629dc0fc7e76603d9737",
+    "docs/reference-grammar.bnf": "1b7e8b0d0fce2b91617b5ae83dc1a1f2e751c16cca39f9edbd240e48e5a84c23",
+    "law_aliases.json": "23bed2195b3f1da3547ef4025ae83e3d67e9a80b438cdcc937dd66b1f0de20c0",
+    "requirements.txt": "48842f854befae1d441278ba38686c23fb7d0f5e3a48fb85e4849811add876a5",
+    "tests/test_reference_parser.py": "dc71b8b38600d83c5cfa90608a4ea1997c5ecf3cb002ed833fc0b6fc34c3b427",
+    "tools/run_reference_experiment.py": "159d7810fa84a0f5e2bd184e4bbee1ea6fe1ca43d18a3bba7fc4bc00ecd34f0a"
+  },
+  "stdout": "unittest.stdout.log",
+  "stderr": "unittest.stderr.log",
+  "status": "passed"
+}

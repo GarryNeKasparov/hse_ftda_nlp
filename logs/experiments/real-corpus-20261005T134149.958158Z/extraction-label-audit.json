@@ -1,0 +1,317 @@
+{
+  "created_at_utc": "2026-10-05T13:44:47.420358+00:00",
+  "method": "Structural checks and whole canonical-alias uniqueness; manual hierarchy review in docs/golden-label-audit.md.",
+  "input_sha256": {
+    "data/golden_real_extraction.jsonl": "0c5c57b432daef858f0f286600940d940b05b8502f2fdbfa6b8dbc538e4105cd",
+    "law_aliases.json": "23bed2195b3f1da3547ef4025ae83e3d67e9a80b438cdcc937dd66b1f0de20c0",
+    "README.md": "4dd0e69884125d947be6e3cb4bf56b9f4d049b36dc5e681e27df7a9742c3cdf0",
+    "CONTEXT.md": "3d7bbcf19963b85f109cb2453c2f7ad63df4045d2a889dd09575d437a431ff34",
+    "data/sources/manifest.json": "be466b10197c1a785588542874fc9882bc73992f6705a5d662f66530431e4624",
+    "data/sources/vsrf-12452.txt": "216ce982cb71915f3021d602c29cebe677559e6a03c76a2845aab6a314807cfd",
+    "data/sources/vsrf-13345.txt": "1347659bba0bb5d44092cee16b3a9db9c90a14c20e3d9364de74c7b97d20d855",
+    "data/sources/vsrf-14913.txt": "57603e54a854d930a5b3a50a5408afa4d46de0a8c466e63393d79ff386e9416a"
+  },
+  "samples": 19,
+  "references": 26,
+  "links": 27,
+  "errors": [],
+  "results": [
+    {
+      "id": "web-vsrf-14913-paragraph-002",
+      "references": 2,
+      "links": 2,
+      "law_evidence": [
+        {
+          "law_id": 5,
+          "canonical_alias": "Гражданский кодекс Российской Федерации",
+          "matching_ids": [
+            5
+          ]
+        }
+      ],
+      "provenance": "https://www.vsrf.ru/files/14913/"
+    },
+    {
+      "id": "web-vsrf-14913-paragraph-003",
+      "references": 2,
+      "links": 2,
+      "law_evidence": [
+        {
+          "law_id": 5,
+          "canonical_alias": "Гражданский кодекс Российской Федерации",
+          "matching_ids": [
+            5
+          ]
+        }
+      ],
+      "provenance": "https://www.vsrf.ru/files/14913/"
+    },
+    {
+      "id": "web-vsrf-14913-paragraph-004",
+      "references": 1,
+      "links": 1,
+      "law_evidence": [
+        {
+          "law_id": 5,
+          "canonical_alias": "Гражданский кодекс Российской Федерации",
+          "matching_ids": [
+            5
+          ]
+        }
+      ],
+      "provenance": "https://www.vsrf.ru/files/14913/"
+    },
+    {
+      "id": "web-vsrf-14913-paragraph-005",
+      "references": 2,
+      "links": 2,
+      "law_evidence": [
+        {
+          "law_id": 6,
+          "canonical_alias": "Гражданский процессуальный кодекс Российской Федерации",
+          "matching_ids": [
+            6
+          ]
+        },
+        {
+          "law_id": 0,
+          "canonical_alias": "АПК",
+          "matching_ids": [
+            0
+          ]
+        }
+      ],
+      "provenance": "https://www.vsrf.ru/files/14913/"
+    },
+    {
+      "id": "web-vsrf-14913-paragraph-006",
+      "references": 3,
+      "links": 3,
+      "law_evidence": [
+        {
+          "law_id": 5,
+          "canonical_alias": "Гражданский кодекс Российской Федерации",
+          "matching_ids": [
+            5
+          ]
+        }
+      ],
+      "provenance": "https://www.vsrf.ru/files/14913/"
+    },
+    {
+      "id": "web-vsrf-14913-paragraph-008",
+      "references": 2,
+      "links": 2,
+      "law_evidence": [
+        {
+          "law_id": 6,
+          "canonical_alias": "Гражданский процессуальный кодекс Российской Федерации",
+          "matching_ids": [
+            6
+          ]
+        },
+        {
+          "law_id": 0,
+          "canonical_alias": "АПК",
+          "matching_ids": [
+            0
+          ]
+        }
+      ],
+      "provenance": "https://www.vsrf.ru/files/14913/"
+    },
+    {
+      "id": "web-vsrf-14913-paragraph-009",
+      "references": 1,
+      "links": 1,
+      "law_evidence": [
+        {
+          "law_id": 5,
+          "canonical_alias": "Гражданский кодекс Российской Федерации",
+          "matching_ids": [
+            5
+          ]
+        }
+      ],
+      "provenance": "https://www.vsrf.ru/files/14913/"
+    },
+    {
+      "id": "web-vsrf-13345-paragraph-003",
+      "references": 1,
+      "links": 1,
+      "law_evidence": [
+        {
+          "law_id": 5,
+          "canonical_alias": "Гражданский кодекс Российской Федерации",
+          "matching_ids": [
+            5
+          ]
+        }
+      ],
+      "provenance": "https://www.vsrf.ru/files/13345/"
+    },
+    {
+      "id": "web-vsrf-13345-paragraph-004",
+      "references": 2,
+      "links": 2,
+      "law_evidence": [
+        {
+          "law_id": null,
+          "absent_whole_aliases": [
+            "Конституция Российской Федерации",
+            "Конституция РФ"
+          ],
+          "matching_ids": []
+        },
+        {
+          "law_id": 5,
+          "canonical_alias": "Гражданский кодекс Российской Федерации",
+          "matching_ids": [
+            5
+          ]
+        }
+      ],
+      "provenance": "https://www.vsrf.ru/files/13345/"
+    },
+    {
+      "id": "web-vsrf-13345-paragraph-006",
+      "references": 2,
+      "links": 2,
+      "law_evidence": [
+        {
+          "law_id": 6,
+          "canonical_alias": "Гражданский процессуальный кодекс Российской Федерации",
+          "matching_ids": [
+            6
+          ]
+        },
+        {
+          "law_id": 0,
+          "canonical_alias": "АПК",
+          "matching_ids": [
+            0
+          ]
+        }
+      ],
+      "provenance": "https://www.vsrf.ru/files/13345/"
+    },
+    {
+      "id": "web-vsrf-13345-paragraph-007",
+      "references": 0,
+      "links": 0,
+      "law_evidence": [],
+      "provenance": "https://www.vsrf.ru/files/13345/"
+    },
+    {
+      "id": "web-vsrf-13345-paragraph-009",
+      "references": 2,
+      "links": 2,
+      "law_evidence": [
+        {
+          "law_id": 6,
+          "canonical_alias": "Гражданский процессуальный кодекс Российской Федерации",
+          "matching_ids": [
+            6
+          ]
+        },
+        {
+          "law_id": 0,
+          "canonical_alias": "АПК",
+          "matching_ids": [
+            0
+          ]
+        }
+      ],
+      "provenance": "https://www.vsrf.ru/files/13345/"
+    },
+    {
+      "id": "web-vsrf-13345-paragraph-012",
+      "references": 1,
+      "links": 2,
+      "law_evidence": [
+        {
+          "law_id": 5,
+          "canonical_alias": "Гражданский кодекс Российской Федерации",
+          "matching_ids": [
+            5
+          ]
+        }
+      ],
+      "provenance": "https://www.vsrf.ru/files/13345/"
+    },
+    {
+      "id": "web-vsrf-13345-paragraph-015",
+      "references": 2,
+      "links": 2,
+      "law_evidence": [
+        {
+          "law_id": 5,
+          "canonical_alias": "Гражданский кодекс Российской Федерации",
+          "matching_ids": [
+            5
+          ]
+        }
+      ],
+      "provenance": "https://www.vsrf.ru/files/13345/"
+    },
+    {
+      "id": "web-vsrf-13345-paragraph-016",
+      "references": 0,
+      "links": 0,
+      "law_evidence": [],
+      "provenance": "https://www.vsrf.ru/files/13345/"
+    },
+    {
+      "id": "web-vsrf-12452-paragraph-019",
+      "references": 1,
+      "links": 1,
+      "law_evidence": [
+        {
+          "law_id": 10,
+          "canonical_alias": "Трудовой кодекс Российской Федерации",
+          "matching_ids": [
+            10
+          ]
+        }
+      ],
+      "provenance": "https://www.vsrf.ru/files/12452/"
+    },
+    {
+      "id": "web-vsrf-12452-paragraph-033",
+      "references": 0,
+      "links": 0,
+      "law_evidence": [],
+      "provenance": "https://www.vsrf.ru/files/12452/"
+    },
+    {
+      "id": "web-vsrf-12452-paragraph-036",
+      "references": 1,
+      "links": 1,
+      "law_evidence": [
+        {
+          "law_id": 6,
+          "canonical_alias": "Гражданский процессуальный кодекс Российской Федерации",
+          "matching_ids": [
+            6
+          ]
+        }
+      ],
+      "provenance": "https://www.vsrf.ru/files/12452/"
+    },
+    {
+      "id": "web-vsrf-12452-paragraph-037",
+      "references": 1,
+      "links": 1,
+      "law_evidence": [
+        {
+          "law_id": 10,
+          "canonical_alias": "Трудовой кодекс Российской Федерации",
+          "matching_ids": [
+            10
+          ]
+        }
+      ],
+      "provenance": "https://www.vsrf.ru/files/12452/"
+    }
+  ]
+}

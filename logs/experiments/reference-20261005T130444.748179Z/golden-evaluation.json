@@ -1,0 +1,620 @@
+{
+  "created_at_utc": "2026-10-05T13:05:31.182390+00:00",
+  "dataset": "/home/vipvl/work/hse/nlp/1/homework_1/logs/experiments/reference-20261005T130444.748179Z/data/golden_references.jsonl",
+  "dataset_sha256": "11bfc8e36057e4be24ee5cb3555476f0244313927a7537d5c445d21285786d97",
+  "evaluated": 25,
+  "exact_matches": 20,
+  "accuracy_on_this_fixture_only": 0.8,
+  "elapsed_seconds": 0.9101124800217804,
+  "results": [
+    {
+      "id": "nested-subpoint",
+      "source": "README.md: worked example",
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 15,
+          "article": "374",
+          "point_article": "1",
+          "subpoint_article": "1"
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 15,
+          "article": "374",
+          "point_article": "1",
+          "subpoint_article": "1"
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.06560099899797933
+    },
+    {
+      "id": "article-known-law",
+      "source": "README.md: supplied test_text",
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 13,
+          "article": "105",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 13,
+          "article": "105",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.010267300000123214
+    },
+    {
+      "id": "point-without-article",
+      "source": "README.md: supplied test_text",
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 0,
+          "article": null,
+          "point_article": "10",
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 0,
+          "article": null,
+          "point_article": "10",
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.008580699002777692
+    },
+    {
+      "id": "part-and-article",
+      "source": "README.md: supplied test_text",
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 17,
+          "article": "30.1",
+          "point_article": "3",
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": null,
+          "article": null,
+          "point_article": "3",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 17,
+          "article": "30.1",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": false,
+      "elapsed_seconds": 0.028176400002848823
+    },
+    {
+      "id": "article-unspecified-law",
+      "source": "README.md: citation rule; shortened context",
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": null,
+          "article": "6",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": null,
+          "article": "6",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.006283599999733269
+    },
+    {
+      "id": "unknown-numbered-law",
+      "source": "README.md: supplied test_text",
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": null,
+          "article": "37",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": null,
+          "article": "37",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.009498699000687338
+    },
+    {
+      "id": "unknown-code-name",
+      "source": "README.md: supplied test_text",
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": null,
+          "article": "34",
+          "point_article": "2",
+          "subpoint_article": "1"
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": null,
+          "article": "34",
+          "point_article": "2",
+          "subpoint_article": "1"
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.037844699996639974
+    },
+    {
+      "id": "independent-citations",
+      "source": "README.md: combination of two supplied examples",
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 15,
+          "article": "5",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 0,
+          "article": null,
+          "point_article": "10",
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 15,
+          "article": "5",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 0,
+          "article": null,
+          "point_article": "10",
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.017393199006619398
+    },
+    {
+      "id": "subpoint-list",
+      "source": "README.md: explicit expected three LawLink records",
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 15,
+          "article": "3",
+          "point_article": "2",
+          "subpoint_article": "1"
+        },
+        {
+          "law_id": 15,
+          "article": "3",
+          "point_article": "2",
+          "subpoint_article": "2"
+        },
+        {
+          "law_id": 15,
+          "article": "3",
+          "point_article": "2",
+          "subpoint_article": "3"
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 15,
+          "article": "3",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": false,
+      "elapsed_seconds": 0.08228819799842313
+    },
+    {
+      "id": "subpoint-list-under-point",
+      "source": "README.md: supplied test_text",
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 174,
+          "article": "14",
+          "point_article": "1",
+          "subpoint_article": "4"
+        },
+        {
+          "law_id": 174,
+          "article": "14",
+          "point_article": "1",
+          "subpoint_article": "5"
+        },
+        {
+          "law_id": 174,
+          "article": "14",
+          "point_article": "1",
+          "subpoint_article": "6"
+        },
+        {
+          "law_id": 174,
+          "article": "14",
+          "point_article": "1",
+          "subpoint_article": "8"
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 174,
+          "article": "14",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": false,
+      "elapsed_seconds": 0.2787389939985587
+    },
+    {
+      "id": "lettered-point",
+      "source": "README.md: supplied test_text",
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 0,
+          "article": "20",
+          "point_article": "а",
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 0,
+          "article": "20",
+          "point_article": "а",
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.02333309900132008
+    },
+    {
+      "id": "misspelled-point-marker",
+      "source": "README.md: supplied test_text",
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 362,
+          "article": "22",
+          "point_article": "б",
+          "subpoint_article": "2"
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 362,
+          "article": "22",
+          "point_article": "б",
+          "subpoint_article": "2"
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.05900889899930917
+    },
+    {
+      "id": "civil-code",
+      "source": "README.md: supplied test_text",
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 5,
+          "article": "30",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 5,
+          "article": "30",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.0121724999989965
+    },
+    {
+      "id": "family-code",
+      "source": "README.md: supplied test_text",
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 8,
+          "article": "90",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 8,
+          "article": "90",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.015425900004629511
+    },
+    {
+      "id": "labour-code",
+      "source": "README.md: supplied test_text",
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 10,
+          "article": "70",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 10,
+          "article": "70",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.012935198996274266
+    },
+    {
+      "id": "civil-procedure-code",
+      "source": "README.md: supplied test_text",
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 6,
+          "article": "213",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 6,
+          "article": "213",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.043108099001983646
+    },
+    {
+      "id": "consumer-protection-law",
+      "source": "README.md: supplied test_text",
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 984,
+          "article": "16",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 984,
+          "article": "16",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.010039000000688247
+    },
+    {
+      "id": "personal-data-law",
+      "source": "README.md: supplied test_text",
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 330,
+          "article": "14",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": null,
+          "article": "14",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": false,
+      "elapsed_seconds": 0.02320099999633385
+    },
+    {
+      "id": "accounting-law-yo-variant",
+      "source": "README.md: supplied test_text",
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 224,
+          "article": "19",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 224,
+          "article": "19",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.011001099002896808
+    },
+    {
+      "id": "registration-of-entities-law",
+      "source": "README.md: supplied test_text",
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 412,
+          "article": "9",
+          "point_article": "р",
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 412,
+          "article": "9",
+          "point_article": "р",
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.04050359900429612
+    },
+    {
+      "id": "inspection-law",
+      "source": "README.md: supplied test_text",
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 284,
+          "article": "16",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": null,
+          "article": "16",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": false,
+      "elapsed_seconds": 0.05806229900190374
+    },
+    {
+      "id": "competition-law",
+      "source": "README.md: supplied test_text",
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 332,
+          "article": "12",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 332,
+          "article": "12",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.011332499998388812
+    },
+    {
+      "id": "police-law",
+      "source": "README.md: supplied test_text",
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 249,
+          "article": "20",
+          "point_article": "3",
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 249,
+          "article": "20",
+          "point_article": "3",
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.027906599003472365
+    },
+    {
+      "id": "law-alias-not-listed",
+      "source": "README.md: supplied test_text; act title is not present in law_aliases.json",
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": null,
+          "article": "6",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": null,
+          "article": "6",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.012877400004072115
+    },
+    {
+      "id": "ordinary-prose-negative",
+      "source": "README.md: surrounding ordinary prose",
+      "status_code": 200,
+      "expected": [],
+      "predicted": [],
+      "exact_match": true,
+      "elapsed_seconds": 0.004532500002824236
+    }
+  ]
+}

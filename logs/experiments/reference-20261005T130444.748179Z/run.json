@@ -1,0 +1,72 @@
+{
+  "started_at_utc": "2026-10-05T13:04:45.091447+00:00",
+  "finished_at_utc": "2026-10-05T13:05:34.177391+00:00",
+  "commands": [
+    {
+      "argv": [
+        "/tmp/legal-grammar-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 36.08945659099845,
+      "stdout": "unittest.stdout.log",
+      "stderr": "unittest.stderr.log"
+    },
+    {
+      "argv": [
+        "/tmp/legal-grammar-venv/bin/python",
+        "-B",
+        "tools/evaluate_golden_references.py",
+        "--dataset",
+        "/home/vipvl/work/hse/nlp/1/homework_1/logs/experiments/reference-20261005T130444.748179Z/data/golden_references.jsonl",
+        "--output",
+        "/home/vipvl/work/hse/nlp/1/homework_1/logs/experiments/reference-20261005T130444.748179Z/golden-evaluation.json"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 12.948153723002179,
+      "stdout": "golden-evaluation.stdout.log",
+      "stderr": "golden-evaluation.stderr.log",
+      "report": "golden-evaluation.json"
+    }
+  ],
+  "workspace": "/home/vipvl/work/hse/nlp/1/homework_1",
+  "python_version": "3.14.4",
+  "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+  "dependencies": {
+    "fastapi": "0.118.0",
+    "httpx": "0.28.1",
+    "lark": "1.3.1",
+    "pymorphy3": "2.0.6",
+    "pymorphy3-dicts-ru": "2.4.417150.4580142",
+    "rapidfuzz": "3.14.6",
+    "uvicorn": "0.37.0"
+  },
+  "duration_seconds": 49.03761031400063,
+  "exit_code": 0,
+  "files_sha256": {
+    "main.py": "08b13bf45bee39017ba50c5685bd6913f850ed899aab0c50f6f12cda8bf0b069",
+    "reference_parser.py": "b0090822b1d2304bb470d76ca9a455aa366173ad7ba2629dc0fc7e76603d9737",
+    "law_link_mapper.py": "293d66e8433a88717e90985d2a4badf9b6bb3cfb0d84ad1c2a689b3faba1088a",
+    "Dockerfile": "41f30fb6206ecf20226942d3fd76fd8676f3e5452589a27dcb77aef2575dcac8",
+    "docs/reference-grammar.bnf": "1b7e8b0d0fce2b91617b5ae83dc1a1f2e751c16cca39f9edbd240e48e5a84c23",
+    "law_aliases.json": "23bed2195b3f1da3547ef4025ae83e3d67e9a80b438cdcc937dd66b1f0de20c0",
+    "requirements.txt": "48842f854befae1d441278ba38686c23fb7d0f5e3a48fb85e4849811add876a5",
+    "requirements-test.txt": "934fbb549ab3209320a68f549631f92ffa7dcd1372d15620c148eb5f55bd7735",
+    "tests/test_reference_parser.py": "dc71b8b38600d83c5cfa90608a4ea1997c5ecf3cb002ed833fc0b6fc34c3b427",
+    "tests/test_service_api.py": "eb62d5d13cadbdf56261c6d791068db3570a1bdaf1440e89d9505b3fec503bd1",
+    "data/golden_references.jsonl": "11bfc8e36057e4be24ee5cb3555476f0244313927a7537d5c445d21285786d97",
+    "data/review_queue.jsonl": "6f52ae2460499332df39041f6aefc089afcb0fc70ffec4edf22bd22f55424379",
+    "docs/golden-test-data.md": "28e5299a799a9b1c11606f5deb4bb63772064a096d372b2d88c02d91e79f5cea",
+    "tools/evaluate_golden_references.py": "b3a0cfcf9e92dcbd774703d1c5e8e806124a102e235448f05fe53f742a62bbf6",
+    "tools/run_reference_experiment.py": "714705723f7e0031c95f6cff4c7f39dcbd03fe26bde58e36cf892ad86178baaa"
+  },
+  "stdout": "unittest.stdout.log",
+  "stderr": "unittest.stderr.log",
+  "status": "passed"
+}

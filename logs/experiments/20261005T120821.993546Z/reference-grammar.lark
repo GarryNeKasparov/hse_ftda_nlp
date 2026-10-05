@@ -1,0 +1,102 @@
+start: reference reference_tail
+reference_tail: join reference reference_tail
+    | 
+reference: branches target_optional
+target_optional: LAW
+    | SELF_LAW
+    | ANAPHORIC_LAW
+    | 
+branches: provision branch_tail
+branch_tail: join provision branch_tail
+    | 
+provision: article_group
+    | part_group
+    | point_group
+    | subpoint_group
+    | paragraph_group
+article_group: article_level
+    | article_children level_gap article_level
+article_children: article_child article_children_tail
+article_children_tail: join article_child article_children_tail
+    | 
+article_child: part_group
+    | point_group
+    | subpoint_group
+    | paragraph_group
+part_group: part_level
+    | part_children level_gap part_level
+part_children: part_child part_children_tail
+part_children_tail: join part_child part_children_tail
+    | 
+part_child: point_group
+    | subpoint_group
+    | paragraph_group
+point_group: point_level
+    | point_children level_gap point_level
+point_children: point_child point_children_tail
+point_children_tail: join point_child point_children_tail
+    | 
+point_child: subpoint_group
+    | paragraph_group
+subpoint_group: subpoint_level
+    | subpoint_children level_gap subpoint_level
+subpoint_children: paragraph_group subpoint_children_tail
+subpoint_children_tail: join paragraph_group subpoint_children_tail
+    | 
+paragraph_group: paragraph_level
+article_level: ARTICLE selector
+    | SELF_ARTICLE
+part_level: PART selector
+    | SELF_PART
+point_level: POINT selector
+    | SELF_POINT
+subpoint_level: SUBPOINT selector
+    | PP selector
+    | SELF_SUBPOINT
+paragraph_level: PARAGRAPH selector
+    | SELF_PARAGRAPH
+selector: item selector_tail
+selector_tail: join item selector_tail
+    | 
+item: identifier range_optional
+identifier: ID
+    | ORDINAL
+range_optional: RANGE identifier
+    | 
+join: AND
+    | OR
+    | AND_OR
+    | COMMA comma_join_tail
+comma_join_tail: AND
+    | OR
+    | AND_OR
+    | 
+level_gap: COMMA gap_in_optional
+    | IN
+    | 
+gap_in_optional: IN
+    | 
+ANAPHORIC_LAW: /ANAPHORIC_LAW(?![A-Z_])/
+AND: /AND(?![A-Z_])/
+AND_OR: /AND_OR(?![A-Z_])/
+ARTICLE: /ARTICLE(?![A-Z_])/
+COMMA: /COMMA(?![A-Z_])/
+ID: /ID(?![A-Z_])/
+IN: /IN(?![A-Z_])/
+LAW: /LAW(?![A-Z_])/
+OR: /OR(?![A-Z_])/
+ORDINAL: /ORDINAL(?![A-Z_])/
+PARAGRAPH: /PARAGRAPH(?![A-Z_])/
+PART: /PART(?![A-Z_])/
+POINT: /POINT(?![A-Z_])/
+PP: /PP(?![A-Z_])/
+RANGE: /RANGE(?![A-Z_])/
+SELF_ARTICLE: /SELF_ARTICLE(?![A-Z_])/
+SELF_LAW: /SELF_LAW(?![A-Z_])/
+SELF_PARAGRAPH: /SELF_PARAGRAPH(?![A-Z_])/
+SELF_PART: /SELF_PART(?![A-Z_])/
+SELF_POINT: /SELF_POINT(?![A-Z_])/
+SELF_SUBPOINT: /SELF_SUBPOINT(?![A-Z_])/
+SUBPOINT: /SUBPOINT(?![A-Z_])/
+%import common.WS
+%ignore WS

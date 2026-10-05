@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/home/vipvl/work/hse/nlp/1/homework_1/tools/evaluate_golden_references.py", line 14, in <module>
+    from main import app
+ModuleNotFoundError: No module named 'main'

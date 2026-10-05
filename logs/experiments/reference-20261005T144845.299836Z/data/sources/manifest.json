@@ -1,0 +1,41 @@
+[
+  {
+    "id": "vsrf-14913",
+    "url": "https://www.vsrf.ru/files/14913/",
+    "title": "Постановление Пленума Верховного Суда РФ №25 от 23.06.2015",
+    "document_date": "2015-06-23",
+    "retrieved_at_utc": "2026-10-05T13:41:50.116316+00:00",
+    "source_kind": "official_judicial_document",
+    "normalized_snapshot": "data/sources/vsrf-14913.txt",
+    "normalized_sha256": "57603e54a854d930a5b3a50a5408afa4d46de0a8c466e63393d79ff386e9416a",
+    "raw_snapshot": "logs/experiments/real-corpus-20261005T134149.958158Z/vsrf-14913.html",
+    "raw_sha256": "1d48192d4b592ee43766358a76abecb40c16499e875b12a5b429d9cbab2410ef",
+    "transformation": "Decode UTF-8, extract PRE text, remove HTML tags, decode entities, collapse whitespace. No spelling or provision-number corrections. Superscript layout is not reconstructed."
+  },
+  {
+    "id": "vsrf-13345",
+    "url": "https://www.vsrf.ru/files/13345/",
+    "title": "Постановление Пленумов ВС РФ и ВАС РФ №10/22 от 29.04.2010",
+    "document_date": "2010-04-29",
+    "retrieved_at_utc": "2026-10-05T13:41:50.178664+00:00",
+    "source_kind": "official_judicial_document",
+    "normalized_snapshot": "data/sources/vsrf-13345.txt",
+    "normalized_sha256": "1347659bba0bb5d44092cee16b3a9db9c90a14c20e3d9364de74c7b97d20d855",
+    "raw_snapshot": "logs/experiments/real-corpus-20261005T134149.958158Z/vsrf-13345.html",
+    "raw_sha256": "04e57ae2e876fa686c6c977baf273f2f195f30cff741e2c31581d4927102caf2",
+    "transformation": "Decode UTF-8, extract PRE text, remove HTML tags, decode entities, collapse whitespace. No spelling or provision-number corrections. Superscript layout is not reconstructed."
+  },
+  {
+    "id": "vsrf-12452",
+    "url": "https://www.vsrf.ru/files/12452/",
+    "title": "Постановление Пленума ВС РФ №63 от 28.12.2006: новая редакция постановления №2 от 17.03.2004",
+    "document_date": "2006-12-28",
+    "retrieved_at_utc": "2026-10-05T13:41:50.233665+00:00",
+    "source_kind": "official_judicial_document",
+    "normalized_snapshot": "data/sources/vsrf-12452.txt",
+    "normalized_sha256": "216ce982cb71915f3021d602c29cebe677559e6a03c76a2845aab6a314807cfd",
+    "raw_snapshot": "logs/experiments/real-corpus-20261005T134149.958158Z/vsrf-12452.html",
+    "raw_sha256": "2940b282b36d8367ad1f0534a87d87f7fb9b266ea4cf1f7550c32d82411b9c6e",
+    "transformation": "Decode UTF-8, extract PRE text, remove HTML tags, decode entities, collapse whitespace. No spelling or provision-number corrections. Superscript layout is not reconstructed."
+  }
+]

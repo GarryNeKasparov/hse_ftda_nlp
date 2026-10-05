@@ -1,0 +1,217 @@
+[
+  {
+    "name": "article_list",
+    "text": "статьи 5 и 6 НК РФ",
+    "tokens": "ARTICLE ID:5 AND ID:6 LAW:НК_РФ",
+    "expect": "accept"
+  },
+  {
+    "name": "two_explicit_laws",
+    "text": "статья 5 НК РФ и пункт 2 статьи 6 ГК РФ",
+    "tokens": "ARTICLE ID:5 LAW:НК_РФ AND POINT ID:2 ARTICLE ID:6 LAW:ГК_РФ",
+    "expect": "accept"
+  },
+  {
+    "name": "point_list_under_part",
+    "text": "пункты 2 и 3 части 1 статьи 15",
+    "tokens": "POINT ID:2 AND ID:3 PART ID:1 ARTICLE ID:15",
+    "expect": "accept"
+  },
+  {
+    "name": "shared_article",
+    "text": "пункт 2 части 1 и часть 3 статьи 15",
+    "tokens": "POINT ID:2 PART ID:1 AND PART ID:3 ARTICLE ID:15",
+    "expect": "accept",
+    "minimum_derivations": 2,
+    "show_trees": true
+  },
+  {
+    "name": "paragraph_ordinals",
+    "text": "абзацы второй и третий пункта 4 части 2 статьи 10",
+    "tokens": "PARAGRAPH ORDINAL:второй AND ORDINAL:третий POINT ID:4 PART ID:2 ARTICLE ID:10",
+    "expect": "accept"
+  },
+  {
+    "name": "readme_nested",
+    "text": "пп. 1 п. 1 ст. 374 НК РФ",
+    "tokens": "PP ID:1 POINT ID:1 ARTICLE ID:374 LAW:НК_РФ",
+    "expect": "accept"
+  },
+  {
+    "name": "readme_subpoint_list",
+    "text": "пп. 1, 2, 3 п. 2 ст. 3 НК РФ",
+    "tokens": "PP ID:1 COMMA ID:2 COMMA ID:3 POINT ID:2 ARTICLE ID:3 LAW:НК_РФ",
+    "expect": "accept"
+  },
+  {
+    "name": "readme_missing_article",
+    "text": "п. 10 АПК",
+    "tokens": "POINT ID:10 LAW:АПК",
+    "expect": "accept"
+  },
+  {
+    "name": "readme_lettered_point",
+    "text": "пункта а ст. 20 АПК",
+    "tokens": "POINT ID:а ARTICLE ID:20 LAW:АПК",
+    "expect": "accept"
+  },
+  {
+    "name": "readme_typo_annotation",
+    "text": "подпункту 2 пунта б статьи 22 Федерального закона «О государственной гражданской службе Российской Федерации»",
+    "tokens": "SUBPOINT ID:2 POINT ID:б ARTICLE ID:22 LAW:ФЗ_О_гражданской_службе",
+    "expect": "accept"
+  },
+  {
+    "name": "readme_multi_level_lists",
+    "text": "подпунктах а, б и с пункта 3.345, 23 в статье 66 НК РФ",
+    "tokens": "SUBPOINT ID:а COMMA ID:б AND ID:с POINT ID:3.345 COMMA ID:23 IN ARTICLE ID:66 LAW:НК_РФ",
+    "expect": "accept"
+  },
+  {
+    "name": "readme_comma_gap",
+    "text": "часть 3, ст. 30.1 КоАП РФ",
+    "tokens": "PART ID:3 COMMA ARTICLE ID:30.1 LAW:КоАП_РФ",
+    "expect": "accept"
+  },
+  {
+    "name": "unknown_act",
+    "text": "ст. 37 ФЗ №20-456",
+    "tokens": "ARTICLE ID:37 LAW:unknown_ФЗ_20-456",
+    "expect": "accept"
+  },
+  {
+    "name": "no_act",
+    "text": "статья 6",
+    "tokens": "ARTICLE ID:6",
+    "expect": "accept"
+  },
+  {
+    "name": "dotted_letter",
+    "text": "подпункт а.1 пункта 2.10.1.1 статьи 5",
+    "tokens": "SUBPOINT ID:а.1 POINT ID:2.10.1.1 ARTICLE ID:5",
+    "expect": "accept"
+  },
+  {
+    "name": "atomic_hyphen",
+    "text": "частью 1.3-3 статьи 32.2",
+    "tokens": "PART ID:1.3-3 ARTICLE ID:32.2",
+    "expect": "accept"
+  },
+  {
+    "name": "atomic_integer_hyphen",
+    "text": "статья 28-1",
+    "tokens": "ARTICLE ID:28-1",
+    "expect": "accept"
+  },
+  {
+    "name": "superscript_id",
+    "text": "статья 159¹",
+    "tokens": "ARTICLE ID:159¹",
+    "expect": "accept"
+  },
+  {
+    "name": "integer_range",
+    "text": "статьи 5–7 НК РФ",
+    "tokens": "ARTICLE ID:5 RANGE ID:7 LAW:НК_РФ",
+    "expect": "accept"
+  },
+  {
+    "name": "ordinal_range_list",
+    "text": "частями первой-четвертой и одиннадцатой статьи 133.1",
+    "tokens": "PART ORDINAL:первой RANGE ORDINAL:четвертой AND ORDINAL:одиннадцатой ARTICLE ID:133.1",
+    "expect": "accept"
+  },
+  {
+    "name": "mixed_branches",
+    "text": "пунктами 2, 4, 6, подпунктами 1 и 2 пункта 9 статьи 1483 ГК РФ",
+    "tokens": "POINT ID:2 COMMA ID:4 COMMA ID:6 COMMA SUBPOINT ID:1 AND ID:2 POINT ID:9 ARTICLE ID:1483 LAW:ГК_РФ",
+    "expect": "accept"
+  },
+  {
+    "name": "shared_law",
+    "text": "статьи 5 и статьи 6 НК РФ",
+    "tokens": "ARTICLE ID:5 AND ARTICLE ID:6 LAW:НК_РФ",
+    "expect": "accept",
+    "minimum_derivations": 2,
+    "show_trees": true
+  },
+  {
+    "name": "pp_means_subpoint",
+    "text": "пп. а, б ст. 105 УК РФ",
+    "tokens": "PP ID:а COMMA ID:б ARTICLE ID:105 LAW:УК_РФ",
+    "expect": "accept",
+    "minimum_derivations": 1
+  },
+  {
+    "name": "self_target",
+    "text": "пункт 2 настоящей статьи настоящего закона",
+    "tokens": "POINT ID:2 SELF_ARTICLE SELF_LAW",
+    "expect": "accept"
+  },
+  {
+    "name": "anaphoric_act",
+    "text": "статья 8 указанного закона",
+    "tokens": "ARTICLE ID:8 ANAPHORIC_LAW",
+    "expect": "accept"
+  },
+  {
+    "name": "repeated_occurrences",
+    "text": "статья 5 НК РФ и статья 5 НК РФ",
+    "tokens": "ARTICLE ID:5 LAW:НК_РФ AND ARTICLE ID:5 LAW:НК_РФ",
+    "expect": "accept"
+  },
+  {
+    "name": "bare_act",
+    "text": "НК РФ",
+    "tokens": "LAW:НК_РФ",
+    "expect": "reject"
+  },
+  {
+    "name": "bare_identifier",
+    "text": "374",
+    "tokens": "ID:374",
+    "expect": "reject"
+  },
+  {
+    "name": "marker_without_value",
+    "text": "статья НК РФ",
+    "tokens": "ARTICLE LAW:НК_РФ",
+    "expect": "reject"
+  },
+  {
+    "name": "unfinished_range",
+    "text": "статьи 5–",
+    "tokens": "ARTICLE ID:5 RANGE",
+    "expect": "reject"
+  },
+  {
+    "name": "unfinished_list",
+    "text": "статьи 5 и",
+    "tokens": "ARTICLE ID:5 AND",
+    "expect": "reject"
+  },
+  {
+    "name": "reversed_order_outside_v1",
+    "text": "статья 5 пункт 2",
+    "tokens": "ARTICLE ID:5 POINT ID:2",
+    "expect": "reject"
+  },
+  {
+    "name": "repeated_level_without_join",
+    "text": "статья 5 статья 6 НК РФ",
+    "tokens": "ARTICLE ID:5 ARTICLE ID:6 LAW:НК_РФ",
+    "expect": "reject"
+  },
+  {
+    "name": "two_acts_without_join",
+    "text": "статья 5 НК РФ ГК РФ",
+    "tokens": "ARTICLE ID:5 LAW:НК_РФ LAW:ГК_РФ",
+    "expect": "reject"
+  },
+  {
+    "name": "empty_candidate",
+    "text": "(нет ссылки)",
+    "tokens": "",
+    "expect": "reject"
+  }
+]

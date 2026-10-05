@@ -1,0 +1,10 @@
+{
+  "extraction_samples": 19,
+  "negative_passages": 3,
+  "references": 26,
+  "links": 27,
+  "interpretation_samples": 26,
+  "review_passages": 7,
+  "sources": 3,
+  "log": "logs/experiments/real-corpus-20261005T134149.958158Z"
+}

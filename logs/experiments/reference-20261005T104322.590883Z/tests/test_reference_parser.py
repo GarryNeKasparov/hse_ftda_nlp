@@ -1,0 +1,243 @@
+"""Behavioral tests for the public reference-analysis interface."""
+
+from pathlib import Path
+import unittest
+
+from reference_parser import AstLeaf, ReferenceAnalyzer
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+class ReferenceAnalyzerTests(unittest.TestCase):
+    """Check legal-reference extraction through its public interface."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.analyzer = ReferenceAnalyzer.from_alias_file(ROOT / "law_aliases.json")
+
+    def test_finds_reference_span_and_zero_valued_law_id(self):
+        text = "См. статью 5 АПК."
+
+        result = self.analyzer.analyze(text)
+
+        matches = [candidate for candidate in result.candidates
+                   if text[candidate.start:candidate.end] == "статью 5 АПК"]
+        self.assertEqual(len(matches), 1)
+        candidate = matches[0]
+        self.assertTrue(candidate.complete)
+        self.assertIn("0", law_ids(candidate))
+        self.assertEqual(node_values(candidate, "ID"), ["5"])
+
+    def test_keeps_point_and_subpoint_readings_of_pp(self):
+        text = "пп. а ст. 105 УК РФ"
+
+        result = self.analyzer.analyze(text)
+        candidate = find_candidate(result, text, text)
+
+        alternative_kinds = {node.kind for alternative in candidate.alternatives
+                             for node in walk_nodes(alternative)}
+        self.assertIn("point_level", alternative_kinds)
+        self.assertIn("subpoint_level", alternative_kinds)
+        self.assertEqual(len(candidate.alternatives), 2)
+
+    def test_retains_incomplete_prefix_and_extracts_reference_after_it(self):
+        text = "статьи 5 и; затем ст. 6 НК РФ"
+
+        result = self.analyzer.analyze(text)
+
+        prefix = find_candidate(result, text, "статьи 5")
+        later = find_candidate(result, text, "ст. 6 НК РФ")
+        self.assertFalse(prefix.complete)
+        self.assertEqual(prefix.diagnostics[0].code, "unfinished_continuation")
+        self.assertTrue(later.complete)
+        self.assertEqual(node_values(later, "ID"), ["6"])
+
+    def test_keeps_unknown_federal_law_mention_without_an_id(self):
+        text = "ст. 37 ФЗ №20-456"
+
+        result = self.analyzer.analyze(text)
+        candidate = find_candidate(result, text, text)
+
+        law_mentions = [leaf for leaf in leaves(candidate) if leaf.kind == "LAW"]
+        self.assertEqual(len(law_mentions), 1)
+        self.assertEqual(law_mentions[0].value, "ФЗ №20-456")
+        self.assertEqual(law_mentions[0].law_ids, ())
+        self.assertEqual(law_mentions[0].law_status, "unknown")
+
+    def test_keeps_all_ids_for_a_colliding_law_alias(self):
+        text = "ст. 7 ФЗ №7-ФЗ"
+
+        result = self.analyzer.analyze(text)
+        candidate = find_candidate(result, text, text)
+
+        ids = {law_id for leaf in leaves(candidate) if leaf.kind == "LAW"
+               for law_id in leaf.law_ids}
+        self.assertEqual(ids, {247, 401, 446, 471, 501, 533})
+
+    def test_extracts_unknown_inflected_code_name(self):
+        text = "ст. 6 рандомного кодекса"
+
+        result = self.analyzer.analyze(text)
+        candidate = find_candidate(result, text, text)
+
+        law_mentions = [leaf for leaf in leaves(candidate) if leaf.kind == "LAW"]
+        self.assertEqual([(leaf.value, leaf.law_status) for leaf in law_mentions],
+                         [("рандомного кодекса", "unknown")])
+
+    def test_preserves_atomic_hyphen_label_and_competing_range(self):
+        text = "ст. 28-1"
+
+        result = self.analyzer.analyze(text)
+        candidate = find_candidate(result, text, text)
+        token_paths = [{(leaf.kind, leaf.value) for leaf in walk(alternative)}
+                       for alternative in candidate.alternatives]
+
+        self.assertTrue(any(("ID", "28-1") in path for path in token_paths))
+        self.assertTrue(any(("ID", "28") in path and ("RANGE", "-") in path
+                            and ("ID", "1") in path for path in token_paths))
+
+    def test_offsets_refer_to_original_decomposed_unicode_text(self):
+        text = "е\u0308 статья 5 АПК"
+
+        result = self.analyzer.analyze(text)
+        candidate = find_candidate(result, text, "статья 5 АПК")
+
+        self.assertEqual(candidate.start, 3)
+        self.assertEqual(text[candidate.start:candidate.end], "статья 5 АПК")
+
+    def test_recognizes_self_and_anaphoric_targets_without_inventing_ids(self):
+        self_target = "пункт 2 настоящей статьи настоящего закона"
+        anaphoric_target = "статья 8 указанного закона"
+
+        self_result = self.analyzer.analyze(self_target)
+        anaphoric_result = self.analyzer.analyze(anaphoric_target)
+        self_candidate = find_candidate(self_result, self_target, self_target)
+        anaphoric_candidate = find_candidate(anaphoric_result, anaphoric_target,
+                                            anaphoric_target)
+
+        self_kinds = {leaf.kind for leaf in leaves(self_candidate)}
+        anaphoric_kinds = {leaf.kind for leaf in leaves(anaphoric_candidate)}
+        self.assertTrue({"SELF_ARTICLE", "SELF_LAW"}.issubset(self_kinds))
+        self.assertIn("ANAPHORIC_LAW", anaphoric_kinds)
+
+    def test_recognizes_an_unknown_quoted_title(self):
+        text = 'ст. 4 «Совершенно неизвестный закон»'
+
+        result = self.analyzer.analyze(text)
+        candidate = find_candidate(result, text, text)
+
+        law_mentions = [leaf for leaf in leaves(candidate) if leaf.kind == "LAW"]
+        self.assertEqual(len(law_mentions), 1)
+        self.assertEqual(law_mentions[0].value, '«Совершенно неизвестный закон»')
+        self.assertEqual(law_mentions[0].law_status, "unknown")
+
+    def test_keeps_repeated_reference_occurrences_in_text_order(self):
+        text = "статья 5 НК РФ и статья 5 НК РФ"
+
+        result = self.analyzer.analyze(text)
+        spans = sorted((candidate.start, candidate.end) for candidate in result.candidates
+                       if candidate.complete and text[candidate.start:candidate.end]
+                       == "статья 5 НК РФ")
+
+        self.assertEqual(len(spans), 2)
+        self.assertLess(spans[0][0], spans[1][0])
+
+    def test_matches_a_misspelled_full_law_name_with_bounded_fuzzy_fallback(self):
+        analyzer = ReferenceAnalyzer({
+            "42": ["Большой необычный закон Российской Федерации"],
+        })
+        text = "ст. 2 Большой необычный закоон Российской Федерации"
+
+        result = analyzer.analyze(text)
+        candidate = find_candidate(result, text, text)
+
+        law_mentions = [leaf for leaf in leaves(candidate) if leaf.kind == "LAW"]
+        self.assertEqual(len(law_mentions), 1)
+        self.assertEqual(law_mentions[0].law_ids, (42,))
+        self.assertEqual(law_mentions[0].law_status, "known_unique")
+
+    def test_finds_the_five_structural_challenge_references_in_raw_text(self):
+        references = (
+            "статьи 5 и 6 НК РФ",
+            "статья 5 НК РФ и пункт 2 статьи 6 ГК РФ",
+            "пункты 2 и 3 части 1 статьи 15",
+            "пункт 2 части 1 и часть 3 статьи 15",
+            "абзацы второй и третий пункта 4 части 2 статьи 10",
+        )
+
+        for text in references:
+            with self.subTest(text=text):
+                result = self.analyzer.analyze(text)
+                candidate = find_candidate(result, text, text)
+                self.assertTrue(candidate.complete)
+                self.assertTrue(candidate.alternatives)
+
+    def test_recognizes_one_letter_marker_typo_but_not_identifier_typos(self):
+        text = "пунта б статьи 20"
+
+        result = self.analyzer.analyze(text)
+        candidate = find_candidate(result, text, text)
+
+        point_markers = [item for item in result.lexical_candidates
+                         if item.start == 0 and item.end == len("пунта")]
+        self.assertTrue(any(item.kind == "POINT" and "fuzzy_marker" in item.evidence
+                            for item in point_markers))
+        self.assertEqual(node_values(candidate, "ID"), ["б", "20"])
+
+    def test_matches_a_controlled_latin_cyrillic_alias_variant(self):
+        text = "статья 5 СК РФ"
+
+        result = self.analyzer.analyze(text)
+        candidate = find_candidate(result, text, text)
+
+        self.assertIn("8", law_ids(candidate))
+
+
+def law_ids(candidate):
+    """Collect law ID values retained in an AST candidate."""
+    return [str(law_id) for leaf in leaves(candidate) for law_id in leaf.law_ids]
+
+
+def node_values(candidate, kind):
+    """Collect lexical values of one kind from every parse alternative."""
+    return [leaf.value for leaf in leaves(candidate) if leaf.kind == kind]
+
+
+def leaves(candidate):
+    """Yield terminal AST leaves from every complete candidate alternative."""
+    for alternative in candidate.alternatives:
+        yield from walk(alternative)
+
+
+def walk(node):
+    """Visit terminal values in a grammar-preserving AST alternative."""
+    if isinstance(node, AstLeaf):
+        yield node
+        return
+    if node.kind is not None:
+        yield node
+    for child in node.children:
+        yield from walk(child)
+
+
+def walk_nodes(node):
+    """Yield internal nodes from one parsed AST alternative."""
+    if isinstance(node, AstLeaf):
+        return
+    yield node
+    for child in node.children:
+        yield from walk_nodes(child)
+
+
+def find_candidate(result, text, candidate_text):
+    """Find one complete span whose original source matches the supplied text."""
+    matches = [candidate for candidate in result.candidates
+               if text[candidate.start:candidate.end] == candidate_text]
+    if not matches:
+        raise AssertionError(f"No candidate span found for {candidate_text!r}")
+    return next((candidate for candidate in matches if candidate.complete), matches[0])
+
+
+if __name__ == "__main__":
+    unittest.main()

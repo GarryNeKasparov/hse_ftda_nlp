@@ -1,0 +1,20 @@
+test_extracts_unknown_inflected_code_name (test_reference_parser.ReferenceAnalyzerTests.test_extracts_unknown_inflected_code_name) ... ok
+test_finds_reference_span_and_zero_valued_law_id (test_reference_parser.ReferenceAnalyzerTests.test_finds_reference_span_and_zero_valued_law_id) ... ok
+test_finds_the_five_structural_challenge_references_in_raw_text (test_reference_parser.ReferenceAnalyzerTests.test_finds_the_five_structural_challenge_references_in_raw_text) ... ok
+test_keeps_all_ids_for_a_colliding_law_alias (test_reference_parser.ReferenceAnalyzerTests.test_keeps_all_ids_for_a_colliding_law_alias) ... ok
+test_keeps_point_and_subpoint_readings_of_pp (test_reference_parser.ReferenceAnalyzerTests.test_keeps_point_and_subpoint_readings_of_pp) ... ok
+test_keeps_repeated_reference_occurrences_in_text_order (test_reference_parser.ReferenceAnalyzerTests.test_keeps_repeated_reference_occurrences_in_text_order) ... ok
+test_keeps_unknown_federal_law_mention_without_an_id (test_reference_parser.ReferenceAnalyzerTests.test_keeps_unknown_federal_law_mention_without_an_id) ... ok
+test_matches_a_controlled_latin_cyrillic_alias_variant (test_reference_parser.ReferenceAnalyzerTests.test_matches_a_controlled_latin_cyrillic_alias_variant) ... ok
+test_matches_a_misspelled_full_law_name_with_bounded_fuzzy_fallback (test_reference_parser.ReferenceAnalyzerTests.test_matches_a_misspelled_full_law_name_with_bounded_fuzzy_fallback) ... ok
+test_offsets_refer_to_original_decomposed_unicode_text (test_reference_parser.ReferenceAnalyzerTests.test_offsets_refer_to_original_decomposed_unicode_text) ... ok
+test_preserves_atomic_hyphen_label_and_competing_range (test_reference_parser.ReferenceAnalyzerTests.test_preserves_atomic_hyphen_label_and_competing_range) ... ok
+test_recognizes_an_unknown_quoted_title (test_reference_parser.ReferenceAnalyzerTests.test_recognizes_an_unknown_quoted_title) ... ok
+test_recognizes_one_letter_marker_typo_but_not_identifier_typos (test_reference_parser.ReferenceAnalyzerTests.test_recognizes_one_letter_marker_typo_but_not_identifier_typos) ... ok
+test_recognizes_self_and_anaphoric_targets_without_inventing_ids (test_reference_parser.ReferenceAnalyzerTests.test_recognizes_self_and_anaphoric_targets_without_inventing_ids) ... ok
+test_retains_incomplete_prefix_and_extracts_reference_after_it (test_reference_parser.ReferenceAnalyzerTests.test_retains_incomplete_prefix_and_extracts_reference_after_it) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 7.150s
+
+OK

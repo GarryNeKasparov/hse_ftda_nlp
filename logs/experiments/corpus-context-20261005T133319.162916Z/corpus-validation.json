@@ -1,0 +1,19 @@
+{
+  "checks": "Unique IDs, exact ordered spans, verbatim passage source offsets and source hash; Python syntax checked. No service evaluations run.",
+  "datasets": [
+    {
+      "dataset": "data/golden_interpretation.jsonl",
+      "samples": 31,
+      "references": 31,
+      "links": 36,
+      "sha256": "847c863c66e640cfb3824c043bd08dfd047b8e8250a726d250dc2ef35bb0f3bb"
+    },
+    {
+      "dataset": "data/golden_extraction.jsonl",
+      "samples": 12,
+      "references": 29,
+      "links": 32,
+      "sha256": "dfcd8f0bbb1c441578dd9fd42cc75696ba591ba3948366f99ec7a5c0d5073ef6"
+    }
+  ]
+}

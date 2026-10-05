@@ -1,0 +1,25 @@
+{
+  "commands": [
+    "python3 tools/audit_golden_labels.py --dataset data/golden_real_extraction.jsonl --output logs/experiments/real-corpus-20261005T134149.958158Z/extraction-label-audit.json",
+    "python3 tools/audit_golden_labels.py --dataset data/golden_real_interpretation.jsonl --output logs/experiments/real-corpus-20261005T134149.958158Z/interpretation-label-audit.json"
+  ],
+  "audit_errors": 0,
+  "additional_checks": [
+    "Raw source hashes",
+    "Seven exact review passage offsets",
+    "Paired reference spans and target consistency",
+    "Modified Python syntax"
+  ],
+  "service_evaluations_run": false,
+  "files_sha256": {
+    "tools/audit_golden_labels.py": "35a53a02c25436f2ad37509b225dd38e381bc5fcaf8f1ff57b5a12a75acb1bad",
+    "tools/run_reference_experiment.py": "414be8a35b5d338699a790da2ce6a36373e69273d881e56e98bb1a8fef812263",
+    "tools/evaluate_golden_references.py": "6dd514fa526aac795dfeaefec58e271b4071e7e5201b74697b27a8cd8794478f",
+    "docs/real-reference-data.md": "5f3469daea58af9d41875ae7255c03fc1c3be59d9e2237b5d8bd4d3779ed69d1",
+    "docs/golden-test-data.md": "fa508639ebe500a43b93ddfa75e4a66b11e882f4ad277197e44c1665cbc2a5b8",
+    "data/sources/manifest.json": "be466b10197c1a785588542874fc9882bc73992f6705a5d662f66530431e4624",
+    "data/sources/vsrf-14913.txt": "57603e54a854d930a5b3a50a5408afa4d46de0a8c466e63393d79ff386e9416a",
+    "data/sources/vsrf-13345.txt": "1347659bba0bb5d44092cee16b3a9db9c90a14c20e3d9364de74c7b97d20d855",
+    "data/sources/vsrf-12452.txt": "216ce982cb71915f3021d602c29cebe677559e6a03c76a2845aab6a314807cfd"
+  }
+}

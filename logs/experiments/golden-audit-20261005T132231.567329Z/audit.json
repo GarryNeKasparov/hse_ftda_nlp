@@ -1,0 +1,381 @@
+{
+  "created_at_utc": "2026-10-05T13:22:43.502010+00:00",
+  "method": "Structural checks and whole canonical-alias uniqueness; manual hierarchy review in docs/golden-label-audit.md.",
+  "input_sha256": {
+    "data/golden_references.jsonl": "87240b87ea7d443740dca1d79421725dfab94cf524c80358696d686267ff7708",
+    "law_aliases.json": "23bed2195b3f1da3547ef4025ae83e3d67e9a80b438cdcc937dd66b1f0de20c0",
+    "README.md": "4dd0e69884125d947be6e3cb4bf56b9f4d049b36dc5e681e27df7a9742c3cdf0",
+    "CONTEXT.md": "3d7bbcf19963b85f109cb2453c2f7ad63df4045d2a889dd09575d437a431ff34"
+  },
+  "samples": 25,
+  "references": 25,
+  "links": 30,
+  "errors": [],
+  "results": [
+    {
+      "id": "nested-subpoint",
+      "references": 1,
+      "links": 1,
+      "law_evidence": [
+        {
+          "law_id": 15,
+          "canonical_alias": "НК РФ",
+          "matching_ids": [
+            15
+          ]
+        }
+      ],
+      "provenance": "README.md: citation excerpt with adapted surrounding prose"
+    },
+    {
+      "id": "article-known-law",
+      "references": 1,
+      "links": 1,
+      "law_evidence": [
+        {
+          "law_id": 13,
+          "canonical_alias": "УК РФ",
+          "matching_ids": [
+            13
+          ]
+        }
+      ],
+      "provenance": "README.md: citation excerpt with adapted surrounding prose"
+    },
+    {
+      "id": "point-without-article",
+      "references": 1,
+      "links": 1,
+      "law_evidence": [
+        {
+          "law_id": 0,
+          "canonical_alias": "АПК",
+          "matching_ids": [
+            0
+          ]
+        }
+      ],
+      "provenance": "README.md: citation excerpt with adapted surrounding prose"
+    },
+    {
+      "id": "part-and-article",
+      "references": 1,
+      "links": 1,
+      "law_evidence": [
+        {
+          "law_id": 17,
+          "canonical_alias": "КоАП РФ",
+          "matching_ids": [
+            17
+          ]
+        }
+      ],
+      "provenance": "README.md: supplied test_text"
+    },
+    {
+      "id": "article-unspecified-law",
+      "references": 1,
+      "links": 1,
+      "law_evidence": [
+        {
+          "law_id": null,
+          "reason": "No law mention or antecedent in this input."
+        }
+      ],
+      "provenance": "Discussion: synthetic example for the agreed unspecified-law policy; not a complete README citation"
+    },
+    {
+      "id": "unknown-numbered-law",
+      "references": 1,
+      "links": 1,
+      "law_evidence": [
+        {
+          "law_id": null,
+          "absence_query": "20-456",
+          "matching_ids": []
+        }
+      ],
+      "provenance": "README.md: citation excerpt with adapted surrounding prose"
+    },
+    {
+      "id": "unknown-code-name",
+      "references": 1,
+      "links": 1,
+      "law_evidence": [
+        {
+          "law_id": null,
+          "absence_query": "рандомного",
+          "matching_ids": []
+        }
+      ],
+      "provenance": "README.md: supplied test_text"
+    },
+    {
+      "id": "independent-citations",
+      "references": 2,
+      "links": 2,
+      "law_evidence": [
+        {
+          "law_id": 15,
+          "canonical_alias": "НК РФ",
+          "matching_ids": [
+            15
+          ]
+        },
+        {
+          "law_id": 0,
+          "canonical_alias": "АПК",
+          "matching_ids": [
+            0
+          ]
+        }
+      ],
+      "provenance": "Discussion and README.md: synthetic combination; article 5 chosen for the independent-citations test"
+    },
+    {
+      "id": "subpoint-list",
+      "references": 1,
+      "links": 3,
+      "law_evidence": [
+        {
+          "law_id": 15,
+          "canonical_alias": "НК РФ",
+          "matching_ids": [
+            15
+          ]
+        }
+      ],
+      "provenance": "README.md: explicit expected three LawLink records"
+    },
+    {
+      "id": "subpoint-list-under-point",
+      "references": 1,
+      "links": 4,
+      "law_evidence": [
+        {
+          "law_id": 174,
+          "canonical_alias": "«О государственной регистрации недвижимости»",
+          "matching_ids": [
+            174
+          ]
+        }
+      ],
+      "provenance": "README.md: supplied test_text"
+    },
+    {
+      "id": "lettered-point",
+      "references": 1,
+      "links": 1,
+      "law_evidence": [
+        {
+          "law_id": 0,
+          "canonical_alias": "АПК",
+          "matching_ids": [
+            0
+          ]
+        }
+      ],
+      "provenance": "README.md: supplied test_text"
+    },
+    {
+      "id": "misspelled-point-marker",
+      "references": 1,
+      "links": 1,
+      "law_evidence": [
+        {
+          "law_id": 362,
+          "canonical_alias": "«О государственной гражданской службе Российской Федерации»",
+          "matching_ids": [
+            362
+          ]
+        }
+      ],
+      "provenance": "README.md: supplied test_text"
+    },
+    {
+      "id": "civil-code",
+      "references": 1,
+      "links": 1,
+      "law_evidence": [
+        {
+          "law_id": 5,
+          "canonical_alias": "Гражданский кодекс Российской Федерации",
+          "matching_ids": [
+            5
+          ]
+        }
+      ],
+      "provenance": "README.md: citation excerpt with adapted surrounding prose"
+    },
+    {
+      "id": "family-code",
+      "references": 1,
+      "links": 1,
+      "law_evidence": [
+        {
+          "law_id": 8,
+          "canonical_alias": "Семейный кодекс Российской Федерации",
+          "matching_ids": [
+            8
+          ]
+        }
+      ],
+      "provenance": "README.md: supplied test_text"
+    },
+    {
+      "id": "labour-code",
+      "references": 1,
+      "links": 1,
+      "law_evidence": [
+        {
+          "law_id": 10,
+          "canonical_alias": "Трудовой кодекс Российской Федерации",
+          "matching_ids": [
+            10
+          ]
+        }
+      ],
+      "provenance": "README.md: supplied test_text"
+    },
+    {
+      "id": "civil-procedure-code",
+      "references": 1,
+      "links": 1,
+      "law_evidence": [
+        {
+          "law_id": 6,
+          "canonical_alias": "Гражданский процессуальный кодекс Российской Федерации",
+          "matching_ids": [
+            6
+          ]
+        }
+      ],
+      "provenance": "README.md: supplied test_text"
+    },
+    {
+      "id": "consumer-protection-law",
+      "references": 1,
+      "links": 1,
+      "law_evidence": [
+        {
+          "law_id": 984,
+          "canonical_alias": "«О защите прав потребителей»",
+          "matching_ids": [
+            984
+          ]
+        }
+      ],
+      "provenance": "README.md: citation excerpt; статье changed to статья"
+    },
+    {
+      "id": "personal-data-law",
+      "references": 1,
+      "links": 1,
+      "law_evidence": [
+        {
+          "law_id": 330,
+          "canonical_alias": "«О персональных данных»",
+          "matching_ids": [
+            330
+          ]
+        }
+      ],
+      "provenance": "README.md: supplied test_text"
+    },
+    {
+      "id": "accounting-law-yo-variant",
+      "references": 1,
+      "links": 1,
+      "law_evidence": [
+        {
+          "law_id": 224,
+          "canonical_alias": "«О бухгалтерском учете»",
+          "matching_ids": [
+            224
+          ]
+        }
+      ],
+      "provenance": "README.md: supplied test_text"
+    },
+    {
+      "id": "registration-of-entities-law",
+      "references": 1,
+      "links": 1,
+      "law_evidence": [
+        {
+          "law_id": 412,
+          "canonical_alias": "«О государственной регистрации юридических лиц и индивидуальных предпринимателей»",
+          "matching_ids": [
+            412
+          ]
+        }
+      ],
+      "provenance": "README.md: supplied test_text"
+    },
+    {
+      "id": "inspection-law",
+      "references": 1,
+      "links": 1,
+      "law_evidence": [
+        {
+          "law_id": 284,
+          "canonical_alias": "«О защите прав юридических лиц и индивидуальных предпринимателей при осуществлении государственного контроля (надзора) и муниципального контроля»",
+          "matching_ids": [
+            284
+          ]
+        }
+      ],
+      "provenance": "README.md: supplied test_text"
+    },
+    {
+      "id": "competition-law",
+      "references": 1,
+      "links": 1,
+      "law_evidence": [
+        {
+          "law_id": 332,
+          "canonical_alias": "«О защите конкуренции»",
+          "matching_ids": [
+            332
+          ]
+        }
+      ],
+      "provenance": "README.md: supplied test_text"
+    },
+    {
+      "id": "police-law",
+      "references": 1,
+      "links": 1,
+      "law_evidence": [
+        {
+          "law_id": 249,
+          "canonical_alias": "«О полиции»",
+          "matching_ids": [
+            249
+          ]
+        }
+      ],
+      "provenance": "README.md: supplied test_text"
+    },
+    {
+      "id": "law-alias-not-listed",
+      "references": 1,
+      "links": 1,
+      "law_evidence": [
+        {
+          "law_id": null,
+          "absence_query": "О банках и банковской деятельности",
+          "matching_ids": []
+        }
+      ],
+      "provenance": "README.md: supplied test_text; act title is not present in law_aliases.json"
+    },
+    {
+      "id": "ordinary-prose-negative",
+      "references": 0,
+      "links": 0,
+      "law_evidence": [],
+      "provenance": "README.md: ordinary-prose excerpt capitalized as a standalone sentence"
+    }
+  ]
+}

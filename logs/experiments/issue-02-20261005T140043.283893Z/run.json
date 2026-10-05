@@ -1,0 +1,27 @@
+{
+  "started_at_utc": "2026-10-05T14:01:13.884840+00:00",
+  "command": [
+    "/tmp/legal-grammar-venv/bin/python",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests",
+    "-v"
+  ],
+  "exit_code": 0,
+  "duration_seconds": 30.55024912200315,
+  "stdout": "unittest.stdout.log",
+  "stderr": "unittest.stderr.log",
+  "files_sha256": {
+    "tests/test_service_api.py": "ccdbbfb796d8ff89422165d54ba872bae8f96a121b90df21080195fa9e03c3fe",
+    "tests/test_reference_parser.py": "dc71b8b38600d83c5cfa90608a4ea1997c5ecf3cb002ed833fc0b6fc34c3b427",
+    ".scratch/legal-reference-service/issues/02-repeated-occurrences-and-recovery.md": "c9b4a876bad48ce1b405e65a303408ceed6d8a104c3abbd9caee6fc28199dc34",
+    ".scratch/legal-reference-service/map.md": "f77dfa3359001dbe618bce7cfe4e633f644a9ce3af40d1ca4aa4cb7638b0f4c7",
+    "reference_parser.py": "b0090822b1d2304bb470d76ca9a455aa366173ad7ba2629dc0fc7e76603d9737",
+    "law_link_mapper.py": "293d66e8433a88717e90985d2a4badf9b6bb3cfb0d84ad1c2a689b3faba1088a",
+    "main.py": "08b13bf45bee39017ba50c5685bd6913f850ed899aab0c50f6f12cda8bf0b069"
+  },
+  "status": "passed"
+}

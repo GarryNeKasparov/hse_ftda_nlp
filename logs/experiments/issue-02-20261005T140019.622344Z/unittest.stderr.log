@@ -1,0 +1,39 @@
+test_reference_parser (unittest.loader._FailedTest.test_reference_parser) ... ERROR
+test_service_api (unittest.loader._FailedTest.test_service_api) ... ERROR
+
+======================================================================
+ERROR: test_reference_parser (unittest.loader._FailedTest.test_reference_parser)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_reference_parser
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/unittest/loader.py", line 426, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/usr/lib/python3.14/unittest/loader.py", line 367, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/home/vipvl/work/hse/nlp/1/homework_1/tests/test_reference_parser.py", line 6, in <module>
+    from reference_parser import AstLeaf, ReferenceAnalyzer
+  File "/home/vipvl/work/hse/nlp/1/homework_1/reference_parser.py", line 15, in <module>
+    from lark import Lark, Token, Tree
+ModuleNotFoundError: No module named 'lark'
+
+
+======================================================================
+ERROR: test_service_api (unittest.loader._FailedTest.test_service_api)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_service_api
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/unittest/loader.py", line 426, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/usr/lib/python3.14/unittest/loader.py", line 367, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/home/vipvl/work/hse/nlp/1/homework_1/tests/test_service_api.py", line 5, in <module>
+    from fastapi.testclient import TestClient
+ModuleNotFoundError: No module named 'fastapi'
+
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.002s
+
+FAILED (errors=2)

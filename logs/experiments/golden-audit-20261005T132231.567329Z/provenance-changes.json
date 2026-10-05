@@ -1,0 +1,47 @@
+[
+  {
+    "id": "nested-subpoint",
+    "old_source": "README.md: worked example",
+    "new_source": "README.md: citation excerpt with adapted surrounding prose"
+  },
+  {
+    "id": "article-known-law",
+    "old_source": "README.md: supplied test_text",
+    "new_source": "README.md: citation excerpt with adapted surrounding prose"
+  },
+  {
+    "id": "point-without-article",
+    "old_source": "README.md: supplied test_text",
+    "new_source": "README.md: citation excerpt with adapted surrounding prose"
+  },
+  {
+    "id": "article-unspecified-law",
+    "old_source": "README.md: citation rule; shortened context",
+    "new_source": "Discussion: synthetic example for the agreed unspecified-law policy; not a complete README citation"
+  },
+  {
+    "id": "unknown-numbered-law",
+    "old_source": "README.md: supplied test_text",
+    "new_source": "README.md: citation excerpt with adapted surrounding prose"
+  },
+  {
+    "id": "independent-citations",
+    "old_source": "README.md: combination of two supplied examples",
+    "new_source": "Discussion and README.md: synthetic combination; article 5 chosen for the independent-citations test"
+  },
+  {
+    "id": "civil-code",
+    "old_source": "README.md: supplied test_text",
+    "new_source": "README.md: citation excerpt with adapted surrounding prose"
+  },
+  {
+    "id": "consumer-protection-law",
+    "old_source": "README.md: supplied test_text",
+    "new_source": "README.md: citation excerpt; статье changed to статья"
+  },
+  {
+    "id": "ordinary-prose-negative",
+    "old_source": "README.md: surrounding ordinary prose",
+    "new_source": "README.md: ordinary-prose excerpt capitalized as a standalone sentence"
+  }
+]

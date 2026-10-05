@@ -1,0 +1,148 @@
+{
+  "started_at_utc": "2026-10-05T14:42:11.775262+00:00",
+  "finished_at_utc": "2026-10-05T14:44:29.338793+00:00",
+  "commands": [
+    {
+      "argv": [
+        "/tmp/legal-grammar-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 67.44294006000564,
+      "stdout": "unittest.stdout.log",
+      "stderr": "unittest.stderr.log"
+    },
+    {
+      "argv": [
+        "/tmp/legal-grammar-venv/bin/python",
+        "-B",
+        "tools/evaluate_golden_references.py",
+        "--dataset",
+        "/home/vipvl/work/hse/nlp/1/homework_1/logs/experiments/reference-20261005T144211.357682Z/data/golden_references.jsonl",
+        "--output",
+        "/home/vipvl/work/hse/nlp/1/homework_1/logs/experiments/reference-20261005T144211.357682Z/golden-evaluation.json"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 13.761425126001996,
+      "stdout": "golden-evaluation.stdout.log",
+      "stderr": "golden-evaluation.stderr.log",
+      "report": "golden-evaluation.json"
+    },
+    {
+      "argv": [
+        "/tmp/legal-grammar-venv/bin/python",
+        "-B",
+        "tools/evaluate_golden_references.py",
+        "--dataset",
+        "/home/vipvl/work/hse/nlp/1/homework_1/logs/experiments/reference-20261005T144211.357682Z/data/golden_interpretation.jsonl",
+        "--output",
+        "/home/vipvl/work/hse/nlp/1/homework_1/logs/experiments/reference-20261005T144211.357682Z/golden-interpretation-evaluation.json"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 13.914596913004061,
+      "stdout": "golden-interpretation.stdout.log",
+      "stderr": "golden-interpretation.stderr.log",
+      "report": "golden-interpretation-evaluation.json"
+    },
+    {
+      "argv": [
+        "/tmp/legal-grammar-venv/bin/python",
+        "-B",
+        "tools/evaluate_golden_references.py",
+        "--dataset",
+        "/home/vipvl/work/hse/nlp/1/homework_1/logs/experiments/reference-20261005T144211.357682Z/data/golden_extraction.jsonl",
+        "--output",
+        "/home/vipvl/work/hse/nlp/1/homework_1/logs/experiments/reference-20261005T144211.357682Z/golden-extraction-evaluation.json"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 12.521353069001634,
+      "stdout": "golden-extraction.stdout.log",
+      "stderr": "golden-extraction.stderr.log",
+      "report": "golden-extraction-evaluation.json"
+    },
+    {
+      "argv": [
+        "/tmp/legal-grammar-venv/bin/python",
+        "-B",
+        "tools/evaluate_golden_references.py",
+        "--dataset",
+        "/home/vipvl/work/hse/nlp/1/homework_1/logs/experiments/reference-20261005T144211.357682Z/data/golden_real_interpretation.jsonl",
+        "--output",
+        "/home/vipvl/work/hse/nlp/1/homework_1/logs/experiments/reference-20261005T144211.357682Z/golden-real_interpretation-evaluation.json"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 12.747028609999688,
+      "stdout": "golden-real_interpretation.stdout.log",
+      "stderr": "golden-real_interpretation.stderr.log",
+      "report": "golden-real_interpretation-evaluation.json"
+    },
+    {
+      "argv": [
+        "/tmp/legal-grammar-venv/bin/python",
+        "-B",
+        "tools/evaluate_golden_references.py",
+        "--dataset",
+        "/home/vipvl/work/hse/nlp/1/homework_1/logs/experiments/reference-20261005T144211.357682Z/data/golden_real_extraction.jsonl",
+        "--output",
+        "/home/vipvl/work/hse/nlp/1/homework_1/logs/experiments/reference-20261005T144211.357682Z/golden-real_extraction-evaluation.json"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 17.013552722004533,
+      "stdout": "golden-real_extraction.stdout.log",
+      "stderr": "golden-real_extraction.stderr.log",
+      "report": "golden-real_extraction-evaluation.json"
+    }
+  ],
+  "workspace": "/home/vipvl/work/hse/nlp/1/homework_1",
+  "python_version": "3.14.4",
+  "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+  "dependencies": {
+    "fastapi": "0.118.0",
+    "httpx": "0.28.1",
+    "lark": "1.3.1",
+    "pymorphy3": "2.0.6",
+    "pymorphy3-dicts-ru": "2.4.417150.4580142",
+    "rapidfuzz": "3.14.6",
+    "uvicorn": "0.37.0"
+  },
+  "duration_seconds": 137.40089650001755,
+  "exit_code": 0,
+  "files_sha256": {
+    "main.py": "76e49e2110bb1af034e1644fc42bd2af729c8b8994dba2ced3ecca376d071ace",
+    "reference_parser.py": "b0090822b1d2304bb470d76ca9a455aa366173ad7ba2629dc0fc7e76603d9737",
+    "semantic_analyzer.py": "799e49e9ae646fb8ee7a03c6bf8472eefc831f3f437c3db8173618066273eb8d",
+    "law_link_mapper.py": "0b506f10ae97e36f038300169f2b1b3d9819a625b3e772f35cb1b0af758f72d8",
+    "Dockerfile": "232416c4e956932e65cd1f04ac8a8a0809ff99172146549ce5af567d5080ce70",
+    "docs/reference-grammar.bnf": "1b7e8b0d0fce2b91617b5ae83dc1a1f2e751c16cca39f9edbd240e48e5a84c23",
+    "law_aliases.json": "23bed2195b3f1da3547ef4025ae83e3d67e9a80b438cdcc937dd66b1f0de20c0",
+    "requirements.txt": "48842f854befae1d441278ba38686c23fb7d0f5e3a48fb85e4849811add876a5",
+    "requirements-test.txt": "934fbb549ab3209320a68f549631f92ffa7dcd1372d15620c148eb5f55bd7735",
+    "tests/test_reference_parser.py": "dc71b8b38600d83c5cfa90608a4ea1997c5ecf3cb002ed833fc0b6fc34c3b427",
+    "tests/test_service_api.py": "11617595b72ffa86f3ab61e103351599a0a2945f0fb00c23243aec3df210ee6a",
+    "tests/test_semantic_analyzer.py": "1afa58eba8e52213f0103e178ee4ff7a911853460591a2a89afe20e65dfb6a3e",
+    "data/golden_references.jsonl": "87240b87ea7d443740dca1d79421725dfab94cf524c80358696d686267ff7708",
+    "data/review_queue.jsonl": "6f52ae2460499332df39041f6aefc089afcb0fc70ffec4edf22bd22f55424379",
+    "data/golden_interpretation.jsonl": "847c863c66e640cfb3824c043bd08dfd047b8e8250a726d250dc2ef35bb0f3bb",
+    "data/golden_extraction.jsonl": "dfcd8f0bbb1c441578dd9fd42cc75696ba591ba3948366f99ec7a5c0d5073ef6",
+    "data/golden_real_interpretation.jsonl": "5ddf79539c1cd06e31f64edb38f0ae33d4525ec481a77266f5ca048dc163efb9",
+    "data/golden_real_extraction.jsonl": "0c5c57b432daef858f0f286600940d940b05b8502f2fdbfa6b8dbc538e4105cd",
+    "data/real_review_queue.jsonl": "fdaf66cc2d60bf58b6da171ae7cdfc718dd60e5776ee2c9c576ddb1f34ebe712",
+    "data/sources/manifest.json": "be466b10197c1a785588542874fc9882bc73992f6705a5d662f66530431e4624",
+    "data/sources/vsrf-14913.txt": "57603e54a854d930a5b3a50a5408afa4d46de0a8c466e63393d79ff386e9416a",
+    "data/sources/vsrf-13345.txt": "1347659bba0bb5d44092cee16b3a9db9c90a14c20e3d9364de74c7b97d20d855",
+    "data/sources/vsrf-12452.txt": "216ce982cb71915f3021d602c29cebe677559e6a03c76a2845aab6a314807cfd",
+    "docs/real-reference-data.md": "5f3469daea58af9d41875ae7255c03fc1c3be59d9e2237b5d8bd4d3779ed69d1",
+    "docs/golden-test-data.md": "fa508639ebe500a43b93ddfa75e4a66b11e882f4ad277197e44c1665cbc2a5b8",
+    "tools/evaluate_golden_references.py": "6dd514fa526aac795dfeaefec58e271b4071e7e5201b74697b27a8cd8794478f",
+    "tools/run_reference_experiment.py": "6448ec015f0304af6747cbd96d94a0db3f20abaa73742291e1456387502b69b5"
+  },
+  "stdout": "unittest.stdout.log",
+  "stderr": "unittest.stderr.log",
+  "status": "passed"
+}

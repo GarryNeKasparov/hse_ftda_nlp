@@ -1,0 +1,969 @@
+{
+  "created_at_utc": "2026-10-05T14:50:26.821072+00:00",
+  "dataset": "/home/vipvl/work/hse/nlp/1/homework_1/logs/experiments/reference-20261005T144845.299836Z/data/golden_real_extraction.jsonl",
+  "dataset_sha256": "0c5c57b432daef858f0f286600940d940b05b8502f2fdbfa6b8dbc538e4105cd",
+  "evaluated": 19,
+  "exact_matches": 19,
+  "accuracy_on_this_fixture_only": 1.0,
+  "elapsed_seconds": 2.0945523159898585,
+  "results": [
+    {
+      "id": "web-vsrf-14913-paragraph-002",
+      "test_type": "extraction",
+      "source": "https://www.vsrf.ru/files/14913/",
+      "references": [
+        {
+          "start": 131,
+          "end": 145,
+          "text": "статья 3 ГК РФ",
+          "links": [
+            {
+              "law_id": 5,
+              "article": "3",
+              "point_article": null,
+              "subpoint_article": null
+            }
+          ],
+          "law_evidence": "Unique whole code alias in law_aliases.json."
+        },
+        {
+          "start": 262,
+          "end": 276,
+          "text": "статье 1 ГК РФ",
+          "links": [
+            {
+              "law_id": 5,
+              "article": "1",
+              "point_article": null,
+              "subpoint_article": null
+            }
+          ],
+          "law_evidence": "Unique whole code alias in law_aliases.json."
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 5,
+          "article": "3",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 5,
+          "article": "1",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 5,
+          "article": "3",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 5,
+          "article": "1",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.08919610000157263
+    },
+    {
+      "id": "web-vsrf-14913-paragraph-003",
+      "test_type": "extraction",
+      "source": "https://www.vsrf.ru/files/14913/",
+      "references": [
+        {
+          "start": 9,
+          "end": 32,
+          "text": "пункту 3 статьи 1 ГК РФ",
+          "links": [
+            {
+              "law_id": 5,
+              "article": "1",
+              "point_article": "3",
+              "subpoint_article": null
+            }
+          ],
+          "law_evidence": "Unique whole code alias in law_aliases.json."
+        },
+        {
+          "start": 211,
+          "end": 234,
+          "text": "пункта 4 статьи 1 ГК РФ",
+          "links": [
+            {
+              "law_id": 5,
+              "article": "1",
+              "point_article": "4",
+              "subpoint_article": null
+            }
+          ],
+          "law_evidence": "Unique whole code alias in law_aliases.json."
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 5,
+          "article": "1",
+          "point_article": "3",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 5,
+          "article": "1",
+          "point_article": "4",
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 5,
+          "article": "1",
+          "point_article": "3",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 5,
+          "article": "1",
+          "point_article": "4",
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.18558050200226717
+    },
+    {
+      "id": "web-vsrf-14913-paragraph-004",
+      "test_type": "extraction",
+      "source": "https://www.vsrf.ru/files/14913/",
+      "references": [
+        {
+          "start": 290,
+          "end": 314,
+          "text": "пункта 5 статьи 10 ГК РФ",
+          "links": [
+            {
+              "law_id": 5,
+              "article": "10",
+              "point_article": "5",
+              "subpoint_article": null
+            }
+          ],
+          "law_evidence": "Unique whole code alias in law_aliases.json."
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 5,
+          "article": "10",
+          "point_article": "5",
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 5,
+          "article": "10",
+          "point_article": "5",
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.09965890100284014
+    },
+    {
+      "id": "web-vsrf-14913-paragraph-005",
+      "test_type": "extraction",
+      "source": "https://www.vsrf.ru/files/14913/",
+      "references": [
+        {
+          "start": 436,
+          "end": 503,
+          "text": "статья 56 Гражданского процессуального кодекса Российской Федерации",
+          "links": [
+            {
+              "law_id": 6,
+              "article": "56",
+              "point_article": null,
+              "subpoint_article": null
+            }
+          ],
+          "law_evidence": "Unique whole code alias in law_aliases.json."
+        },
+        {
+          "start": 522,
+          "end": 589,
+          "text": "статья 65 Арбитражного процессуального кодекса Российской Федерации",
+          "links": [
+            {
+              "law_id": 0,
+              "article": "65",
+              "point_article": null,
+              "subpoint_article": null
+            }
+          ],
+          "law_evidence": "Unique whole code alias in law_aliases.json."
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 6,
+          "article": "56",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 0,
+          "article": "65",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 6,
+          "article": "56",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 0,
+          "article": "65",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.10810320000018692
+    },
+    {
+      "id": "web-vsrf-14913-paragraph-006",
+      "test_type": "extraction",
+      "source": "https://www.vsrf.ru/files/14913/",
+      "references": [
+        {
+          "start": 374,
+          "end": 397,
+          "text": "пункт 2 статьи 10 ГК РФ",
+          "links": [
+            {
+              "law_id": 5,
+              "article": "10",
+              "point_article": "2",
+              "subpoint_article": null
+            }
+          ],
+          "law_evidence": "Unique whole code alias in law_aliases.json."
+        },
+        {
+          "start": 548,
+          "end": 572,
+          "text": "пункт 3 статьи 157 ГК РФ",
+          "links": [
+            {
+              "law_id": 5,
+              "article": "157",
+              "point_article": "3",
+              "subpoint_article": null
+            }
+          ],
+          "law_evidence": "Unique whole code alias in law_aliases.json."
+        },
+        {
+          "start": 671,
+          "end": 695,
+          "text": "пункт 5 статьи 166 ГК РФ",
+          "links": [
+            {
+              "law_id": 5,
+              "article": "166",
+              "point_article": "5",
+              "subpoint_article": null
+            }
+          ],
+          "law_evidence": "Unique whole code alias in law_aliases.json."
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 5,
+          "article": "10",
+          "point_article": "2",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 5,
+          "article": "157",
+          "point_article": "3",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 5,
+          "article": "166",
+          "point_article": "5",
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 5,
+          "article": "10",
+          "point_article": "2",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 5,
+          "article": "157",
+          "point_article": "3",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 5,
+          "article": "166",
+          "point_article": "5",
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.2764022030023625
+    },
+    {
+      "id": "web-vsrf-14913-paragraph-008",
+      "test_type": "extraction",
+      "source": "https://www.vsrf.ru/files/14913/",
+      "references": [
+        {
+          "start": 375,
+          "end": 391,
+          "text": "статья 56 ГПК РФ",
+          "links": [
+            {
+              "law_id": 6,
+              "article": "56",
+              "point_article": null,
+              "subpoint_article": null
+            }
+          ],
+          "law_evidence": "Unique whole code alias in law_aliases.json."
+        },
+        {
+          "start": 393,
+          "end": 409,
+          "text": "статья 65 АПК РФ",
+          "links": [
+            {
+              "law_id": 0,
+              "article": "65",
+              "point_article": null,
+              "subpoint_article": null
+            }
+          ],
+          "law_evidence": "Unique whole code alias in law_aliases.json."
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 6,
+          "article": "56",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 0,
+          "article": "65",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 6,
+          "article": "56",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 0,
+          "article": "65",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.10612550000223564
+    },
+    {
+      "id": "web-vsrf-14913-paragraph-009",
+      "test_type": "extraction",
+      "source": "https://www.vsrf.ru/files/14913/",
+      "references": [
+        {
+          "start": 9,
+          "end": 32,
+          "text": "пункту 2 статьи 5 ГК РФ",
+          "links": [
+            {
+              "law_id": 5,
+              "article": "5",
+              "point_article": "2",
+              "subpoint_article": null
+            }
+          ],
+          "law_evidence": "Unique whole code alias in law_aliases.json."
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 5,
+          "article": "5",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 5,
+          "article": "5",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.05492330100241816
+    },
+    {
+      "id": "web-vsrf-13345-paragraph-003",
+      "test_type": "extraction",
+      "source": "https://www.vsrf.ru/files/13345/",
+      "references": [
+        {
+          "start": 21,
+          "end": 74,
+          "text": "статьей 212 Гражданского кодекса Российской Федерации",
+          "links": [
+            {
+              "law_id": 5,
+              "article": "212",
+              "point_article": null,
+              "subpoint_article": null
+            }
+          ],
+          "law_evidence": "Unique whole code alias in law_aliases.json."
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 5,
+          "article": "212",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 5,
+          "article": "212",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.06084059999557212
+    },
+    {
+      "id": "web-vsrf-13345-paragraph-004",
+      "test_type": "extraction",
+      "source": "https://www.vsrf.ru/files/13345/",
+      "references": [
+        {
+          "start": 17,
+          "end": 59,
+          "text": "статьи 55 Конституции Российской Федерации",
+          "links": [
+            {
+              "law_id": null,
+              "article": "55",
+              "point_article": null,
+              "subpoint_article": null
+            }
+          ],
+          "law_evidence": "The standalone Constitution name is absent from law_aliases.json; no inference from embedded titles of other acts."
+        },
+        {
+          "start": 62,
+          "end": 85,
+          "text": "пункта 2 статьи 1 ГК РФ",
+          "links": [
+            {
+              "law_id": 5,
+              "article": "1",
+              "point_article": "2",
+              "subpoint_article": null
+            }
+          ],
+          "law_evidence": "Unique whole code alias in law_aliases.json."
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": null,
+          "article": "55",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 5,
+          "article": "1",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": null,
+          "article": "55",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 5,
+          "article": "1",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.06970400099817198
+    },
+    {
+      "id": "web-vsrf-13345-paragraph-006",
+      "test_type": "extraction",
+      "source": "https://www.vsrf.ru/files/13345/",
+      "references": [
+        {
+          "start": 7,
+          "end": 31,
+          "text": "части 1 статьи 30 ГПК РФ",
+          "links": [
+            {
+              "law_id": 6,
+              "article": "30",
+              "point_article": "1",
+              "subpoint_article": null
+            }
+          ],
+          "law_evidence": "Unique whole code alias in law_aliases.json."
+        },
+        {
+          "start": 34,
+          "end": 58,
+          "text": "части 1 статьи 38 АПК РФ",
+          "links": [
+            {
+              "law_id": 0,
+              "article": "38",
+              "point_article": "1",
+              "subpoint_article": null
+            }
+          ],
+          "law_evidence": "Unique whole code alias in law_aliases.json."
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 6,
+          "article": "30",
+          "point_article": "1",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 0,
+          "article": "38",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 6,
+          "article": "30",
+          "point_article": "1",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 0,
+          "article": "38",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.22615610199864022
+    },
+    {
+      "id": "web-vsrf-13345-paragraph-007",
+      "test_type": "extraction",
+      "source": "https://www.vsrf.ru/files/13345/",
+      "references": [],
+      "status_code": 200,
+      "expected": [],
+      "predicted": [],
+      "exact_match": true,
+      "elapsed_seconds": 0.06211469999834662
+    },
+    {
+      "id": "web-vsrf-13345-paragraph-009",
+      "test_type": "extraction",
+      "source": "https://www.vsrf.ru/files/13345/",
+      "references": [
+        {
+          "start": 18,
+          "end": 36,
+          "text": "статьей 148 ГПК РФ",
+          "links": [
+            {
+              "law_id": 6,
+              "article": "148",
+              "point_article": null,
+              "subpoint_article": null
+            }
+          ],
+          "law_evidence": "Unique whole code alias in law_aliases.json."
+        },
+        {
+          "start": 41,
+          "end": 59,
+          "text": "статьей 133 АПК РФ",
+          "links": [
+            {
+              "law_id": 0,
+              "article": "133",
+              "point_article": null,
+              "subpoint_article": null
+            }
+          ],
+          "law_evidence": "Unique whole code alias in law_aliases.json."
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 6,
+          "article": "148",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 0,
+          "article": "133",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 6,
+          "article": "148",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 0,
+          "article": "133",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.07564800100226421
+    },
+    {
+      "id": "web-vsrf-13345-paragraph-012",
+      "test_type": "extraction",
+      "source": "https://www.vsrf.ru/files/13345/",
+      "references": [
+        {
+          "start": 20,
+          "end": 50,
+          "text": "пунктами 1, 2 статьи 299 ГК РФ",
+          "links": [
+            {
+              "law_id": 5,
+              "article": "299",
+              "point_article": "1",
+              "subpoint_article": null
+            },
+            {
+              "law_id": 5,
+              "article": "299",
+              "point_article": "2",
+              "subpoint_article": null
+            }
+          ],
+          "law_evidence": "Unique whole code alias in law_aliases.json."
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 5,
+          "article": "299",
+          "point_article": "1",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 5,
+          "article": "299",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 5,
+          "article": "299",
+          "point_article": "1",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 5,
+          "article": "299",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.13801540099666454
+    },
+    {
+      "id": "web-vsrf-13345-paragraph-015",
+      "test_type": "extraction",
+      "source": "https://www.vsrf.ru/files/13345/",
+      "references": [
+        {
+          "start": 16,
+          "end": 41,
+          "text": "пункта 4 статьи 216 ГК РФ",
+          "links": [
+            {
+              "law_id": 5,
+              "article": "216",
+              "point_article": "4",
+              "subpoint_article": null
+            }
+          ],
+          "law_evidence": "Unique whole code alias in law_aliases.json."
+        },
+        {
+          "start": 157,
+          "end": 174,
+          "text": "статьей 305 ГК РФ",
+          "links": [
+            {
+              "law_id": 5,
+              "article": "305",
+              "point_article": null,
+              "subpoint_article": null
+            }
+          ],
+          "law_evidence": "Unique whole code alias in law_aliases.json."
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 5,
+          "article": "216",
+          "point_article": "4",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 5,
+          "article": "305",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 5,
+          "article": "216",
+          "point_article": "4",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 5,
+          "article": "305",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.069631099999242
+    },
+    {
+      "id": "web-vsrf-13345-paragraph-016",
+      "test_type": "extraction",
+      "source": "https://www.vsrf.ru/files/13345/",
+      "references": [],
+      "status_code": 200,
+      "expected": [],
+      "predicted": [],
+      "exact_match": true,
+      "elapsed_seconds": 0.08607230099732988
+    },
+    {
+      "id": "web-vsrf-12452-paragraph-019",
+      "test_type": "extraction",
+      "source": "https://www.vsrf.ru/files/12452/",
+      "references": [
+        {
+          "start": 705,
+          "end": 720,
+          "text": "статья 15 ТК РФ",
+          "links": [
+            {
+              "law_id": 10,
+              "article": "15",
+              "point_article": null,
+              "subpoint_article": null
+            }
+          ],
+          "law_evidence": "Unique whole code alias in law_aliases.json."
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 10,
+          "article": "15",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 10,
+          "article": "15",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.13636140099697514
+    },
+    {
+      "id": "web-vsrf-12452-paragraph-033",
+      "test_type": "extraction",
+      "source": "https://www.vsrf.ru/files/12452/",
+      "references": [],
+      "status_code": 200,
+      "expected": [],
+      "predicted": [],
+      "exact_match": true,
+      "elapsed_seconds": 0.0931573009947897
+    },
+    {
+      "id": "web-vsrf-12452-paragraph-036",
+      "test_type": "extraction",
+      "source": "https://www.vsrf.ru/files/12452/",
+      "references": [
+        {
+          "start": 20,
+          "end": 45,
+          "text": "части 3 статьи 152 ГПК РФ",
+          "links": [
+            {
+              "law_id": 6,
+              "article": "152",
+              "point_article": "3",
+              "subpoint_article": null
+            }
+          ],
+          "law_evidence": "Unique whole code alias in law_aliases.json."
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 6,
+          "article": "152",
+          "point_article": "3",
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 6,
+          "article": "152",
+          "point_article": "3",
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.07996489999641199
+    },
+    {
+      "id": "web-vsrf-12452-paragraph-037",
+      "test_type": "extraction",
+      "source": "https://www.vsrf.ru/files/12452/",
+      "references": [
+        {
+          "start": 84,
+          "end": 100,
+          "text": "статьей 11 ТК РФ",
+          "links": [
+            {
+              "law_id": 10,
+              "article": "11",
+              "point_article": null,
+              "subpoint_article": null
+            }
+          ],
+          "law_evidence": "Unique whole code alias in law_aliases.json."
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 10,
+          "article": "11",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 10,
+          "article": "11",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.07689680100156693
+    }
+  ],
+  "by_test_type": {
+    "extraction": {
+      "evaluated": 19,
+      "exact_matches": 19
+    }
+  },
+  "boundary_scoring": "Not measured: POST /detect returns links without spans."
+}

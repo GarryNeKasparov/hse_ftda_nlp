@@ -1,0 +1,1073 @@
+{
+  "created_at_utc": "2026-10-05T14:43:29.266648+00:00",
+  "dataset": "/home/vipvl/work/hse/nlp/1/homework_1/logs/experiments/reference-20261005T144211.357682Z/data/golden_references.jsonl",
+  "dataset_sha256": "87240b87ea7d443740dca1d79421725dfab94cf524c80358696d686267ff7708",
+  "evaluated": 25,
+  "exact_matches": 21,
+  "accuracy_on_this_fixture_only": 0.84,
+  "elapsed_seconds": 0.921575009037042,
+  "results": [
+    {
+      "id": "nested-subpoint",
+      "test_type": "legacy_mixed",
+      "source": "README.md: citation excerpt with adapted surrounding prose",
+      "references": [
+        {
+          "start": 17,
+          "end": 41,
+          "text": "пп. 1 п. 1 ст. 374 НК РФ",
+          "links": [
+            {
+              "law_id": 15,
+              "article": "374",
+              "point_article": "1",
+              "subpoint_article": "1"
+            }
+          ]
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 15,
+          "article": "374",
+          "point_article": "1",
+          "subpoint_article": "1"
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 15,
+          "article": "374",
+          "point_article": "1",
+          "subpoint_article": "1"
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.1062313010042999
+    },
+    {
+      "id": "article-known-law",
+      "test_type": "legacy_mixed",
+      "source": "README.md: citation excerpt with adapted surrounding prose",
+      "references": [
+        {
+          "start": 25,
+          "end": 38,
+          "text": "ст. 105 УК РФ",
+          "links": [
+            {
+              "law_id": 13,
+              "article": "105",
+              "point_article": null,
+              "subpoint_article": null
+            }
+          ]
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 13,
+          "article": "105",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 13,
+          "article": "105",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.021307399998477194
+    },
+    {
+      "id": "point-without-article",
+      "test_type": "legacy_mixed",
+      "source": "README.md: citation excerpt with adapted surrounding prose",
+      "references": [
+        {
+          "start": 9,
+          "end": 18,
+          "text": "п. 10 АПК",
+          "links": [
+            {
+              "law_id": 0,
+              "article": null,
+              "point_article": "10",
+              "subpoint_article": null
+            }
+          ]
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 0,
+          "article": null,
+          "point_article": "10",
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 0,
+          "article": null,
+          "point_article": "10",
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.009877900003630202
+    },
+    {
+      "id": "part-and-article",
+      "test_type": "legacy_mixed",
+      "source": "README.md: supplied test_text",
+      "references": [
+        {
+          "start": 0,
+          "end": 25,
+          "text": "часть 3, ст. 30.1 КоАП РФ",
+          "links": [
+            {
+              "law_id": 17,
+              "article": "30.1",
+              "point_article": "3",
+              "subpoint_article": null
+            }
+          ]
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 17,
+          "article": "30.1",
+          "point_article": "3",
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [],
+      "exact_match": false,
+      "elapsed_seconds": 0.025501800002530217
+    },
+    {
+      "id": "article-unspecified-law",
+      "test_type": "legacy_mixed",
+      "source": "Discussion: synthetic example for the agreed unspecified-law policy; not a complete README citation",
+      "references": [
+        {
+          "start": 9,
+          "end": 14,
+          "text": "ст. 6",
+          "links": [
+            {
+              "law_id": null,
+              "article": "6",
+              "point_article": null,
+              "subpoint_article": null
+            }
+          ]
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": null,
+          "article": "6",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": null,
+          "article": "6",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.00453850000485545
+    },
+    {
+      "id": "unknown-numbered-law",
+      "test_type": "legacy_mixed",
+      "source": "README.md: citation excerpt with adapted surrounding prose",
+      "references": [
+        {
+          "start": 9,
+          "end": 26,
+          "text": "ст. 37 ФЗ №20-456",
+          "links": [
+            {
+              "law_id": null,
+              "article": "37",
+              "point_article": null,
+              "subpoint_article": null
+            }
+          ]
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": null,
+          "article": "37",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": null,
+          "article": "37",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.014669400996353943
+    },
+    {
+      "id": "unknown-code-name",
+      "test_type": "legacy_mixed",
+      "source": "README.md: supplied test_text",
+      "references": [
+        {
+          "start": 0,
+          "end": 36,
+          "text": "пп. 1 п. 2 ст. 34 рандомного кодекса",
+          "links": [
+            {
+              "law_id": null,
+              "article": "34",
+              "point_article": "2",
+              "subpoint_article": "1"
+            }
+          ]
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": null,
+          "article": "34",
+          "point_article": "2",
+          "subpoint_article": "1"
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": null,
+          "article": "34",
+          "point_article": "2",
+          "subpoint_article": "1"
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.046907200005080085
+    },
+    {
+      "id": "independent-citations",
+      "test_type": "legacy_mixed",
+      "source": "Discussion and README.md: synthetic combination; article 5 chosen for the independent-citations test",
+      "references": [
+        {
+          "start": 0,
+          "end": 11,
+          "text": "ст. 5 НК РФ",
+          "links": [
+            {
+              "law_id": 15,
+              "article": "5",
+              "point_article": null,
+              "subpoint_article": null
+            }
+          ]
+        },
+        {
+          "start": 13,
+          "end": 22,
+          "text": "п. 10 АПК",
+          "links": [
+            {
+              "law_id": 0,
+              "article": null,
+              "point_article": "10",
+              "subpoint_article": null
+            }
+          ]
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 15,
+          "article": "5",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 0,
+          "article": null,
+          "point_article": "10",
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 15,
+          "article": "5",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 0,
+          "article": null,
+          "point_article": "10",
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.022104700001364108
+    },
+    {
+      "id": "subpoint-list",
+      "test_type": "legacy_mixed",
+      "source": "README.md: explicit expected three LawLink records",
+      "references": [
+        {
+          "start": 0,
+          "end": 28,
+          "text": "пп. 1, 2, 3 п. 2 ст. 3 НК РФ",
+          "links": [
+            {
+              "law_id": 15,
+              "article": "3",
+              "point_article": "2",
+              "subpoint_article": "1"
+            },
+            {
+              "law_id": 15,
+              "article": "3",
+              "point_article": "2",
+              "subpoint_article": "2"
+            },
+            {
+              "law_id": 15,
+              "article": "3",
+              "point_article": "2",
+              "subpoint_article": "3"
+            }
+          ]
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 15,
+          "article": "3",
+          "point_article": "2",
+          "subpoint_article": "1"
+        },
+        {
+          "law_id": 15,
+          "article": "3",
+          "point_article": "2",
+          "subpoint_article": "2"
+        },
+        {
+          "law_id": 15,
+          "article": "3",
+          "point_article": "2",
+          "subpoint_article": "3"
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 15,
+          "article": "3",
+          "point_article": "2",
+          "subpoint_article": "1"
+        },
+        {
+          "law_id": 15,
+          "article": "3",
+          "point_article": "2",
+          "subpoint_article": "2"
+        },
+        {
+          "law_id": 15,
+          "article": "3",
+          "point_article": "2",
+          "subpoint_article": "3"
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.0994457010019687
+    },
+    {
+      "id": "subpoint-list-under-point",
+      "test_type": "legacy_mixed",
+      "source": "README.md: supplied test_text",
+      "references": [
+        {
+          "start": 0,
+          "end": 92,
+          "text": "пп. 4, 5, 6 и 8 п. 1 ст. 14 Федерального закона \"О государственной регистрации недвижимости\"",
+          "links": [
+            {
+              "law_id": 174,
+              "article": "14",
+              "point_article": "1",
+              "subpoint_article": "4"
+            },
+            {
+              "law_id": 174,
+              "article": "14",
+              "point_article": "1",
+              "subpoint_article": "5"
+            },
+            {
+              "law_id": 174,
+              "article": "14",
+              "point_article": "1",
+              "subpoint_article": "6"
+            },
+            {
+              "law_id": 174,
+              "article": "14",
+              "point_article": "1",
+              "subpoint_article": "8"
+            }
+          ]
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 174,
+          "article": "14",
+          "point_article": "1",
+          "subpoint_article": "4"
+        },
+        {
+          "law_id": 174,
+          "article": "14",
+          "point_article": "1",
+          "subpoint_article": "5"
+        },
+        {
+          "law_id": 174,
+          "article": "14",
+          "point_article": "1",
+          "subpoint_article": "6"
+        },
+        {
+          "law_id": 174,
+          "article": "14",
+          "point_article": "1",
+          "subpoint_article": "8"
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 174,
+          "article": "14",
+          "point_article": "1",
+          "subpoint_article": "4"
+        },
+        {
+          "law_id": 174,
+          "article": "14",
+          "point_article": "1",
+          "subpoint_article": "5"
+        },
+        {
+          "law_id": 174,
+          "article": "14",
+          "point_article": "1",
+          "subpoint_article": "6"
+        },
+        {
+          "law_id": 174,
+          "article": "14",
+          "point_article": "1",
+          "subpoint_article": "8"
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.23517230200377526
+    },
+    {
+      "id": "lettered-point",
+      "test_type": "legacy_mixed",
+      "source": "README.md: supplied test_text",
+      "references": [
+        {
+          "start": 30,
+          "end": 49,
+          "text": "пункта а ст. 20 АПК",
+          "links": [
+            {
+              "law_id": 0,
+              "article": "20",
+              "point_article": "а",
+              "subpoint_article": null
+            }
+          ]
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 0,
+          "article": "20",
+          "point_article": "а",
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": null,
+          "article": "20",
+          "point_article": "а",
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": false,
+      "elapsed_seconds": 0.03239980099897366
+    },
+    {
+      "id": "misspelled-point-marker",
+      "test_type": "legacy_mixed",
+      "source": "README.md: supplied test_text",
+      "references": [
+        {
+          "start": 0,
+          "end": 109,
+          "text": "подпункту 2 пунта б статьи 22 Федерального закона \"О государственной гражданской службе Российской Федерации\"",
+          "links": [
+            {
+              "law_id": 362,
+              "article": "22",
+              "point_article": "б",
+              "subpoint_article": "2"
+            }
+          ]
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 362,
+          "article": "22",
+          "point_article": "б",
+          "subpoint_article": "2"
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 362,
+          "article": "22",
+          "point_article": "б",
+          "subpoint_article": "2"
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.054410300006566104
+    },
+    {
+      "id": "civil-code",
+      "test_type": "legacy_mixed",
+      "source": "README.md: citation excerpt with adapted surrounding prose",
+      "references": [
+        {
+          "start": 29,
+          "end": 77,
+          "text": "ст. 30 Гражданского кодекса Российской Федерации",
+          "links": [
+            {
+              "law_id": 5,
+              "article": "30",
+              "point_article": null,
+              "subpoint_article": null
+            }
+          ]
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 5,
+          "article": "30",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 5,
+          "article": "30",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.012211200002639089
+    },
+    {
+      "id": "family-code",
+      "test_type": "legacy_mixed",
+      "source": "README.md: supplied test_text",
+      "references": [
+        {
+          "start": 0,
+          "end": 45,
+          "text": "ст. 90 Семейного кодекса Российской Федерации",
+          "links": [
+            {
+              "law_id": 8,
+              "article": "90",
+              "point_article": null,
+              "subpoint_article": null
+            }
+          ]
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 8,
+          "article": "90",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 8,
+          "article": "90",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.012156600998423528
+    },
+    {
+      "id": "labour-code",
+      "test_type": "legacy_mixed",
+      "source": "README.md: supplied test_text",
+      "references": [
+        {
+          "start": 0,
+          "end": 45,
+          "text": "ст. 70 Трудового кодекса Российской Федерации",
+          "links": [
+            {
+              "law_id": 10,
+              "article": "70",
+              "point_article": null,
+              "subpoint_article": null
+            }
+          ]
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 10,
+          "article": "70",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 10,
+          "article": "70",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.01255690000107279
+    },
+    {
+      "id": "civil-procedure-code",
+      "test_type": "legacy_mixed",
+      "source": "README.md: supplied test_text",
+      "references": [
+        {
+          "start": 0,
+          "end": 70,
+          "text": "п. 1 ст. 213 Гражданского процессуального кодекса Российской Федерации",
+          "links": [
+            {
+              "law_id": 6,
+              "article": "213",
+              "point_article": "1",
+              "subpoint_article": null
+            }
+          ]
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 6,
+          "article": "213",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 6,
+          "article": "213",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.03372760000638664
+    },
+    {
+      "id": "consumer-protection-law",
+      "test_type": "legacy_mixed",
+      "source": "README.md: citation excerpt; статье changed to статья",
+      "references": [
+        {
+          "start": 0,
+          "end": 45,
+          "text": "статья 16 Закона \"О защите прав потребителей\"",
+          "links": [
+            {
+              "law_id": 984,
+              "article": "16",
+              "point_article": null,
+              "subpoint_article": null
+            }
+          ]
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 984,
+          "article": "16",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 984,
+          "article": "16",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.008682400002726354
+    },
+    {
+      "id": "personal-data-law",
+      "test_type": "legacy_mixed",
+      "source": "README.md: supplied test_text",
+      "references": [
+        {
+          "start": 0,
+          "end": 42,
+          "text": "п. 2 ст. 14 Закона \"О персональных данных\"",
+          "links": [
+            {
+              "law_id": 330,
+              "article": "14",
+              "point_article": "2",
+              "subpoint_article": null
+            }
+          ]
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 330,
+          "article": "14",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": null,
+          "article": "14",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": false,
+      "elapsed_seconds": 0.016877000001841225
+    },
+    {
+      "id": "accounting-law-yo-variant",
+      "test_type": "legacy_mixed",
+      "source": "README.md: supplied test_text",
+      "references": [
+        {
+          "start": 0,
+          "end": 50,
+          "text": "ст. 19 Федерального закона \"О бухгалтерском учёте\"",
+          "links": [
+            {
+              "law_id": 224,
+              "article": "19",
+              "point_article": null,
+              "subpoint_article": null
+            }
+          ]
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 224,
+          "article": "19",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 224,
+          "article": "19",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.00823590000072727
+    },
+    {
+      "id": "registration-of-entities-law",
+      "test_type": "legacy_mixed",
+      "source": "README.md: supplied test_text",
+      "references": [
+        {
+          "start": 0,
+          "end": 112,
+          "text": "п. р ст. 9 Федерального закона \"О государственной регистрации юридических лиц и индивидуальных предпринимателей\"",
+          "links": [
+            {
+              "law_id": 412,
+              "article": "9",
+              "point_article": "р",
+              "subpoint_article": null
+            }
+          ]
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 412,
+          "article": "9",
+          "point_article": "р",
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 412,
+          "article": "9",
+          "point_article": "р",
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.025888201002089772
+    },
+    {
+      "id": "inspection-law",
+      "test_type": "legacy_mixed",
+      "source": "README.md: supplied test_text",
+      "references": [
+        {
+          "start": 0,
+          "end": 164,
+          "text": "п. 1 ст. 16 Закона \"О защите прав юридических лиц и индивидуальных предпринимателей при осуществлении государственного контроля (надзора) и муниципального контроля\"",
+          "links": [
+            {
+              "law_id": 284,
+              "article": "16",
+              "point_article": "1",
+              "subpoint_article": null
+            }
+          ]
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 284,
+          "article": "16",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": null,
+          "article": "16",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": false,
+      "elapsed_seconds": 0.05234259999997448
+    },
+    {
+      "id": "competition-law",
+      "test_type": "legacy_mixed",
+      "source": "README.md: supplied test_text",
+      "references": [
+        {
+          "start": 0,
+          "end": 49,
+          "text": "ст. 12 Федерального закона \"О защите конкуренции\"",
+          "links": [
+            {
+              "law_id": 332,
+              "article": "12",
+              "point_article": null,
+              "subpoint_article": null
+            }
+          ]
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 332,
+          "article": "12",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 332,
+          "article": "12",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.00943589999951655
+    },
+    {
+      "id": "police-law",
+      "test_type": "legacy_mixed",
+      "source": "README.md: supplied test_text",
+      "references": [
+        {
+          "start": 0,
+          "end": 46,
+          "text": "п. 3 статьи 20 Федерального закона \"О полиции\"",
+          "links": [
+            {
+              "law_id": 249,
+              "article": "20",
+              "point_article": "3",
+              "subpoint_article": null
+            }
+          ]
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": 249,
+          "article": "20",
+          "point_article": "3",
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": 249,
+          "article": "20",
+          "point_article": "3",
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.03485000100044999
+    },
+    {
+      "id": "law-alias-not-listed",
+      "test_type": "legacy_mixed",
+      "source": "README.md: supplied test_text; act title is not present in law_aliases.json",
+      "references": [
+        {
+          "start": 0,
+          "end": 62,
+          "text": "ст. 6 Федерального закона \"О банках и банковской деятельности\"",
+          "links": [
+            {
+              "law_id": null,
+              "article": "6",
+              "point_article": null,
+              "subpoint_article": null
+            }
+          ]
+        }
+      ],
+      "status_code": 200,
+      "expected": [
+        {
+          "law_id": null,
+          "article": "6",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "predicted": [
+        {
+          "law_id": null,
+          "article": "6",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ],
+      "exact_match": true,
+      "elapsed_seconds": 0.016974699996353593
+    },
+    {
+      "id": "ordinary-prose-negative",
+      "test_type": "legacy_mixed",
+      "source": "README.md: ordinary-prose excerpt capitalized as a standalone sentence",
+      "references": [],
+      "status_code": 200,
+      "expected": [],
+      "predicted": [],
+      "exact_match": true,
+      "elapsed_seconds": 0.005069699996965937
+    }
+  ],
+  "by_test_type": {
+    "legacy_mixed": {
+      "evaluated": 25,
+      "exact_matches": 21
+    }
+  },
+  "boundary_scoring": "Not measured: POST /detect returns links without spans."
+}

@@ -1,0 +1,89 @@
+{
+  "started_at_utc": "2026-10-01T20:01:17.443342+00:00",
+  "invocation": [
+    "/tmp/legal-grammar-venv/bin/python",
+    "tools/run_grammar_experiments.py"
+  ],
+  "workspace": "/home/vipvl/work/hse/nlp/1/homework_1",
+  "python_executable": "/tmp/legal-grammar-venv/bin/python",
+  "python_version": "3.14.4",
+  "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+  "dependencies": {
+    "lark": "1.3.1",
+    "interegular": "0.3.3"
+  },
+  "files": {
+    "reference-grammar.bnf": {
+      "source": "docs/reference-grammar.bnf",
+      "sha256": "d746044331c731c6f5fc867c23a07397171b602a87d1c03c029d277e6b3e6365"
+    },
+    "grammar-examples.json": {
+      "source": "docs/grammar-examples.json",
+      "sha256": "f1a5fa008265c52acc11fc9141d8c116fa9106f93428e3b1dd04f60b44737d01"
+    },
+    "requirements-grammar.txt": {
+      "source": "requirements-grammar.txt",
+      "sha256": "0f41cd4535b3535db8169a49a057169472dd90f5d7709c970306974f57b3c264"
+    },
+    "tools/analyze_grammar.py": {
+      "source": "tools/analyze_grammar.py",
+      "sha256": "2dcfe1f1dc736731e71e75063a52221cce892a0f0adc4ca97cf897dd21c33997"
+    },
+    "tools/analyze_with_lark.py": {
+      "source": "tools/analyze_with_lark.py",
+      "sha256": "f99f38ef68a76498a7c9b56112aebe8e097046cdde7d3f230c400fa8f0001cfd"
+    },
+    "tools/run_grammar_experiments.py": {
+      "source": "tools/run_grammar_experiments.py",
+      "sha256": "ef78010713e41bd787f48b6225fa3f9bab535521ebbb414e063d021db2b45a2e"
+    },
+    "reference-grammar.lark": {
+      "source": "generated from reference-grammar.bnf",
+      "sha256": "0d0ad1a01905cfee3dd9765e9abc935db11f2ed8fd268ee46ec6efc2be76b6e4"
+    }
+  },
+  "commands": [
+    {
+      "argv": [
+        "/tmp/legal-grammar-venv/bin/python",
+        "/home/vipvl/work/hse/nlp/1/homework_1/docs/experiments/20261001T200117.441131Z/tools/analyze_grammar.py",
+        "--grammar",
+        "/home/vipvl/work/hse/nlp/1/homework_1/docs/experiments/20261001T200117.441131Z/reference-grammar.bnf",
+        "--examples",
+        "/home/vipvl/work/hse/nlp/1/homework_1/docs/experiments/20261001T200117.441131Z/grammar-examples.json",
+        "--output",
+        "/home/vipvl/work/hse/nlp/1/homework_1/docs/experiments/20261001T200117.441131Z/grammar-analysis.md"
+      ],
+      "cwd": "/home/vipvl/work/hse/nlp/1/homework_1",
+      "started_at_utc": "2026-10-01T20:01:17.509210+00:00",
+      "finished_at_utc": "2026-10-01T20:01:17.797362+00:00",
+      "duration_seconds": 0.2875329870003043,
+      "exit_code": 0,
+      "stdout": "analyze_grammar.stdout.log",
+      "stderr": "analyze_grammar.stderr.log",
+      "report": "grammar-analysis.md"
+    },
+    {
+      "argv": [
+        "/tmp/legal-grammar-venv/bin/python",
+        "/home/vipvl/work/hse/nlp/1/homework_1/docs/experiments/20261001T200117.441131Z/tools/analyze_with_lark.py",
+        "--grammar",
+        "/home/vipvl/work/hse/nlp/1/homework_1/docs/experiments/20261001T200117.441131Z/reference-grammar.bnf",
+        "--examples",
+        "/home/vipvl/work/hse/nlp/1/homework_1/docs/experiments/20261001T200117.441131Z/grammar-examples.json",
+        "--output",
+        "/home/vipvl/work/hse/nlp/1/homework_1/docs/experiments/20261001T200117.441131Z/lark-grammar-analysis.md"
+      ],
+      "cwd": "/home/vipvl/work/hse/nlp/1/homework_1",
+      "started_at_utc": "2026-10-01T20:01:17.798279+00:00",
+      "finished_at_utc": "2026-10-01T20:01:22.203383+00:00",
+      "duration_seconds": 4.403568888999871,
+      "exit_code": 0,
+      "stdout": "analyze_with_lark.stdout.log",
+      "stderr": "analyze_with_lark.stderr.log",
+      "report": "lark-grammar-analysis.md"
+    }
+  ],
+  "status": "passed",
+  "finished_at_utc": "2026-10-01T20:01:22.203745+00:00"
+}
