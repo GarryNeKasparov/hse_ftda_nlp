@@ -29,6 +29,19 @@ class ReferenceAnalyzerTests(unittest.TestCase):
         self.assertIn("0", law_ids(candidate))
         self.assertEqual(node_values(candidate, "ID"), ["5"])
 
+    def test_keeps_full_law_alias_when_sentence_comma_follows(self):
+        text = "Согласно пункту 2 статьи 5 НК РФ, применяется правило."
+        expected_span = "пункту 2 статьи 5 НК РФ"
+
+        result = self.analyzer.analyze(text)
+
+        matches = [candidate for candidate in result.candidates
+                   if text[candidate.start:candidate.end] == expected_span]
+        self.assertEqual(len(matches), 1)
+        self.assertTrue(matches[0].complete)
+        law_names = [leaf.value for leaf in leaves(matches[0]) if leaf.kind == "LAW"]
+        self.assertIn("НК РФ", law_names)
+
     def test_interprets_pp_as_subpoint_under_point(self):
         text = "пп. 1 п. 1 ст. 374 НК РФ"
 

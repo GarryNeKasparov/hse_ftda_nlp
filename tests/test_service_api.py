@@ -98,6 +98,42 @@ class ServiceApiTests(unittest.TestCase):
                     "subpoint_article": None}
         self.assertEqual(response.json(), {"links": [expected, expected]})
 
+    def test_prose_with_one_nested_citation_returns_one_link(self):
+        response = self.client.post("/detect", json={
+            "text": "Согласно пункту 2 статьи 5 НК РФ, применяется правило.",
+        })
+
+        self.assertEqual(response.json(), {"links": [{
+            "law_id": 15,
+            "article": "5",
+            "point_article": "2",
+            "subpoint_article": None,
+        }]})
+
+    def test_comma_before_prose_conjunction_keeps_citation_complete(self):
+        response = self.client.post("/detect", json={
+            "text": "В тексте указана статья 5 НК РФ, и она применяется на практике.",
+        })
+
+        self.assertEqual(response.json(), {"links": [{
+            "law_id": 15,
+            "article": "5",
+            "point_article": None,
+            "subpoint_article": None,
+        }]})
+
+    def test_incomplete_longer_citation_does_not_emit_its_prefix(self):
+        response = self.client.post("/detect", json={"text": "статьи 5 и"})
+
+        self.assertEqual(response.json(), {"links": []})
+
+    def test_unsupported_range_does_not_emit_its_first_number(self):
+        response = self.client.post("/detect", json={
+            "text": "пункты 2-4 статьи 10 НК РФ",
+        })
+
+        self.assertEqual(response.json(), {"links": []})
+
     def test_recovers_after_an_unfinished_reference_without_emitting_it(self):
         response = self.client.post("/detect", json={
             "text": "статьи 5 и; затем ст. 6 НК РФ и ст. 7 ГК РФ",

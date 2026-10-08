@@ -587,16 +587,38 @@ class ReferenceAnalyzer:
                                 grouped[span][ast] = None
                         next_index = bisect_left(starts_at, span[1])
                         next_piece = raw[next_index] if next_index < len(raw) else None
-                        if next_piece is not None and self._is_unfinished_connector(next_piece.value):
+                        if next_piece is not None:
                             following_index = bisect_left(starts_at, next_piece.end)
                             following = raw[following_index] if following_index < len(raw) else None
                             reference_starts = {"ARTICLE", "PART", "POINT", "SUBPOINT", "PP",
                                                 "PARAGRAPH", "SELF_ARTICLE", "SELF_PART",
                                                 "SELF_POINT", "SELF_SUBPOINT", "SELF_PARAGRAPH"}
+                            is_connector = self._is_unfinished_connector(next_piece.value)
+                            if next_piece.value == ",":
+                                comma_followers = edges.get(following_index, ())
+                                selector_kinds = {"ID", "ORDINAL", "RANGE", "IN"}
+                                join_kinds = {"AND", "OR", "AND_OR"}
+                                is_connector = False
+                                if any(edge.token.kind in join_kinds for edge in comma_followers):
+                                    is_connector = following is None
+                                if (any(edge.token.kind in join_kinds for edge in comma_followers)
+                                        and following is not None):
+                                    after_join = bisect_left(starts_at, following.end)
+                                    join_followers = edges.get(after_join, ())
+                                    has_citation_continuation = any(
+                                        edge.token.kind in selector_kinds | reference_starts
+                                        for edge in join_followers)
+                                    after_join_token = (raw[after_join]
+                                                        if after_join < len(raw) else None)
+                                    ends_with_punctuation = (
+                                        after_join_token is not None
+                                        and not after_join_token.value[:1].isalnum())
+                                    is_connector = (has_citation_continuation
+                                                    or ends_with_punctuation)
                             continues = (following_index in edges and any(
                                 edge.token.kind in reference_starts
                                 for edge in edges[following_index]))
-                            if following is None or not continues:
+                            if is_connector and (following is None or not continues):
                                 incomplete_spans[span] = next_piece.end
                     for edge in sorted(edges.get(cursor, ()), key=lambda item: (
                             item.token.kind, item.token.value, item.after)):
@@ -632,4 +654,4 @@ class ReferenceAnalyzer:
     @staticmethod
     def _is_unfinished_connector(value: str) -> bool:
         """Recognize a dangling list, range, or hierarchy connector."""
-        return value in _RANGE_MARKERS or value == "," or value.casefold() in {"и", "или", "в"}
+        return value in _RANGE_MARKERS or value.casefold() in {"и", "или", "в"}

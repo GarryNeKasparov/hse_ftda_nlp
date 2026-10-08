@@ -80,6 +80,47 @@ class SemanticAnalyzerTests(unittest.TestCase):
         self.assertEqual(result.references[1].provisions[0].law_id, 5)
         self.assertEqual(result.references[1].provisions[0].point, "2")
 
+    def test_one_citation_in_prose_has_one_final_occurrence_span(self):
+        text = "Согласно пункту 2 статьи 5 НК РФ, применяется правило."
+
+        result = self.analyze(text)
+
+        self.assertEqual(len(result.references), 1)
+        self.assertEqual(result.references[0].span,
+                         (text.index("пункт"), text.index(",")))
+        self.assertEqual(result.references[0].provisions, (
+            self.path(law_id=15, article="5", point="2"),
+        ))
+
+    def test_prose_conjunction_after_citation_does_not_shorten_its_span(self):
+        text = "В тексте указана статья 5 НК РФ, и она применяется на практике."
+
+        result = self.analyze(text)
+
+        self.assertEqual(len(result.references), 1)
+        self.assertEqual(result.references[0].span,
+                         (text.index("статья"), text.index(",")))
+        self.assertEqual(result.references[0].provisions,
+                         (self.path(law_id=15, article="5"),))
+
+    def test_two_prose_citations_keep_source_order_and_duplicates(self):
+        result = self.analyze(
+            "Согласно ст. 5 НК РФ, действует правило. "
+            "Ст. 5 НК РФ также упоминается ниже.")
+
+        self.assertEqual([item.provisions for item in result.references], [
+            (self.path(law_id=15, article="5"),),
+            (self.path(law_id=15, article="5"),),
+        ])
+        self.assertLess(result.references[0].start, result.references[1].start)
+
+    def test_unsupported_longer_range_does_not_leak_its_first_number(self):
+        result = self.analyze("пункты 2-4 статьи 10 НК РФ")
+
+        self.assertEqual(result.references, ())
+        self.assertTrue(any(item.code == "competing_syntax_alternatives"
+                            for item in result.diagnostics))
+
     @staticmethod
     def path(*, law_id, article=None, part=None, point=None, subpoint=None,
              paragraph=None, law_status="known_unique", law_candidate_ids=()):
