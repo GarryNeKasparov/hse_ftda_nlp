@@ -15,10 +15,10 @@ coordinated branches. A mentioned law may be known, unknown, unspecified, or
 ambiguous. Misinterpreting the structure can attach a point to the wrong
 article or resolve a law to the wrong identity.
 
-The service previously returned fixed sample links. It now connects syntax
-analysis, an explicit shared semantic analyzer, and a `/detect` mapper. Simple
-references and scalar selector lists are supported. Divergent structures,
-unresolved mappings, and range expansion remain future work.
+The service connects syntax analysis, an explicit shared semantic analyzer,
+and a `/detect` mapper. Coordinated branches, supported integer ranges, and
+projection into the fixed LawLink fields are implemented. Contextual
+resolution and workload evaluation remain future work.
 
 ## Solution
 
@@ -34,9 +34,8 @@ mapping so that uncertainty at one stage does not silently invent information
 at another. Preserve repeated textual occurrences and expand grouped legal
 references within their own branches.
 
-The remaining implementation work includes deeper semantic interpretation of
-AST alternatives, selection of ambiguous reference occurrences, output mapping,
-and representative workload evaluation. The explicit shared `SemanticAnalyzer`
+The remaining implementation work includes contextual interpretation,
+representative workload evaluation, and quality measurement. The explicit shared `SemanticAnalyzer`
 stage now consumes `Analysis` and returns `SemanticAnalysis` containing
 `SemanticReference` occurrences and expanded `ProvisionPath` values. Further
 semantic tickets extend this same stage and representation. Policies listed
@@ -86,7 +85,7 @@ can serve as definitive acceptance criteria.
 - Keep the existing analyzer interface, ReferenceAnalyzer.analyze(text), as the public extraction boundary. Its Analysis contains lexical candidates, candidate spans, AST alternatives, and diagnostics.
 - Use the revised pipeline: original text, tokenization, normalization alternatives, lexical recognition, candidate discovery and parsing, AST, contextual resolution when defined, and output mapping. Unknown-law recognition and law-alias matching belong to lexical recognition; boundary discovery may be integrated with parsing.
 - Retain original Python string offsets and source spelling. Lookup normalization must not change the coordinate system of the input text.
-- Preserve morphological alternatives and ambiguous law IDs rather than choosing the first dictionary or morphology result.
+- Preserve morphological alternatives and all ambiguous law IDs internally. For public projection, use the smallest candidate ID when a law alias remains ambiguous and record an internal diagnostic.
 - Use the supplied law alias database for known documents. The database has no established guarantee of covering every law mentioned in input.
 - Recognize unknown laws initially through explicit numbered federal-law mentions, quoted titles, and names ending in an inflected form of кодекс. Exact unknown-name boundaries remain heuristic and need evaluation.
 - Interpret пп. as a subpoint for this assignment. The raw abbreviation may remain represented by a dedicated terminal, but its grammar production must be a subpoint production.
@@ -100,11 +99,11 @@ can serve as definitive acceptance criteria.
 - Expand selector lists across levels within one branch. Keep separate coordinated branches separate. Expand unambiguous integer ranges inclusively.
 - Preserve competing atomic-identifier and range readings where hyphens are ambiguous. Letter-range and shortened dotted-range policies are still open.
 - Extract an unspecified-law reference with unresolved identity. Initially, its eventual law_id is null. A future contextual resolver may assign identity only after an explicit inference policy has been agreed.
-- Preserve recognizable unknown-law references with unresolved identity and internal supporting evidence; their eventual law_id is null. An ambiguous law must retain its candidate IDs internally and must not silently receive one of them.
+- Preserve recognizable unknown-law references with unresolved identity and internal supporting evidence; their eventual law_id is null. An ambiguous law retains all candidate IDs and status internally; its projected law_id is the smallest candidate ID.
 - Retain self and anaphoric structural targets for contextual resolution. The parser does not supply a numeric identifier for настоящей статьи or a law ID for указанного закона.
 - Retain incomplete candidate prefixes with local diagnostics and continue searching for later legal references. A connector joining a valid later reference is not automatically a dangling continuation.
 - Preserve repeated occurrences in textual order. Final occurrence selection must handle overlapping prefixes from candidate discovery without treating each prefix as a separate final mention; the selection policy remains open.
-- Project article to article, a sole explicit point or part to point_article, and subpoint to subpoint_article. Projection when both point and part occur, or a paragraph is present, remains open because the response schema cannot express every internal level.
+- Project article to article, point to point_article, and subpoint to subpoint_article. A part alone maps to point_article; when both part and point occur, project the point and omit the part. Omit paragraph from the response while retaining other supported values. Record internal diagnostics when hierarchy levels are omitted.
 - Integrate the analyzer and subsequent output stages into the service after the relevant interpretation and projection policies are defined. Reuse initialized recognition resources across requests rather than constructing the full analyzer for every request.
 - Package the grammar, recognition dependencies, law aliases, and service code in the Docker image. Keep port 8978 and the /detect route required by the assignment.
 - Save each experiment in a separate log directory with input/source snapshots, hashes, interpreter and dependency versions, command, duration, exit status, and captured output. Historical runs retain their original results.
@@ -142,9 +141,9 @@ can serve as definitive acceptance criteria.
 
 ## Further Notes
 
-The current milestone is an MVP service for simple, unambiguous individual
-references, backed by the raw-text analyzer and AST alternatives. The latest
-recorded analyzer and API acceptance run passes 23 tests. The structural
+The current milestone is a raw-text reference service backed by the analyzer
+and AST alternatives. The latest recorded analyzer and API acceptance run
+passes 60 tests. The structural
 experiment passes all 35 annotated cases, with four cases admitting multiple
 derivations and 35 LL(1) conflict cells. Strict LALR rejects the current
 grammar. These measures describe the selected fixtures; they are not
@@ -155,8 +154,6 @@ The following decisions remain necessary for the affected implementation stages:
 
 - **Occurrence selection:** how to choose final mentions from overlapping candidate prefixes while preserving separate repeated occurrences.
 - **Structural interpretation:** how to select article/law attachment when alternatives describe different provisions, and how to recognize alternatives with equal meaning.
-- **API projection:** how simultaneous point and part levels and paragraph references map into the limited output schema; whether instructor clarification is available.
-- **Ambiguous law output:** how unresolved multiple candidate IDs are represented in the final response while retaining internal evidence.
 - **Range interpretation:** how to distinguish atomic hyphenated labels from ranges, and whether letter or shortened dotted ranges can be expanded safely.
 - **Context inference:** what identifies an unambiguous law antecedent, where its scope ends, and how self and anaphoric provision references resolve. The user has deferred the unresolved case; null identity remains the initial behavior.
 - **Coverage and thresholds:** how unknown-law boundaries, fuzzy thresholds, false positives, and runtime behave on a representative annotated corpus.

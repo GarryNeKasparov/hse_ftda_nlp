@@ -158,6 +158,42 @@ class ServiceApiTests(unittest.TestCase):
             for point in ("2", "3", "4")
         ]})
 
+    def test_projects_point_when_part_is_also_present(self):
+        response = self.client.post("/detect", json={
+            "text": "пункт 2 части 1 статьи 15",
+        })
+
+        self.assertEqual(response.json(), {"links": [{
+            "law_id": None,
+            "article": "15",
+            "point_article": "2",
+            "subpoint_article": None,
+        }]})
+
+    def test_projects_supported_levels_and_ignores_paragraph(self):
+        response = self.client.post("/detect", json={
+            "text": "абзац 2 подпункта 3 пункта 4 статьи 10 НК РФ",
+        })
+
+        self.assertEqual(response.json(), {"links": [{
+            "law_id": 15,
+            "article": "10",
+            "point_article": "4",
+            "subpoint_article": "3",
+        }]})
+
+    def test_uses_minimum_law_id_for_an_ambiguous_alias(self):
+        response = self.client.post("/detect", json={
+            "text": "статья 2 ФЗ №3-ФЗ",
+        })
+
+        self.assertEqual(response.json(), {"links": [{
+            "law_id": 249,
+            "article": "2",
+            "point_article": None,
+            "subpoint_article": None,
+        }]})
+
     def test_recovers_after_an_unfinished_reference_without_emitting_it(self):
         response = self.client.post("/detect", json={
             "text": "статьи 5 и; затем ст. 6 НК РФ и ст. 7 ГК РФ",

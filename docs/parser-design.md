@@ -1,9 +1,9 @@
 # Legal reference parser: agreed rules
 
 This document records the design and current implementation boundary. The
-grammar has an executable raw-text analyzer and a first API projection for
-simple, unambiguous references. Contextual resolution and grouped expansion
-remain deferred.
+grammar has an executable raw-text analyzer and an API projection that keeps
+all supported fields even when the internal path has extra levels. Contextual
+resolution remains deferred.
 
 ## Current analyzer
 
@@ -11,9 +11,9 @@ remain deferred.
 `analyze(text) -> Analysis`. The analysis contains lexical candidates,
 source-positioned candidate spans, grammar-preserving AST alternatives, and
 candidate-local diagnostics. It keeps overlapping spans and repeated
-occurrences. The service currently projects complete single-chain ASTs into
-`LawLink` records and leaves grouped or structurally ambiguous candidates for
-later work.
+occurrences. The service projects interpreted provision paths into `LawLink`
+records, expanding coordinated groups and preserving unsupported levels
+internally for diagnostic purposes.
 
 The implementation tokenizes the original string and retains Python string
 offsets, applies Unicode normalization and case folding for lookup, uses
@@ -28,8 +28,8 @@ ambiguity.
 This is a first extraction milestone, not a claim of complete Russian legal
 reference coverage. Unknown-document detection is heuristic; fuzzy thresholds
 are implementation defaults; offsets are Python string indices; no context
-resolver assigns omitted laws; and API schema mapping, range/list expansion,
-publication coordinates, and workload benchmarking remain open.
+resolver assigns omitted laws; publication coordinates and workload
+benchmarking remain open.
 
 The acceptance suite is run and snapshotted with
 `tools/run_reference_experiment.py`. Each invocation stores input hashes,
@@ -53,7 +53,7 @@ environment, duration, exit code, and stdout/stderr under
 - Try exact matching after normalization first.
 - Permit bounded Levenshtein matching for full hierarchy words and full law names when needed.
 - Require exact matching after normalization for short abbreviations and provision identifiers.
-- Leave ambiguous law matches unresolved.
+- Keep ambiguous law matches unresolved internally with all candidate IDs. The API deterministically projects the smallest ID, as agreed in ticket 08.
 - The fuzzy thresholds and method for normalizing Russian inflections remain undecided.
 
 ## Expansion
@@ -109,16 +109,17 @@ evidence or explicit agreement.
 
 ## Output and context decisions
 
-- Ask the instructor how simultaneous point and part levels should map into `LawLink`; no mapping has been selected.
+- When both point and part occur, project the point into `point_article` and omit the part from the API response. A part without a point maps to `point_article`.
+- Omit paragraphs from the API response but continue projecting article, point/part, and subpoint values. Retain paragraph values internally.
+- For an ambiguous law alias, project the smallest candidate ID to `law_id`. Retain the ambiguous status and all candidate IDs internally and record a mapping diagnostic.
 - Initially return `law_id=null` for references without an explicit law. Contextual inheritance is deferred.
-- Preserve distinct hierarchy levels in the proposed internal representation, pending agreement on the grammar and output mapping.
+- Preserve distinct hierarchy levels internally even when the API projection omits one.
 
 ## Open decisions
 
 - Exact extraction strategy, grammar, and parser algorithm.
 - Where to retain supporting information about unresolved laws.
 - Exact unknown-name boundaries and lexical rules.
-- Representation of simultaneous points and parts, and paragraphs: the supplied output schema has only `point_article` for points or parts and no paragraph field.
 - What counts as an unambiguous antecedent if contextual resolution is added later.
 - Whether to support alternate meanings of abbreviations such as `пп.` in legal texts beyond this assignment's README convention.
 - The ordering used for letter ranges and treatment of inserted identifiers within ranges.
@@ -128,7 +129,7 @@ evidence or explicit agreement.
 
 See [legal-reference-research.md](legal-reference-research.md) for primary evidence, inferred rules, and retrieval limitations.
 
-- Keep paragraph, subpoint, point, article part, and article distinct internally; the API projection remains unresolved.
+- Keep paragraph, subpoint, point, article part, and article distinct internally; the API projects only fields it supports.
 - Preserve atomic identifiers, including multiple dots, letter-plus-number labels, superscript suffixes, and hyphens. Marker type determines the stated level; identifier shape alone does not.
 - Distinguish single selectors, lists, and ranges before expansion.
 - Represent coordination and shared tails explicitly. A shared tail may be an article or a law; Cartesian expansion is scoped to one branch.

@@ -1,4 +1,4 @@
-"""Project simple, unambiguous AST references into the LawLink response shape."""
+"""Project supported provision fields into the fixed LawLink response shape."""
 
 from __future__ import annotations
 
@@ -32,21 +32,27 @@ def map_semantic_analysis(analysis: SemanticAnalysis) -> LawLinkMapping:
     diagnostics = []
     for reference in analysis.references:
         for provision in reference.provisions:
-            link = _map_provision(provision)
-            if link is not None:
-                links.append(link)
-            else:
+            links.append(_map_provision(provision))
+            if provision.part is not None and provision.point is not None:
                 diagnostics.append(SemanticDiagnostic(
-                    "provision_not_representable_in_law_link", reference.start, reference.end))
+                    "unsupported_hierarchy_levels_omitted", reference.start, reference.end))
+            if provision.paragraph is not None:
+                diagnostics.append(SemanticDiagnostic(
+                    "unsupported_hierarchy_levels_omitted", reference.start, reference.end))
+            if provision.law_status == "known_ambiguous":
+                diagnostics.append(SemanticDiagnostic(
+                    "ambiguous_law_identity_resolved_to_minimum", reference.start,
+                    reference.end))
     return LawLinkMapping(tuple(links), tuple(diagnostics))
 
 
-def _map_provision(provision: ProvisionPath) -> LawLinkData | None:
-    """Map one path when its levels fit the four-field output contract."""
-    if provision.paragraph is not None or (provision.part is not None and provision.point is not None):
-        return None
+def _map_provision(provision: ProvisionPath) -> LawLinkData:
+    """Project each supported field and leave other hierarchy levels internal."""
+    law_id = provision.law_id
+    if provision.law_status == "known_ambiguous" and provision.law_candidate_ids:
+        law_id = min(provision.law_candidate_ids)
     return LawLinkData(
-        law_id=provision.law_id,
+        law_id=law_id,
         article=provision.article,
         point_article=provision.point if provision.point is not None else provision.part,
         subpoint_article=provision.subpoint,

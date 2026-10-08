@@ -44,3 +44,13 @@ One interpreted target within a legal reference. It retains law identity
 status and candidate IDs, plus separate article, part, point, subpoint, and
 paragraph values until the output mapper projects it to the narrower API
 schema.
+
+**LawLink projection**:
+The response keeps its existing fields: `law_id`, `article`, `point_article`,
+and `subpoint_article`. If both part and point are present, `point_article`
+contains the point and the part is omitted from the response. A part alone maps
+to `point_article`. Paragraphs remain internal and do not prevent supported
+fields from being returned. For an ambiguous law alias, the response uses the
+smallest candidate ID; the internal path retains the ambiguity status and all
+candidate IDs. The mapper records diagnostics for omitted hierarchy levels and
+for this deterministic ambiguous-ID projection.

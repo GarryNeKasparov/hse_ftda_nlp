@@ -31,12 +31,16 @@ local issue files.
   integer endpoints expand inclusively; ASCII hyphen ambiguities and deferred
   range forms remain unresolved with diagnostics. Verification is in
   `logs/experiments/issue-07-20261008T111053Z/`.
+- Issue 08 is resolved. LawLink projects supported fields while retaining
+  complete paths internally; ambiguous law aliases project their smallest
+  candidate ID with a diagnostic. Verification is in
+  `logs/experiments/issue-08-20261008T114056Z/`.
 
 ## Fog
 
 - Selector expansion is implemented in issue 03; divergent branch shapes and
-  shared tails in issue 06; safe integer ranges in issue 07. API projection
-  when point and part coexist remains issue 08.
+  shared tails in issue 06; safe integer ranges and LawLink projection in
+  issues 07 and 08.
 - The current service API does not expose source spans; boundary scoring stays
   out of this issue.
 
@@ -59,14 +63,14 @@ the previously completed MVP. Dependency numbers refer to this table.
 | [05 — Concrete grammar ambiguities](issues/05-concrete-grammar-ambiguities.md) | resolved | 03 | Investigate actual alternatives and settle attachment rules |
 | [06 — Coordination and shared tails](issues/06-coordination-and-shared-tails.md) | resolved | 03, 05 | Grammar-supported branches through semantic expansion and API output |
 | [07 — Safe range expansion](issues/07-safe-range-expansion.md) | resolved | 03 | Expand agreed integer ranges while preserving uncertain identifiers |
-| [08 — LawLink projection policy](issues/08-lawlink-projection-policy.md) | ready-for-agent | 03 | Decide outputs for paths the API cannot fully represent |
+| [08 — LawLink projection policy](issues/08-lawlink-projection-policy.md) | resolved | 03 | Decide outputs for paths the API cannot fully represent |
 | [09 — Context resolution](issues/09-contextual-reference-resolution.md) | ready-for-agent | 04, 08 | Resolve context-dependent targets under explicitly agreed rules |
 | [10 — Quality, runtime, packaging](issues/10-quality-runtime-and-packaging.md) | ready-for-agent | 04–09 | Assess real-text quality, workload runtime, and Docker execution |
 
 ## Frontier
 
-Ticket 08 is the next numbered open ticket. Its projection policy question
-remains unsettled; ready-for-agent does not imply it has already been chosen.
+Ticket 09 is the next numbered open ticket. Its context-inference rules remain
+open and should be agreed before implementing inheritance behavior.
 
 ## Comments
 
