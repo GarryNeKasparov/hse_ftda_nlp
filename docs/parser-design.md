@@ -2,8 +2,8 @@
 
 This document records the design and current implementation boundary. The
 grammar has an executable raw-text analyzer and an API projection that keeps
-all supported fields even when the internal path has extra levels. Contextual
-resolution remains deferred.
+all supported fields even when the internal path has extra levels. A separate
+left-to-right pass resolves law and article context under the rules below.
 
 ## Current analyzer
 
@@ -40,7 +40,7 @@ environment, duration, exit code, and stdout/stderr under
 
 - Normalize before structural parsing, preserving meaningful punctuation and original text positions.
 - Build the grammar and assess its properties before choosing a parser algorithm. The proposed order subpoint → point or part → article → law is a hypothesis to assess against more complex examples, not a guaranteed property of the inputs.
-- Extract references without an explicit law with `law_id=null`. Contextual law inheritance is a separate responsibility from structural parsing; any inheritance requires an unambiguous antecedent, whose criteria remain undecided.
+- Extract references without an explicit law as unspecified. A separate left-to-right resolver inherits the latest law context and resolves explicit anaphoric/self targets from the latest compatible context; plain text does not supply enclosing-document identity.
 - Preserve explicitly stated levels: `п. 10 АПК` has point `10` and no article.
 - Resolve known laws through normalized aliases in `law_aliases.json`.
 - Interpret `пп.` as a subpoint in accordance with the README's examples: `пп. 1 п. 1 ст. 374 НК РФ`.
@@ -112,7 +112,7 @@ evidence or explicit agreement.
 - When both point and part occur, project the point into `point_article` and omit the part from the API response. A part without a point maps to `point_article`.
 - Omit paragraphs from the API response but continue projecting article, point/part, and subpoint values. Retain paragraph values internally.
 - For an ambiguous law alias, project the smallest candidate ID to `law_id`. Retain the ambiguous status and all candidate IDs internally and record a mapping diagnostic.
-- Initially return `law_id=null` for references without an explicit law. Contextual inheritance is deferred.
+- Inherit an omitted law from the latest resolved law context in the input. Resolve anaphoric/self article targets from the most recent compatible article context; retain unresolved targets when no compatible context exists.
 - Preserve distinct hierarchy levels internally even when the API projection omits one.
 
 ## Open decisions
@@ -120,7 +120,6 @@ evidence or explicit agreement.
 - Exact extraction strategy, grammar, and parser algorithm.
 - Where to retain supporting information about unresolved laws.
 - Exact unknown-name boundaries and lexical rules.
-- What counts as an unambiguous antecedent if contextual resolution is added later.
 - Whether to support alternate meanings of abbreviations such as `пп.` in legal texts beyond this assignment's README convention.
 - The ordering used for letter ranges and treatment of inserted identifiers within ranges.
 - Distinguishing hyphenated atomic identifiers from ranges and preserving superscripts in output.

@@ -8,6 +8,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 
 from law_link_mapper import map_semantic_analysis
+from contextual_resolver import ContextualResolver
 from reference_parser import ReferenceAnalyzer
 from semantic_analyzer import SemanticAnalyzer
 
@@ -32,6 +33,7 @@ async def lifespan(app: FastAPI):
     aliases_path = Path(__file__).resolve().parent / "law_aliases.json"
     app.state.reference_analyzer = ReferenceAnalyzer.from_alias_file(aliases_path)
     app.state.semantic_analyzer = SemanticAnalyzer()
+    app.state.contextual_resolver = ContextualResolver()
     yield
 
 
@@ -50,6 +52,7 @@ async def get_law_links(data: TextRequest) -> LinksResponse:
     """
     analysis = app.state.reference_analyzer.analyze(data.text)
     semantic = app.state.semantic_analyzer.analyze(analysis)
+    semantic = app.state.contextual_resolver.resolve(semantic)
     mapped = map_semantic_analysis(semantic)
     return LinksResponse(links=[LawLink(**asdict(item)) for item in mapped.links])
 

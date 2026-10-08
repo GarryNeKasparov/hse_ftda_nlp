@@ -571,6 +571,7 @@ class ReferenceAnalyzer:
                     visited.add(path_key)
                     tree = None
                     if path[-1].kind in {"ID", "ORDINAL", "LAW", "SELF_LAW", "ANAPHORIC_LAW",
+                                         "ANAPHORIC_ARTICLE",
                                          "SELF_ARTICLE", "SELF_PART", "SELF_POINT",
                                          "SELF_SUBPOINT", "SELF_PARAGRAPH"}:
                         try:

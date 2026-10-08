@@ -52,6 +52,82 @@ class ServiceApiTests(unittest.TestCase):
             "subpoint_article": None,
         }]})
 
+    def test_inherits_last_explicit_law_for_a_later_reference(self):
+        response = self.client.post("/detect", json={
+            "text": "Статья 5 НК РФ. Статья 6",
+        })
+
+        self.assertEqual(response.json(), {"links": [
+            {"law_id": 15, "article": "5", "point_article": None,
+             "subpoint_article": None},
+            {"law_id": 15, "article": "6", "point_article": None,
+             "subpoint_article": None},
+        ]})
+
+    def test_resolves_anaphoric_article_and_law_from_previous_reference(self):
+        response = self.client.post("/detect", json={
+            "text": ("Пункт 2 статьи 5 НК РФ. "
+                     "Пункт 3 указанной статьи указанного закона"),
+        })
+
+        self.assertEqual(response.json(), {"links": [
+            {"law_id": 15, "article": "5", "point_article": "2",
+             "subpoint_article": None},
+            {"law_id": 15, "article": "5", "point_article": "3",
+             "subpoint_article": None},
+        ]})
+
+    def test_uses_recent_article_as_fallback_for_present_article(self):
+        response = self.client.post("/detect", json={
+            "text": "Статья 5 НК РФ. Пункт 2 настоящей статьи",
+        })
+
+        self.assertEqual(response.json(), {"links": [
+            {"law_id": 15, "article": "5", "point_article": None,
+             "subpoint_article": None},
+            {"law_id": 15, "article": "5", "point_article": "2",
+             "subpoint_article": None},
+        ]})
+
+    def test_keeps_present_article_unresolved_without_prior_context(self):
+        response = self.client.post("/detect", json={
+            "text": "Пункт 2 настоящей статьи",
+        })
+
+        self.assertEqual(response.json(), {"links": [{
+            "law_id": None, "article": None, "point_article": "2",
+            "subpoint_article": None,
+        }]})
+
+    def test_anaphoric_article_uses_most_recent_compatible_law_context(self):
+        response = self.client.post("/detect", json={
+            "text": ("Статья 5 НК РФ. Статья 6 ГК РФ. "
+                     "Пункт 3 указанной статьи НК РФ"),
+        })
+
+        self.assertEqual(response.json(), {"links": [
+            {"law_id": 15, "article": "5", "point_article": None,
+             "subpoint_article": None},
+            {"law_id": 5, "article": "6", "point_article": None,
+             "subpoint_article": None},
+            {"law_id": 15, "article": "5", "point_article": "3",
+             "subpoint_article": None},
+        ]})
+
+    def test_new_explicit_law_replaces_context_for_later_omitted_laws(self):
+        response = self.client.post("/detect", json={
+            "text": "Статья 5 НК РФ. Статья 6 ГК РФ. Статья 7",
+        })
+
+        self.assertEqual(response.json(), {"links": [
+            {"law_id": 15, "article": "5", "point_article": None,
+             "subpoint_article": None},
+            {"law_id": 5, "article": "6", "point_article": None,
+             "subpoint_article": None},
+            {"law_id": 5, "article": "7", "point_article": None,
+             "subpoint_article": None},
+        ]})
+
     def test_preserves_point_without_inventing_an_article(self):
         response = self.client.post("/detect", json={"text": "п. 10 АПК"})
 

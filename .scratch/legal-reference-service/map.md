@@ -35,6 +35,10 @@ local issue files.
   complete paths internally; ambiguous law aliases project their smallest
   candidate ID with a diagnostic. Verification is in
   `logs/experiments/issue-08-20261008T114056Z/`.
+- Issue 09 is resolved. A separate left-to-right resolver carries law and
+  article context, uses the latest compatible entity for anaphoric/self
+  targets, and retains unresolved values when context is absent. Verification
+  is in `logs/experiments/issue-09-20261008T124607Z/`.
 
 ## Fog
 
@@ -64,13 +68,12 @@ the previously completed MVP. Dependency numbers refer to this table.
 | [06 — Coordination and shared tails](issues/06-coordination-and-shared-tails.md) | resolved | 03, 05 | Grammar-supported branches through semantic expansion and API output |
 | [07 — Safe range expansion](issues/07-safe-range-expansion.md) | resolved | 03 | Expand agreed integer ranges while preserving uncertain identifiers |
 | [08 — LawLink projection policy](issues/08-lawlink-projection-policy.md) | resolved | 03 | Decide outputs for paths the API cannot fully represent |
-| [09 — Context resolution](issues/09-contextual-reference-resolution.md) | ready-for-agent | 04, 08 | Resolve context-dependent targets under explicitly agreed rules |
+| [09 — Context resolution](issues/09-contextual-reference-resolution.md) | resolved | 04, 08 | Resolve context-dependent targets under explicitly agreed rules |
 | [10 — Quality, runtime, packaging](issues/10-quality-runtime-and-packaging.md) | ready-for-agent | 04–09 | Assess real-text quality, workload runtime, and Docker execution |
 
 ## Frontier
 
-Ticket 09 is the next numbered open ticket. Its context-inference rules remain
-open and should be agreed before implementing inheritance behavior.
+Ticket 10 is the next numbered open ticket: quality, runtime, and packaging.
 
 ## Comments
 

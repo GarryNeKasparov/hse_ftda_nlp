@@ -45,6 +45,13 @@ status and candidate IDs, plus separate article, part, point, subpoint, and
 paragraph values until the output mapper projects it to the narrower API
 schema.
 
+**Contextual resolver**:
+A separate left-to-right pass over semantic references. It carries the latest
+explicit law and article, fills omitted law identities, and resolves
+self/anaphoric targets from the most recent compatible context. Text-only
+input does not provide the enclosing document, so `настоящей статьи/закона`
+uses backward context as a fallback and otherwise remains unresolved.
+
 **LawLink projection**:
 The response keeps its existing fields: `law_id`, `article`, `point_article`,
 and `subpoint_article`. If both part and point are present, `point_article`

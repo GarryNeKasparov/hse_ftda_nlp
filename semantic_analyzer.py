@@ -15,7 +15,9 @@ class ProvisionPath:
     law_id: int | None
     law_status: str
     law_candidate_ids: tuple[int, ...]
+    law_target_status: str = "unspecified"
     article: str | None = None
+    article_status: str = "unspecified"
     part: str | None = None
     point: str | None = None
     subpoint: str | None = None
@@ -149,7 +151,9 @@ class SemanticAnalyzer:
                             law_id=law_id,
                             law_status=law.law_status or "unknown",
                             law_candidate_ids=law.law_ids,
-                            article=path.article, part=path.part, point=path.point,
+                            law_target_status="explicit",
+                            article=path.article, article_status=path.article_status,
+                            part=path.part, point=path.point,
                             subpoint=path.subpoint, paragraph=path.paragraph)
                             for path in occurrence.provisions)
                         propagated.extend(provisions)
@@ -222,14 +226,23 @@ class SemanticAnalyzer:
         if len(law_leaves) > 1:
             raise _UnsupportedSemantics("multiple_law_mentions")
         law = law_leaves[0] if law_leaves else None
+        article_target = next((leaf for leaf in self._walk_leaves(tree)
+                               if leaf.kind in {"SELF_ARTICLE", "ANAPHORIC_ARTICLE"}), None)
+        article_status = ("self" if article_target.kind == "SELF_ARTICLE" else "anaphoric") \
+            if article_target is not None else "unspecified"
         law_status = ("unspecified" if law is None else
                       law.law_status if law.kind == "LAW" else
                       "self" if law.kind == "SELF_LAW" else "anaphoric")
+        law_target_status = ("unspecified" if law is None else
+                             "explicit" if law.kind == "LAW" else
+                             "self" if law.kind == "SELF_LAW" else "anaphoric")
         candidate_ids = law.law_ids if law is not None else ()
         law_id = candidate_ids[0] if law_status == "known_unique" and len(candidate_ids) == 1 else None
-        provisions = tuple(ProvisionPath(law_id=law_id, law_status=law_status,
-                                         law_candidate_ids=candidate_ids, **path)
-                           for path in paths)
+        provisions = tuple(ProvisionPath(
+            law_id=law_id, law_status=law_status, law_candidate_ids=candidate_ids,
+            law_target_status=law_target_status,
+            article_status=("explicit" if path.get("article") is not None else article_status),
+            **path) for path in paths)
         if not provisions:
             raise _UnsupportedSemantics("empty_provision_expansion")
         return provisions
@@ -240,7 +253,10 @@ class SemanticAnalyzer:
                        if node.kind == level_kind]
         if len(level_nodes) != 1:
             raise _UnsupportedSemantics("missing_or_repeated_hierarchy_level")
-        values = self._selector_values(level_nodes[0])
+        structural_self = (field == "article" and any(
+            leaf.kind in {"SELF_ARTICLE", "ANAPHORIC_ARTICLE"}
+            for leaf in self._walk_leaves(level_nodes[0])))
+        values = [None] if structural_self else self._selector_values(level_nodes[0])
         children = self._child_groups(group)
         if children:
             lower_paths = [path for child in children

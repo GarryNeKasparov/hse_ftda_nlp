@@ -90,7 +90,7 @@ can serve as definitive acceptance criteria.
 - Recognize unknown laws initially through explicit numbered federal-law mentions, quoted titles, and names ending in an inflected form of кодекс. Exact unknown-name boundaries remain heuristic and need evaluation.
 - Interpret пп. as a subpoint for this assignment. The raw abbreviation may remain represented by a dedicated terminal, but its grammar production must be a subpoint production.
 - Keep paragraph, subpoint, point, article part, article, and law distinct internally. Omitted levels remain absent.
-- Use one explicit `SemanticAnalyzer` between syntax analysis and output mapping. It consumes `Analysis` and returns `SemanticAnalysis` containing `SemanticReference` occurrences with expanded `ProvisionPath` values. Later semantic tickets extend this same stage and shared representation.
+- Use one explicit `SemanticAnalyzer` between syntax analysis and output mapping. It consumes `Analysis` and returns `SemanticAnalysis` containing `SemanticReference` occurrences with expanded `ProvisionPath` values. A separate `ContextualResolver` pass consumes these references before mapping; later semantic tickets extend the same representation.
 - Expand comma and conjunction selector lists along a provision path, combining nested selector values only within that path. Preserve separate occurrences and law identities. Compare competing AST alternatives by their provision paths before accepting an interpretation.
 - Build and assess the CFG before choosing deterministic parsing rules. The current implementation uses Lark Earley and retains explicit alternatives; evidence does not support treating the current grammar as LL or LR.
 - Use normalization and exact matching first. Bounded Levenshtein fallback applies to supported full hierarchy words and sufficiently long law names. Short abbreviations and provision identifiers require exact matching after normalization. Existing edit thresholds are prototype defaults pending corpus evaluation.
@@ -98,9 +98,9 @@ can serve as definitive acceptance criteria.
 - Compare AST alternatives by the provision paths they describe before adopting attachment preferences. Different tree groupings can describe the same provisions. Equality of interpretation must not deduplicate repeated source occurrences.
 - Expand selector lists across levels within one branch. Keep separate coordinated branches separate. Expand unambiguous integer ranges inclusively.
 - Preserve competing atomic-identifier and range readings where hyphens are ambiguous. Letter-range and shortened dotted-range policies are still open.
-- Extract an unspecified-law reference with unresolved identity. Initially, its eventual law_id is null. A future contextual resolver may assign identity only after an explicit inference policy has been agreed.
+- Extract an unspecified-law reference with unresolved identity before contextual resolution. A separate left-to-right resolver fills an omitted law from the most recent law context and retains unresolved identity if no context exists.
 - Preserve recognizable unknown-law references with unresolved identity and internal supporting evidence; their eventual law_id is null. An ambiguous law retains all candidate IDs and status internally; its projected law_id is the smallest candidate ID.
-- Retain self and anaphoric structural targets for contextual resolution. The parser does not supply a numeric identifier for настоящей статьи or a law ID for указанного закона.
+- Retain self and anaphoric structural targets for contextual resolution. The parser does not supply a numeric identifier for настоящей статьи or a law ID for указанного закона. The resolver uses the most recent compatible context as a fallback because enclosing-document context is unavailable in text-only input.
 - Retain incomplete candidate prefixes with local diagnostics and continue searching for later legal references. A connector joining a valid later reference is not automatically a dangling continuation.
 - Preserve repeated occurrences in textual order. Final occurrence selection must handle overlapping prefixes from candidate discovery without treating each prefix as a separate final mention; the selection policy remains open.
 - Project article to article, point to point_article, and subpoint to subpoint_article. A part alone maps to point_article; when both part and point occur, project the point and omit the part. Omit paragraph from the response while retaining other supported values. Record internal diagnostics when hierarchy levels are omitted.
@@ -134,7 +134,7 @@ can serve as definitive acceptance criteria.
 - Deduplicating repeated textual occurrences in the extraction response.
 - Adding response fields to express the entire internal AST without an explicit API-contract decision.
 - Applying alternate meanings of пп. from broader legal writing to this assignment's default interpretation.
-- Automatically inheriting laws or resolving self and anaphoric references before context rules are agreed.
+- Inferring enclosing-document identity that is absent from the input text.
 - Treating letter ranges, shortened dotted ranges, or atomic hyphenated identifiers as settled expansion cases.
 - Committing to arbitrary intervening prose, parenthetical interruptions, forward-order references, chapters, appendices, or publication-coordinate parsing in the initial conventional-reference milestone. These remain potential coverage extensions to assess against task examples.
 - Automatic deployment, public repository publication, or submission to the instructor as part of specification drafting.
@@ -143,7 +143,7 @@ can serve as definitive acceptance criteria.
 
 The current milestone is a raw-text reference service backed by the analyzer
 and AST alternatives. The latest recorded analyzer and API acceptance run
-passes 60 tests. The structural
+passes 66 tests. The structural
 experiment passes all 35 annotated cases, with four cases admitting multiple
 derivations and 35 LL(1) conflict cells. Strict LALR rejects the current
 grammar. These measures describe the selected fixtures; they are not
@@ -155,7 +155,6 @@ The following decisions remain necessary for the affected implementation stages:
 - **Occurrence selection:** how to choose final mentions from overlapping candidate prefixes while preserving separate repeated occurrences.
 - **Structural interpretation:** how to select article/law attachment when alternatives describe different provisions, and how to recognize alternatives with equal meaning.
 - **Range interpretation:** how to distinguish atomic hyphenated labels from ranges, and whether letter or shortened dotted ranges can be expanded safely.
-- **Context inference:** what identifies an unambiguous law antecedent, where its scope ends, and how self and anaphoric provision references resolve. The user has deferred the unresolved case; null identity remains the initial behavior.
 - **Coverage and thresholds:** how unknown-law boundaries, fuzzy thresholds, false positives, and runtime behave on a representative annotated corpus.
 
 The existing research records evidence of broader legal conventions, including
@@ -163,6 +162,6 @@ alternate uses of пп. The user's latest assignment-specific decision governs
 the implementation described here.
 
 This specification is published in the project's local Markdown issue tracker.
-Its ready-for-agent status permits work on agreed requirements. Resolve the
-open interpretation policies explicitly before implementing their affected
-output cases.
+Its ready-for-agent status permits work on agreed requirements. Resolve any
+remaining interpretation policies explicitly before implementing their
+affected output cases.

@@ -218,7 +218,13 @@ class SemanticAnalyzerTests(unittest.TestCase):
         if law_id is not None and not law_candidate_ids:
             law_candidate_ids = (law_id,)
         return ProvisionPath(law_id=law_id, law_status=law_status,
-                             law_candidate_ids=law_candidate_ids, article=article,
+                             law_candidate_ids=law_candidate_ids,
+                             law_target_status=("unspecified" if law_status == "unspecified"
+                                                else "self" if law_status == "self"
+                                                else "anaphoric" if law_status == "anaphoric"
+                                                else "explicit"),
+                             article=article,
+                             article_status="explicit" if article is not None else "unspecified",
                              part=part, point=point, subpoint=subpoint,
                              paragraph=paragraph)
 

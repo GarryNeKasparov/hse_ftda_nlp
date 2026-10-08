@@ -10,7 +10,7 @@
 start ::= reference reference_tail
 reference_tail ::= join reference reference_tail | EPS
 reference ::= branches target_optional
-target_optional ::= LAW | SELF_LAW | ANAPHORIC_LAW | EPS
+target_optional ::= LAW target_optional | SELF_LAW target_optional | ANAPHORIC_LAW target_optional | SELF_ARTICLE target_optional | ANAPHORIC_ARTICLE target_optional | EPS
 branches ::= provision branch_tail
 branch_tail ::= join provision branch_tail | EPS
 provision ::= article_group | part_group | point_group | subpoint_group | paragraph_group
