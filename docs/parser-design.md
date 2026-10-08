@@ -60,9 +60,14 @@ environment, duration, exit code, and stdout/stderr under
 
 - Emit one output per individual provision.
 - Expand lists at different levels within one branch into all combinations. Coordinated branches denote alternatives and must remain separate.
-- Expand integer ranges inclusively.
-- Letter ranges were initially agreed to expand in Russian alphabetical order. Research shows actual act labels may skip letters; the expansion alphabet is therefore under review and must not silently invent absent target labels.
-- The previously chosen interpretation of `43.2–6` as `43.2` through `43.6` is under review: legal texts contain single dotted identifiers with hyphens. Preserve this distinction in the grammar discussion rather than treating every hyphen as a range operator.
+- Expand inclusive ranges only when the lexer identifies an en dash (`–`) or
+  em dash (`—`) as `RANGE` and both endpoints are plain decimal integer IDs.
+  Emit values in ascending written order; reject reversed endpoints. A short
+  hyphen-minus (`-`) remains ambiguous with an atomic identifier and is not
+  expanded automatically. Reject ranges that would produce more than 1,000
+  values to bound one citation's expansion.
+- Letter ranges remain deferred. Legal labels may skip letters, so the expansion alphabet and whether to omit absent labels need an explicit policy.
+- Dotted and shortened ranges such as `43.2–6` remain unresolved and are not expanded. Legal texts contain atomic dotted identifiers with hyphens, so range expansion must not infer omitted endpoint prefixes.
 - Preserve repeated reference occurrences in textual order. Any future deduplication is a separate post-processing step.
 
 ## Cases to assess before settling the grammar

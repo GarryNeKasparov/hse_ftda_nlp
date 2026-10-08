@@ -61,6 +61,7 @@ _GROUP_FIELDS = {
     "paragraph_group": ("paragraph_level", "paragraph"),
 }
 _LIST_CONNECTORS = {"COMMA", "AND", "OR", "AND_OR"}
+_MAX_RANGE_VALUES = 1000
 
 
 class _UnsupportedSemantics(ValueError):
@@ -70,10 +71,9 @@ class _UnsupportedSemantics(ValueError):
 class SemanticAnalyzer:
     """Convert parsed references into provision paths and expand selector lists.
 
-    This is the shared semantic stage for future work on parse alternatives,
-    coordinated branches, and contextual targets. This version interprets
-    complete references with scalar or coordinated scalar selectors; divergent
-    branch structures remain unresolved.
+    This is the shared semantic stage for parse alternatives, coordinated
+    branches, and contextual targets. It expands branch-local selectors and
+    carries common parent levels and a single final law tail to each branch.
     """
 
     def analyze(self, syntax: Analysis) -> SemanticAnalysis:
@@ -134,6 +134,28 @@ class SemanticAnalyzer:
                     end = max(leaf.end for leaf in leaves)
                     occurrences.append(SemanticReference(
                         start, end, self._interpret_tree(reference)))
+                law_leaves = [leaf for leaf in self._walk_leaves(tree)
+                              if leaf.kind in {"LAW", "SELF_LAW", "ANAPHORIC_LAW"}]
+                if (len(reference_nodes) > 1 and len(law_leaves) == 1
+                        and law_leaves[0].kind == "LAW"
+                        and any(leaf is law_leaves[0]
+                                for leaf in self._walk_leaves(reference_nodes[-1]))):
+                    law = law_leaves[0]
+                    law_id = (law.law_ids[0] if law.law_status == "known_unique"
+                              and len(law.law_ids) == 1 else None)
+                    propagated = []
+                    for occurrence in occurrences:
+                        provisions = tuple(ProvisionPath(
+                            law_id=law_id,
+                            law_status=law.law_status or "unknown",
+                            law_candidate_ids=law.law_ids,
+                            article=path.article, part=path.part, point=path.point,
+                            subpoint=path.subpoint, paragraph=path.paragraph)
+                            for path in occurrence.provisions)
+                        propagated.extend(provisions)
+                    occurrences = [SemanticReference(
+                        min(item.start for item in occurrences),
+                        max(item.end for item in occurrences), tuple(propagated))]
                 alternatives.append(tuple(sorted(occurrences,
                                                  key=lambda item: (item.start, item.end))))
             except _UnsupportedSemantics as error:
@@ -142,9 +164,50 @@ class SemanticAnalyzer:
             code = ("competing_syntax_alternatives" if len(candidate.alternatives) > 1
                     else failures[0])
             raise _UnsupportedSemantics(code)
-        if not alternatives or any(result != alternatives[0] for result in alternatives[1:]):
+        if not alternatives:
             raise _UnsupportedSemantics("competing_syntax_alternatives")
-        return alternatives[0]
+        if all(result == alternatives[0] for result in alternatives[1:]):
+            return alternatives[0]
+        return self._select_refined_alternative(alternatives)
+
+    @staticmethod
+    def _select_refined_alternative(
+            alternatives: list[tuple[SemanticReference, ...]]) -> tuple[SemanticReference, ...]:
+        """Choose a uniquely more complete reading when paths otherwise agree."""
+        flattened = [tuple(path for reference in result for path in reference.provisions)
+                     for result in alternatives]
+        if not flattened or any(len(paths) != len(flattened[0]) for paths in flattened[1:]):
+            raise _UnsupportedSemantics("competing_syntax_alternatives")
+
+        def refines(more, less):
+            fields = ("article", "part", "point", "subpoint", "paragraph")
+            for field in fields:
+                less_value = getattr(less, field)
+                more_value = getattr(more, field)
+                if less_value is not None and more_value != less_value:
+                    return False
+            if less.law_status not in {"unspecified", more.law_status}:
+                return False
+            if (less.law_status != "unspecified"
+                    and (less.law_id, less.law_candidate_ids)
+                    != (more.law_id, more.law_candidate_ids)):
+                return False
+            return True
+
+        ranks = [sum(sum(getattr(path, field) is not None for field in
+                         ("article", "part", "point", "subpoint", "paragraph"))
+                     + (path.law_status != "unspecified") for path in paths)
+                 for paths in flattened]
+        best_rank = max(ranks)
+        best = [index for index, rank in enumerate(ranks) if rank == best_rank]
+        if any(flattened[index] != flattened[best[0]] for index in best[1:]):
+            raise _UnsupportedSemantics("competing_syntax_alternatives")
+        selected = best[0]
+        if any(not all(refines(preferred, alternative)
+                       for preferred, alternative in zip(flattened[selected], paths))
+               for paths in flattened):
+            raise _UnsupportedSemantics("competing_syntax_alternatives")
+        return alternatives[selected]
 
     def _interpret_tree(self, tree: AstNode) -> tuple[ProvisionPath, ...]:
         provision_groups = [node for node in self._walk_nodes(tree)
@@ -153,15 +216,7 @@ class SemanticAnalyzer:
                        if not self._has_ancestor_group(tree, node)]
         if not root_groups:
             raise _UnsupportedSemantics("expected_provision_branch")
-        if any(node.kind and node.kind.endswith("_children_tail") and node.children
-               for node in self._walk_nodes(tree)):
-            raise _UnsupportedSemantics("coordinated_child_groups_not_yet_resolved")
         paths = [path for group in root_groups for path in self._expand_group(group)]
-        if len(root_groups) > 1:
-            path_shapes = {tuple(sorted(key for key, value in path.items() if value is not None))
-                           for path in paths}
-            if len(path_shapes) != 1:
-                raise _UnsupportedSemantics("coordinated_branches_not_yet_resolved")
         law_leaves = [leaf for leaf in self._walk_leaves(tree)
                       if leaf.kind in {"LAW", "SELF_LAW", "ANAPHORIC_LAW"}]
         if len(law_leaves) > 1:
@@ -187,10 +242,9 @@ class SemanticAnalyzer:
             raise _UnsupportedSemantics("missing_or_repeated_hierarchy_level")
         values = self._selector_values(level_nodes[0])
         children = self._child_groups(group)
-        if len(children) > 1:
-            raise _UnsupportedSemantics("coordinated_child_groups_not_yet_resolved")
         if children:
-            lower_paths = self._expand_group(children[0])
+            lower_paths = [path for child in children
+                           for path in self._expand_group(child)]
         else:
             lower_paths = [{}]
         return [{**lower, field: value} for lower in lower_paths for value in values]
@@ -207,10 +261,27 @@ class SemanticAnalyzer:
         for item in items:
             leaves = tuple(self._walk_leaves(item))
             identifiers = [leaf for leaf in leaves if leaf.kind in {"ID", "ORDINAL"}]
+            ranges = [leaf for leaf in leaves if leaf.kind == "RANGE"]
+            if ranges:
+                if (len(ranges) != 1 or len(identifiers) != 2
+                        or any(identifier.kind != "ID" for identifier in identifiers)):
+                    raise _UnsupportedSemantics("unsupported_range_endpoints")
+                first, last = (identifier.value for identifier in identifiers)
+                if any(not endpoint.isascii() or not endpoint.isdigit()
+                       for endpoint in (first, last)):
+                    raise _UnsupportedSemantics("unsupported_range_endpoints")
+                try:
+                    first_number, last_number = int(first), int(last)
+                except ValueError as error:
+                    raise _UnsupportedSemantics("unsupported_range_endpoints") from error
+                if first_number > last_number:
+                    raise _UnsupportedSemantics("reversed_range")
+                if last_number - first_number + 1 > _MAX_RANGE_VALUES:
+                    raise _UnsupportedSemantics("range_too_large")
+                values.extend(str(number) for number in range(first_number, last_number + 1))
+                continue
             if len(identifiers) != 1 or identifiers[0].kind != "ID":
                 raise _UnsupportedSemantics("non_scalar_or_ordinal_selector")
-            if any(leaf.kind == "RANGE" for leaf in leaves):
-                raise _UnsupportedSemantics("range_expansion_not_yet_resolved")
             values.append(identifiers[0].value)
         connectors = [leaf.kind for leaf in self._walk_leaves(selector)
                       if leaf.kind in {"COMMA", "AND", "OR", "AND_OR"}]

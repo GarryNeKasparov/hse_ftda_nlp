@@ -89,6 +89,19 @@ class ServiceApiTests(unittest.TestCase):
              "subpoint_article": None},
         ]})
 
+    def test_shared_law_applies_to_coordinated_article_branches(self):
+        response = self.client.post("/detect", json={
+            "text": ("Согласно пункту 2 статьи 5 и пункту 3 статьи 6 НК РФ, "
+                     "применяется правило."),
+        })
+
+        self.assertEqual(response.json(), {"links": [
+            {"law_id": 15, "article": "5", "point_article": "2",
+             "subpoint_article": None},
+            {"law_id": 15, "article": "6", "point_article": "3",
+             "subpoint_article": None},
+        ]})
+
     def test_preserves_repeated_occurrences_as_separate_links(self):
         response = self.client.post("/detect", json={
             "text": "статья 5 НК РФ и статья 5 НК РФ",
@@ -133,6 +146,17 @@ class ServiceApiTests(unittest.TestCase):
         })
 
         self.assertEqual(response.json(), {"links": []})
+
+    def test_expands_an_explicit_integer_range_through_the_api(self):
+        response = self.client.post("/detect", json={
+            "text": "Согласно пунктам 2–4 статьи 10 НК РФ, действует правило.",
+        })
+
+        self.assertEqual(response.json(), {"links": [
+            {"law_id": 15, "article": "10", "point_article": point,
+             "subpoint_article": None}
+            for point in ("2", "3", "4")
+        ]})
 
     def test_recovers_after_an_unfinished_reference_without_emitting_it(self):
         response = self.client.post("/detect", json={

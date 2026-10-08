@@ -18,12 +18,25 @@ local issue files.
   comma could truncate a citation span before the final law token; the parser
   now distinguishes that punctuation from a dangling list connector. All 43
   tests passed; the experiment log is in `logs/experiments/issue-04-20261008T093122Z/`.
+- Issue 05 is resolved. The experiment found genuine shared-law alternatives
+  and equivalent tree alternatives, and records a bounded rule: one explicit
+  law closing a compact coordinated citation scopes all its branches. The
+  user confirmed the mixed-depth grouping for issue 06. Its annotated
+  experiment is in `logs/experiments/issue-05-20261008T095039Z/`.
+- Issue 06 is resolved. The shared semantic analyzer expands coordinated
+  branches and common tails, including the confirmed mixed-depth example. The
+  LawLink limitation for paths containing both a part and point remains with
+  issue 08. Verification is in `logs/experiments/issue-06-20261008T101500Z/`.
+- Issue 07 is resolved. Explicit en/em dash ranges with ascending plain
+  integer endpoints expand inclusively; ASCII hyphen ambiguities and deferred
+  range forms remain unresolved with diagnostics. Verification is in
+  `logs/experiments/issue-07-20261008T111053Z/`.
 
 ## Fog
 
-- Selector expansion and basic same-shape coordinated branches are implemented
-  in issue 03. Divergent branch shapes, ranges, and API projection when point
-  and part coexist remain separate tickets and follow-up decisions.
+- Selector expansion is implemented in issue 03; divergent branch shapes and
+  shared tails in issue 06; safe integer ranges in issue 07. API projection
+  when point and part coexist remains issue 08.
 - The current service API does not expose source spans; boundary scoring stays
   out of this issue.
 
@@ -43,19 +56,17 @@ the previously completed MVP. Dependency numbers refer to this table.
 | [02 — Occurrences and recovery](issues/02-repeated-occurrences-and-recovery.md) | resolved | None | Preserve repeated mentions and recover after unfinished candidates |
 | [03 — Semantic analyzer and lists](issues/03-semantic-analyzer-and-selector-lists.md) | resolved | MVP | Shared provision paths and selector-list expansion |
 | [04 — Final citation boundaries](issues/04-final-occurrence-boundaries.md) | resolved | 03 | Validate and fix overlapping-candidate selection |
-| [05 — Concrete grammar ambiguities](issues/05-concrete-grammar-ambiguities.md) | ready-for-agent | 03 | Investigate actual alternatives and settle attachment rules |
-| [06 — Coordination and shared tails](issues/06-coordination-and-shared-tails.md) | ready-for-agent | 03, 05 | Grammar-supported branches through semantic expansion and API output |
-| [07 — Safe range expansion](issues/07-safe-range-expansion.md) | ready-for-agent | 03 | Expand agreed integer ranges while preserving uncertain identifiers |
+| [05 — Concrete grammar ambiguities](issues/05-concrete-grammar-ambiguities.md) | resolved | 03 | Investigate actual alternatives and settle attachment rules |
+| [06 — Coordination and shared tails](issues/06-coordination-and-shared-tails.md) | resolved | 03, 05 | Grammar-supported branches through semantic expansion and API output |
+| [07 — Safe range expansion](issues/07-safe-range-expansion.md) | resolved | 03 | Expand agreed integer ranges while preserving uncertain identifiers |
 | [08 — LawLink projection policy](issues/08-lawlink-projection-policy.md) | ready-for-agent | 03 | Decide outputs for paths the API cannot fully represent |
 | [09 — Context resolution](issues/09-contextual-reference-resolution.md) | ready-for-agent | 04, 08 | Resolve context-dependent targets under explicitly agreed rules |
 | [10 — Quality, runtime, packaging](issues/10-quality-runtime-and-packaging.md) | ready-for-agent | 04–09 | Assess real-text quality, workload runtime, and Docker execution |
 
 ## Frontier
 
-Ticket 05 is the first numbered open, unclaimed ticket. Tickets 07 and 08 are
-also unblocked. Their recorded policy questions remain questions until
-settled; ready-for-agent allows that work to begin and does not imply that
-the answers have already been chosen.
+Ticket 08 is the next numbered open ticket. Its projection policy question
+remains unsettled; ready-for-agent does not imply it has already been chosen.
 
 ## Comments
 

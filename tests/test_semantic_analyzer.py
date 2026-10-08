@@ -54,6 +54,41 @@ class SemanticAnalyzerTests(unittest.TestCase):
         self.assertTrue(all(item.article == "299" and item.law_id == 5
                             for item in result.references[0].provisions))
 
+    def test_shared_law_applies_to_each_coordinated_article_branch(self):
+        result = self.analyze("пункт 2 статьи 5 и пункт 3 статьи 6 НК РФ")
+
+        self.assertEqual(result.references[0].provisions, (
+            self.path(law_id=15, article="5", point="2"),
+            self.path(law_id=15, article="6", point="3"),
+        ))
+        self.assertEqual(result.diagnostics, ())
+
+    def test_mixed_depth_branches_inherit_article_without_crossing(self):
+        result = self.analyze("пункт 2 части 1 и часть 3 статьи 15")
+
+        self.assertEqual(result.references[0].provisions, (
+            self.path(law_id=None, law_status="unspecified", article="15",
+                      part="1", point="2"),
+            self.path(law_id=None, law_status="unspecified", article="15",
+                      part="3"),
+        ))
+        self.assertEqual(result.diagnostics, ())
+
+    def test_expands_mixed_depth_branches_under_shared_article_and_law(self):
+        text = ("пунктами 2, 4, 6, подпунктами 1 и 2 пункта 9 "
+                "статьи 1483 ГК РФ")
+
+        result = self.analyze(text)
+
+        self.assertEqual(result.references[0].provisions, (
+            self.path(law_id=5, article="1483", point="2"),
+            self.path(law_id=5, article="1483", point="4"),
+            self.path(law_id=5, article="1483", point="6"),
+            self.path(law_id=5, article="1483", point="9", subpoint="1"),
+            self.path(law_id=5, article="1483", point="9", subpoint="2"),
+        ))
+        self.assertEqual(result.diagnostics, ())
+
     def test_expands_lists_at_two_levels_within_their_shared_branch(self):
         text = "пп. 1, 2 п. 3, 4 ст. 5 НК РФ"
 
@@ -119,6 +154,60 @@ class SemanticAnalyzerTests(unittest.TestCase):
 
         self.assertEqual(result.references, ())
         self.assertTrue(any(item.code == "competing_syntax_alternatives"
+                            for item in result.diagnostics))
+
+    def test_expands_explicit_integer_range_in_written_order(self):
+        for dash in ("–", "—"):
+            with self.subTest(dash=dash):
+                text = (f"Согласно пунктам 2{dash}4 статьи 10 НК РФ, "
+                        "действует правило.")
+                result = self.analyze(text)
+
+                self.assertEqual(result.references[0].provisions, (
+                    self.path(law_id=15, article="10", point="2"),
+                    self.path(law_id=15, article="10", point="3"),
+                    self.path(law_id=15, article="10", point="4"),
+                ))
+                self.assertEqual(result.references[0].span,
+                                 (text.index("пункт"), text.index(",")))
+                self.assertEqual(result.diagnostics, ())
+
+    def test_expands_ranges_inside_a_selector_list_and_keeps_parent_values(self):
+        result = self.analyze("пункты 2, 4–5 и 8 статьи 10 НК РФ")
+
+        self.assertEqual(result.references[0].provisions, (
+            self.path(law_id=15, article="10", point="2"),
+            self.path(law_id=15, article="10", point="4"),
+            self.path(law_id=15, article="10", point="5"),
+            self.path(law_id=15, article="10", point="8"),
+        ))
+
+    def test_leaves_dotted_ranges_unresolved(self):
+        result = self.analyze("пункты 2.3–2.5 статьи 10 НК РФ")
+
+        self.assertEqual(result.references, ())
+        self.assertTrue(any(item.code == "unsupported_range_endpoints"
+                            for item in result.diagnostics))
+
+    def test_keeps_ascii_hyphen_identifier_range_ambiguity_unresolved(self):
+        result = self.analyze("пункт 2-1 статьи 10 НК РФ")
+
+        self.assertEqual(result.references, ())
+        self.assertTrue(any(item.code == "competing_syntax_alternatives"
+                            for item in result.diagnostics))
+
+    def test_rejects_reversed_explicit_integer_range(self):
+        result = self.analyze("пункты 4–2 статьи 10 НК РФ")
+
+        self.assertEqual(result.references, ())
+        self.assertTrue(any(item.code == "reversed_range"
+                            for item in result.diagnostics))
+
+    def test_rejects_ranges_that_expand_to_too_many_provisions(self):
+        result = self.analyze("пункты 1–1001 статьи 10 НК РФ")
+
+        self.assertEqual(result.references, ())
+        self.assertTrue(any(item.code == "range_too_large"
                             for item in result.diagnostics))
 
     @staticmethod

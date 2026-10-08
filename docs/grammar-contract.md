@@ -35,8 +35,11 @@ A future lexer must retain original offsets, raw spelling, normalization
 alternatives, and candidate law IDs. `LAW` recognition does not assert a unique
 ID; `ORDINAL` recognition does not assert a final numeric serialization.
 
-A raw hyphen may belong to an `ID` or denote a `RANGE`. Version 1 accepts either
-tokenization when explicitly annotated; it does not decide between them.
+A hyphen-minus may belong to an `ID` or denote a `RANGE`; when the raw text
+allows both readings, keep the alternatives unresolved. En dash and em dash
+are lexed as explicit `RANGE` separators. Semantic expansion currently accepts
+only ascending ranges whose two endpoints are plain decimal integer IDs.
+Dotted, shortened, letter, ordinal, and reversed ranges are not expanded.
 Under the assignment's README convention, `PP` maps to subpoint. Broader legal
 texts may use the same abbreviation differently; those readings are outside
 this homework-specific token contract.
@@ -63,15 +66,17 @@ remain syntax nodes for later expansion. A hyphenated label remains a string,
 not a floating-point number or an implicitly expanded sequence.
 
 An explicit act can follow a group of branches. Several references can also
-be coordinated. An omitted act is allowed. This deliberately admits both
-shared-tail and local-tail readings in some strings, rather than embedding an
-unverified universal attachment rule.
+be coordinated. An omitted act is allowed. For one compact coordinated
+citation, a single explicit final law scopes each branch; separately named
+laws stay attached to their branches. This bounded rule does not define
+inheritance across unrelated prose.
 
-The shared reading established for `пункт 2 части 1 и часть 3 статьи 15` must be
-available. The grammar experiment also retains the competing local reading so
-the analysis can expose the need for a selection policy. Additional parse
-trees can differ only in how lawless references are grouped; those are not
-necessarily different output provisions.
+The confirmed reading for `пункт 2 части 1 и часть 3 статьи 15` is article 15
+containing point 2 of part 1 and part 3. The grammar retains the competing
+local reading; semantic analysis selects the uniquely more complete path
+interpretation when alternatives preserve the same branch identifiers.
+Additional parse trees can differ only in how lawless references are grouped;
+those are not necessarily different output provisions.
 
 ## Outside this version
 
