@@ -313,6 +313,7 @@ class ReferenceAnalyzer:
         edges: dict[int, list[_Edge]] = defaultdict(list)
         by_span: dict[tuple[int, int, str, str], set[int]] = defaultdict(set)
         fuzzy_starts = []
+        unknown_law_spans: list[tuple[int, int]] = []
 
         def add(first: int, after: int, kind: str, law_ids: Iterable[int] = (), evidence: str = ""):
             if after <= first:
@@ -348,7 +349,23 @@ class ReferenceAnalyzer:
             if word in {"и", "или"}:
                 add(index, index + 1, "AND_OR")
             if token.value == ",":
-                add(index, index + 1, "COMMA")
+                following_marker = (self._marker_forms.get(
+                    self._matching_form(raw[index + 1].value))
+                    if index + 1 < len(raw) else None)
+                follows_article = following_marker == "ARTICLE"
+                precedes_part_value = any(
+                    edge.token.kind == "PART"
+                    and edge.after < index
+                    and any(self._is_identifier(item.value)
+                            for item in raw[edge.after:index])
+                    and all(self._is_identifier(item.value) or item.value == "."
+                            for item in raw[edge.after:index])
+                    for start in range(max(0, index - 4), index)
+                    for edge in edges.get(start, ())
+                )
+                comma_kind = ("LEVEL_COMMA" if follows_article and precedes_part_value
+                              else "COMMA")
+                add(index, index + 1, comma_kind)
             if token.value == "в":
                 add(index, index + 1, "IN")
             if token.value in _RANGE_MARKERS:
@@ -409,6 +426,35 @@ class ReferenceAnalyzer:
                 if start < index:
                     add(start, index + 1, "LAW", evidence="unknown_code_name")
 
+            # Preserve explicit, unlisted law names as LAW tokens. Alias edges
+            # are collected below and take precedence when they cover this same
+            # complete phrase.
+            forms = self._word_forms(token.value)
+            if forms & {"закон", "конституция"}:
+                start = index
+                if index > 0 and self._word_forms(raw[index - 1].value) & {
+                        "федеральный", "российский"}:
+                    start = index - 1
+                after = index + 1
+                if after < len(raw) and raw[after].value in _QUOTE_MARKS:
+                    opening = raw[after].value
+                    closing_mark = {"«": "»", "„": "“", "“": "”", "‟": "”"}.get(
+                        opening, opening)
+                    closing = next((position for position in range(after + 1, len(raw))
+                                    if raw[position].value == closing_mark
+                                    and "\n" not in text[raw[position - 1].end:
+                                                         raw[position].start]), None)
+                    if closing is not None:
+                        after = closing + 1
+                elif after < len(raw) and self._matching_form(raw[after].value) in {
+                        "рф", "российской"}:
+                    after += 1
+                    if (after < len(raw)
+                            and "федерация" in self._word_forms(raw[after].value)):
+                        after += 1
+                if after > index + 1:
+                    unknown_law_spans.append((start, after))
+
             if (index > 0 and token.value and token.value[0].isalpha()
                     and any(edge.token.kind in {"ID", "ORDINAL"}
                             for edge in edges.get(index - 1, ()))):
@@ -447,6 +493,19 @@ class ReferenceAnalyzer:
                 nodes = next_nodes
                 cursor += 1
 
+        known_law_spans = {(first, after): ids
+                           for (first, after, kind, _), ids in by_span.items()
+                           if kind == "LAW"}
+        for first, after in unknown_law_spans:
+            exact_ids = known_law_spans.get((first, after), set())
+            title_ids = set().union(*(
+                ids for (title_start, title_after), ids in known_law_spans.items()
+                if first < title_start and title_after == after
+            )) if any(first < title_start and title_after == after
+                      for title_start, title_after in known_law_spans) else set()
+            if not exact_ids:
+                add(first, after, "LAW", law_ids=title_ids,
+                    evidence="law_alias_title" if title_ids else "unknown_explicit_law")
         for (first, after, kind, value), ids in by_span.items():
             forms = tuple(sorted({f"{position - first}:{form}"
                                   for position in range(first, after)
@@ -618,11 +677,17 @@ class ReferenceAnalyzer:
                                                     or ends_with_punctuation)
                             continues = (following_index in edges and any(
                                 edge.token.kind in reference_starts
+                                | {"ID", "ORDINAL", "RANGE", "IN"}
                                 for edge in edges[following_index]))
-                            if is_connector and (following is None or not continues):
+                            ends_at_boundary = (following is None or
+                                                not following.value[:1].isalnum())
+                            if is_connector and not continues and ends_at_boundary:
                                 incomplete_spans[span] = next_piece.end
                     for edge in sorted(edges.get(cursor, ()), key=lambda item: (
                             item.token.kind, item.token.value, item.after)):
+                        if (edge.token.kind in {"LAW", "SELF_LAW", "ANAPHORIC_LAW"}
+                                and path[-1].kind in {"LAW", "SELF_LAW", "ANAPHORIC_LAW"}):
+                            continue
                         pending.append((edge.after, path + (edge.token,)))
 
         candidates = []

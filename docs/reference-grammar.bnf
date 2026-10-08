@@ -54,5 +54,6 @@ range_optional ::= RANGE identifier | EPS
 # link between nested levels. A comma can coordinate or bridge levels.
 join ::= AND | OR | AND_OR | COMMA comma_join_tail
 comma_join_tail ::= AND | OR | AND_OR | EPS
-level_gap ::= COMMA gap_in_optional | IN | EPS
+# LEVEL_COMMA marks a comma between a part selector and an article marker.
+level_gap ::= COMMA gap_in_optional | LEVEL_COMMA gap_in_optional | IN | EPS
 gap_in_optional ::= IN | EPS

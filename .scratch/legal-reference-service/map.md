@@ -43,6 +43,19 @@ local issue files.
   probes, 2,000-request local workload, and Docker contract are recorded in
   `docs/quality-evaluation.md` and
   `logs/experiments/issue-10-20261008T131105Z/`. Docker could not run in WSL.
+- Issue 11 is resolved. Explicit law-name tails now retain their full spans;
+  exact quoted aliases keep their IDs and unlisted titles clear stale law
+  context. The five-case passage regression and updated quality metrics are in
+  `logs/experiments/issue-11-20261008T133215Z/`.
+- Issue 12 is resolved. A comma between a part selector and an article marker
+  is represented as a hierarchy gap, so `часть 3, ст. 30.1 КоАП РФ` produces
+  one complete provision path. The README extraction track is now 12/12 exact;
+  details are in `logs/experiments/issue-12-20261008T134000Z/`.
+- Issue 13 is resolved. Short law aliases now retain complete spans through
+  `РФ`, trailing prose does not invalidate citations, and `статьей 11 ТК РФ`
+  extracts correctly. Both README and published passage suites have perfect
+  boundary and link precision/recall; logs are in
+  `logs/experiments/issue-13-20261008T135311Z/`.
 - Issues 11–13 are focused follow-ups from measured failures: law-name boundary
   and stale-context errors, one part/article citation form, and abbreviated-law
   citation boundaries/recall.
@@ -79,14 +92,14 @@ this table.
 | [08 — LawLink projection policy](issues/08-lawlink-projection-policy.md) | resolved | 03 | Decide outputs for paths the API cannot fully represent |
 | [09 — Context resolution](issues/09-contextual-reference-resolution.md) | resolved | 04, 08 | Resolve context-dependent targets under explicitly agreed rules |
 | [10 — Quality, runtime, packaging](issues/10-quality-runtime-and-packaging.md) | resolved | 04–09 | Assess real-text quality, workload runtime, and Docker execution |
-| [11 — Law-name boundaries and context safety](issues/11-law-name-boundaries-and-context-safety.md) | ready-for-agent | 10 | Prevent missed explicit law tails from inheriting stale IDs |
-| [12 — Part-before-article citation](issues/12-part-before-article-citations.md) | ready-for-agent | 10 | Extract the measured `часть 3, ст. 30.1 КоАП РФ` form |
-| [13 — Abbreviated-law citations](issues/13-abbreviated-law-citation-coverage.md) | ready-for-agent | 10 | Improve spans and recall for short law abbreviations |
+| [11 — Law-name boundaries and context safety](issues/11-law-name-boundaries-and-context-safety.md) | resolved | 10 | Prevent missed explicit law tails from inheriting stale IDs |
+| [12 — Part-before-article citation](issues/12-part-before-article-citations.md) | resolved | 10 | Extract the measured `часть 3, ст. 30.1 КоАП РФ` form |
+| [13 — Abbreviated-law citations](issues/13-abbreviated-law-citation-coverage.md) | resolved | 10 | Improve spans and recall for short law abbreviations |
 
 ## Frontier
 
-Ticket 11 is the next open ticket, based on the law-name and contextual-ID
-errors measured in ticket 10.
+All saved tickets are resolved. Add a new ticket if later evaluation or
+annotation identifies another concrete gap.
 
 ## Comments
 

@@ -128,6 +128,95 @@ class ServiceApiTests(unittest.TestCase):
              "subpoint_article": None},
         ]})
 
+    def test_explicit_law_tails_keep_identity_and_full_source_spans(self):
+        text = (
+            'ст. 16 Закона "О защите прав потребителей". '
+            'п. 2 ст. 14 Закона "О персональных данных". '
+            'статье 17 Конституции Российской Федерации. Статья 5 ГК РФ. '
+            'ст. 6 Федерального закона "О банках и банковской деятельности"'
+        )
+        response = self.client.post("/detect", json={"text": text})
+
+        self.assertEqual(response.json(), {"links": [
+            {"law_id": 984, "article": "16", "point_article": None,
+             "subpoint_article": None},
+            {"law_id": 330, "article": "14", "point_article": "2",
+             "subpoint_article": None},
+            {"law_id": None, "article": "17", "point_article": None,
+             "subpoint_article": None},
+            {"law_id": 5, "article": "5", "point_article": None,
+             "subpoint_article": None},
+            {"law_id": None, "article": "6", "point_article": None,
+             "subpoint_article": None},
+        ]})
+
+        syntax = self.client_context.app.state.reference_analyzer.analyze(text)
+        semantic = self.client_context.app.state.semantic_analyzer.analyze(syntax)
+        excerpts = [text[item.start:item.end] for item in semantic.references]
+        self.assertEqual(excerpts, [
+            'ст. 16 Закона "О защите прав потребителей"',
+            'п. 2 ст. 14 Закона "О персональных данных"',
+            "статье 17 Конституции Российской Федерации",
+            "Статья 5 ГК РФ",
+            'ст. 6 Федерального закона "О банках и банковской деятельности"',
+        ])
+
+    def test_part_comma_article_citation_and_neighboring_reference(self):
+        text = (
+            "Дополнительно применяются общие правила часть 3, ст. 30.1 КоАП РФ "
+            "(обжалование), при дальнейшем споре — нормы ст. 211 АПК РФ и далее."
+        )
+        response = self.client.post("/detect", json={"text": text})
+
+        self.assertEqual(response.json(), {"links": [
+            {"law_id": 17, "article": "30.1", "point_article": "3",
+             "subpoint_article": None},
+            {"law_id": 0, "article": "211", "point_article": None,
+             "subpoint_article": None},
+        ]})
+
+        syntax = self.client_context.app.state.reference_analyzer.analyze(text)
+        semantic = self.client_context.app.state.semantic_analyzer.analyze(syntax)
+        citation = next(item for item in semantic.references
+                        if text[item.start:item.end] == "часть 3, ст. 30.1 КоАП РФ")
+        self.assertEqual(len(citation.provisions), 1)
+        path = citation.provisions[0]
+        self.assertEqual((path.part, path.article, path.law_id), ("3", "30.1", 17))
+
+    def test_ordinary_part_and_article_prose_does_not_form_a_citation(self):
+        text = (
+            "В первой части доклада обсуждается новая статья; "
+            "обозначение 30.1 указано отдельно."
+        )
+
+        self.assertEqual(self.client.post("/detect", json={"text": text}).json(),
+                         {"links": []})
+
+    def test_abbreviated_law_citations_keep_boundaries_in_running_text(self):
+        text = (
+            "Ведение учета регулируют ст. 105 УК РФ и ведения бухгалтерского учета. "
+            "Далее применяются ст. 211 АПК РФ (см. пояснение). "
+            "В соответствии со статьей 11 ТК РФ нормы этого Кодекса обязательны."
+        )
+        response = self.client.post("/detect", json={"text": text})
+
+        self.assertEqual(response.json(), {"links": [
+            {"law_id": 13, "article": "105", "point_article": None,
+             "subpoint_article": None},
+            {"law_id": 0, "article": "211", "point_article": None,
+             "subpoint_article": None},
+            {"law_id": 10, "article": "11", "point_article": None,
+             "subpoint_article": None},
+        ]})
+
+        syntax = self.client_context.app.state.reference_analyzer.analyze(text)
+        semantic = self.client_context.app.state.semantic_analyzer.analyze(syntax)
+        self.assertEqual([text[item.start:item.end] for item in semantic.references], [
+            "ст. 105 УК РФ",
+            "ст. 211 АПК РФ",
+            "статьей 11 ТК РФ",
+        ])
+
     def test_preserves_point_without_inventing_an_article(self):
         response = self.client.post("/detect", json={"text": "п. 10 АПК"})
 
