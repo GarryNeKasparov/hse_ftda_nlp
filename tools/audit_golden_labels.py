@@ -36,6 +36,17 @@ UNKNOWN_QUERIES = {
     "unknown-numbered-law": "20-456",
     "unknown-code-name": "рандомного",
     "law-alias-not-listed": "О банках и банковской деятельности",
+    "readme-passage-08-reference-1": "20-456",
+    "readme-passage-10-reference-1": "рандомного",
+}
+UNKNOWN_REFERENCE_QUERIES = {
+    ("readme-passage-08", "ст. 37 ФЗ №20-456"): "20-456",
+    ("readme-passage-08-reference-3",
+     'ст. 6 Федерального закона "О банках и банковской деятельности"'):
+        "О банках и банковской деятельности",
+    ("readme-passage-08", 'ст. 6 Федерального закона "О банках и банковской деятельности"'):
+        "О банках и банковской деятельности",
+    ("readme-passage-10", "пп. 1 п. 2 ст. 34 рандомного кодекса"): "рандомного",
 }
 
 
@@ -92,8 +103,10 @@ def audit(dataset):
                     if type(law_id) is not int or matches != [law_id]:
                         errors.append(f"{sample_id}: canonical alias is not unique for {law_id}")
                     evidence = {"law_id": law_id, "canonical_alias": alias, "matching_ids": matches}
-                elif sample_id in UNKNOWN_QUERIES:
-                    query = UNKNOWN_QUERIES[sample_id]
+                elif (sample_id in UNKNOWN_QUERIES
+                      or (sample_id, ref["text"]) in UNKNOWN_REFERENCE_QUERIES):
+                    query = UNKNOWN_REFERENCE_QUERIES.get(
+                        (sample_id, ref["text"]), UNKNOWN_QUERIES.get(sample_id))
                     matches = sorted(int(k) for k, values in aliases.items()
                                      if any(normalize(query) in normalize(v) for v in values))
                     if matches:

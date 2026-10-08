@@ -40,6 +40,11 @@ The experiment runner saves separate `golden-interpretation-evaluation.json`
 and `golden-extraction-evaluation.json` reports. Do not combine their scores
 into one measure of extraction performance.
 
+The current four-track evaluation includes link precision/recall, exact sample
+matches, and span-aware extraction metrics. See the
+[quality evaluation](quality-evaluation.md) and its reproducible
+[experiment bundle](../logs/experiments/issue-10-20261008T131105Z/).
+
 ## Historical mixed corpus
 
 `data/golden_references.jsonl` is the manually annotated fixture corpus. It

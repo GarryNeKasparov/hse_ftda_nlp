@@ -39,24 +39,33 @@ local issue files.
   article context, uses the latest compatible entity for anaphoric/self
   targets, and retains unresolved values when context is absent. Verification
   is in `logs/experiments/issue-09-20261008T124607Z/`.
+- Issue 10 is resolved. The four gold tracks, audited labels, recognition
+  probes, 2,000-request local workload, and Docker contract are recorded in
+  `docs/quality-evaluation.md` and
+  `logs/experiments/issue-10-20261008T131105Z/`. Docker could not run in WSL.
+- Issues 11–13 are focused follow-ups from measured failures: law-name boundary
+  and stale-context errors, one part/article citation form, and abbreviated-law
+  citation boundaries/recall.
 
 ## Fog
 
 - Selector expansion is implemented in issue 03; divergent branch shapes and
   shared tails in issue 06; safe integer ranges and LawLink projection in
   issues 07 and 08.
-- The current service API does not expose source spans; boundary scoring stays
-  out of this issue.
+- `/detect` does not expose source spans. Issue 10 scores boundaries from
+  internal semantic references for evaluation; span output is still outside
+  the API contract.
 
 - [Issue 02: repeated occurrences and recovery](issues/02-repeated-occurrences-and-recovery.md) is resolved.
 - [Issue 03: semantic analyzer and selector lists](issues/03-semantic-analyzer-and-selector-lists.md) owns the shared semantic IR and is resolved.
 
 ## Ticket navigation
 
-The following ten-ticket roadmap is reconstructed from the current spec and
-conversation. It is not an exact recovery of the missing historical list.
-Tickets 02 and 03 retain their original bodies and answers; ticket 01 records
-the previously completed MVP. Dependency numbers refer to this table.
+The original ten-ticket roadmap is reconstructed from the current spec and
+conversation, not recovered exactly. Tickets 02 and 03 retain their original
+bodies and answers; ticket 01 records the previously completed MVP. Tickets
+11–13 were added from measured gaps in issue 10. Dependency numbers refer to
+this table.
 
 | Ticket | Status | Blocked by | Purpose |
 | --- | --- | --- | --- |
@@ -69,11 +78,15 @@ the previously completed MVP. Dependency numbers refer to this table.
 | [07 — Safe range expansion](issues/07-safe-range-expansion.md) | resolved | 03 | Expand agreed integer ranges while preserving uncertain identifiers |
 | [08 — LawLink projection policy](issues/08-lawlink-projection-policy.md) | resolved | 03 | Decide outputs for paths the API cannot fully represent |
 | [09 — Context resolution](issues/09-contextual-reference-resolution.md) | resolved | 04, 08 | Resolve context-dependent targets under explicitly agreed rules |
-| [10 — Quality, runtime, packaging](issues/10-quality-runtime-and-packaging.md) | ready-for-agent | 04–09 | Assess real-text quality, workload runtime, and Docker execution |
+| [10 — Quality, runtime, packaging](issues/10-quality-runtime-and-packaging.md) | resolved | 04–09 | Assess real-text quality, workload runtime, and Docker execution |
+| [11 — Law-name boundaries and context safety](issues/11-law-name-boundaries-and-context-safety.md) | ready-for-agent | 10 | Prevent missed explicit law tails from inheriting stale IDs |
+| [12 — Part-before-article citation](issues/12-part-before-article-citations.md) | ready-for-agent | 10 | Extract the measured `часть 3, ст. 30.1 КоАП РФ` form |
+| [13 — Abbreviated-law citations](issues/13-abbreviated-law-citation-coverage.md) | ready-for-agent | 10 | Improve spans and recall for short law abbreviations |
 
 ## Frontier
 
-Ticket 10 is the next numbered open ticket: quality, runtime, and packaging.
+Ticket 11 is the next open ticket, based on the law-name and contextual-ID
+errors measured in ticket 10.
 
 ## Comments
 

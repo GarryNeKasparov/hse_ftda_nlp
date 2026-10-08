@@ -21,11 +21,13 @@ def main() -> int:
     run_dir = root / "logs" / "experiments" / run_name
     run_dir.mkdir(parents=True, exist_ok=False)
     paths = (
-        "main.py", "reference_parser.py", "semantic_analyzer.py", "law_link_mapper.py", "Dockerfile",
+        "main.py", "reference_parser.py", "semantic_analyzer.py", "contextual_resolver.py",
+        "law_link_mapper.py", "Dockerfile",
         "docs/reference-grammar.bnf", "law_aliases.json", "requirements.txt",
         "requirements-test.txt", "tests/test_reference_parser.py",
         "tests/test_service_api.py",
         "tests/test_semantic_analyzer.py",
+        "tests/test_law_link_mapper.py",
         "data/golden_references.jsonl", "data/review_queue.jsonl",
         "data/golden_interpretation.jsonl", "data/golden_extraction.jsonl",
         "data/golden_real_interpretation.jsonl", "data/golden_real_extraction.jsonl",
