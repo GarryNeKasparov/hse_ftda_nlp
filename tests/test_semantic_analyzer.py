@@ -89,6 +89,18 @@ class SemanticAnalyzerTests(unittest.TestCase):
         ))
         self.assertEqual(result.diagnostics, ())
 
+    def test_expands_grouped_mixed_level_clauses_without_crossing_branches(self):
+        text = ("части 4 статьи 1, абзаца четвертого статьи 222 и "
+                "пункта 4 статьи 328 ГПК РФ")
+        result = self.analyze(text)
+
+        self.assertEqual(result.references[0].provisions, (
+            self.path(law_id=6, article="1", part="4"),
+            self.path(law_id=6, article="222", paragraph="4"),
+            self.path(law_id=6, article="328", point="4"),
+        ))
+        self.assertEqual(result.diagnostics, ())
+
     def test_expands_lists_at_two_levels_within_their_shared_branch(self):
         text = "пп. 1, 2 п. 3, 4 ст. 5 НК РФ"
 

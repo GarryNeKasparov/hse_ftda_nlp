@@ -1,0 +1,46 @@
+[
+  {
+    "id": "grouped_mixed_level_citation",
+    "text": "части 4 статьи 1, абзаца четвертого статьи 222 и пункта 4 статьи 328 ГПК РФ",
+    "expected_links": [
+      {"law_id": 6, "article": "1", "point_article": "4", "subpoint_article": null},
+      {"law_id": 6, "article": "222", "point_article": null, "subpoint_article": null},
+      {"law_id": 6, "article": "328", "point_article": "4", "subpoint_article": null}
+    ],
+    "expected_reference_texts": ["части 4 статьи 1, абзаца четвертого статьи 222 и пункта 4 статьи 328 ГПК РФ"],
+    "expected_paths": [
+      {"law_id": 6, "law_status": "known_unique", "article": "1", "part": "4", "point": null, "paragraph": null},
+      {"law_id": 6, "law_status": "known_unique", "article": "222", "part": null, "point": null, "paragraph": "4"},
+      {"law_id": 6, "law_status": "known_unique", "article": "328", "part": null, "point": "4", "paragraph": null}
+    ]
+  },
+  {
+    "id": "measured_t_p_heading_passage",
+    "text": "Вместе с тем не могут рассматриваться в качестве  уважительных\nпричин пропуска юридическим лицом срока апелляционного  обжалования\nтакие обстоятельства, как нахождение  представителя  организации  в\nкомандировке или отпуске, смена руководителя организации  либо  его\nнахождение  в  командировке  или  отпуске,   отсутствие   в   штате\nорганизации юриста и т. п.\n     9. Исходя из положений пункта 5 части  1  статьи  225  ГПК  РФ\nопределение суда первой инстанции о восстановлении или об отказе  в\nвосстановлении пропущенного срока апелляционного обжалования должно\nбыть мотивировано.",
+    "expected_links": [
+      {"law_id": 6, "article": "225", "point_article": "5", "subpoint_article": null}
+    ],
+    "expected_reference_texts": ["пункта 5 части  1  статьи  225  ГПК  РФ"],
+    "expected_paths": [
+      {"law_id": 6, "law_status": "known_unique", "article": "225", "part": "1", "point": "5", "paragraph": null}
+    ]
+  },
+  {
+    "id": "genuine_standalone_point_nine",
+    "text": "п. 9 ГПК РФ",
+    "expected_links": [
+      {"law_id": 6, "article": null, "point_article": "9", "subpoint_article": null}
+    ],
+    "expected_reference_texts": ["п. 9 ГПК РФ"],
+    "expected_paths": [
+      {"law_id": 6, "law_status": "known_unique", "article": null, "part": null, "point": "9", "paragraph": null}
+    ]
+  },
+  {
+    "id": "ordinary_t_p_without_numbered_heading",
+    "text": "В тексте перечислены примеры и т. п. Здесь нет ссылки на пункт.",
+    "expected_links": [],
+    "expected_reference_texts": [],
+    "expected_paths": []
+  }
+]

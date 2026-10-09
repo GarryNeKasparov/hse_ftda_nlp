@@ -449,12 +449,27 @@ class ReferenceAnalyzer:
                     return "ambiguous"
             return "ambiguous"
 
+        def begins_numbered_heading(index: int) -> bool:
+            """Detect a dotted number at the start of a new source line."""
+            if index + 1 >= len(raw) or not _INTEGER_ID_RE.fullmatch(raw[index].value):
+                return False
+            line_start = text.rfind("\n", 0, raw[index].start) + 1
+            if text[line_start:raw[index].start].strip():
+                return False
+            return raw[index].end == raw[index + 1].start and raw[index + 1].value == "."
+
         for index, token in enumerate(raw):
             word = self._matching_form(token.value)
             if word in {key.rstrip(".") for key in _SHORT_MARKERS}:
                 marker_end = index + 2 if index + 1 < len(raw) and raw[index + 1].value == "." else index + 1
                 if marker_end > index + 1 and raw[marker_end - 1].start == token.end:
-                    add(index, marker_end, _SHORT_MARKERS[word][0], evidence="exact_abbreviation")
+                    marker_kind = _SHORT_MARKERS[word][0]
+                    heading_follows = (
+                        marker_kind == "POINT" and marker_end < len(raw)
+                        and "\n" in text[raw[marker_end - 1].end:raw[marker_end].start]
+                        and begins_numbered_heading(marker_end))
+                    if not heading_follows:
+                        add(index, marker_end, marker_kind, evidence="exact_abbreviation")
                 else:
                     add(index, index + 1, _SHORT_MARKERS[word][0], evidence="exact_abbreviation")
             elif word in self._marker_forms:
@@ -781,7 +796,7 @@ class ReferenceAnalyzer:
         """Return a supported ordinal's numeric value from its morphological lemma."""
         for parse in self._morphology.parse(value):
             if parse.tag.POS == "NUMR" or "Anum" in str(parse.tag):
-                number = _ORDINAL_NUMBERS.get(parse.normal_form)
+                number = _ORDINAL_NUMBERS.get(parse.normal_form.replace("ё", "е"))
                 if number is not None:
                     return number
         return None

@@ -710,6 +710,54 @@ class ServiceApiTests(unittest.TestCase):
              "subpoint_article": None},
         ]})
 
+    def test_extracts_each_clause_in_a_mixed_level_group(self):
+        response = self.client.post("/detect", json={
+            "text": ("части 4 статьи 1, абзаца четвертого статьи 222 и "
+                     "пункта 4 статьи 328 ГПК РФ"),
+        })
+
+        self.assertEqual(response.json(), {"links": [
+            {"law_id": 6, "article": "1", "point_article": "4",
+             "subpoint_article": None},
+            {"law_id": 6, "article": "222", "point_article": None,
+             "subpoint_article": None},
+            {"law_id": 6, "article": "328", "point_article": "4",
+             "subpoint_article": None},
+        ]})
+
+    def test_heading_number_after_t_p_is_not_a_point_citation(self):
+        text = (
+            "Вместе с тем не могут рассматриваться в качестве  уважительных\n"
+            "причин пропуска юридическим лицом срока апелляционного  обжалования\n"
+            "такие обстоятельства, как нахождение  представителя  организации  в\n"
+            "командировке или отпуске, смена руководителя организации  либо  его\n"
+            "нахождение  в  командировке  или  отпуске,   отсутствие   в   штате\n"
+            "организации юриста и т. п.\n"
+            "     9. Исходя из положений пункта 5 части  1  статьи  225  ГПК  РФ\n"
+            "определение суда первой инстанции о восстановлении или об отказе  в\n"
+            "восстановлении пропущенного срока апелляционного обжалования должно\n"
+            "быть мотивировано."
+        )
+        response = self.client.post("/detect", json={"text": text})
+
+        self.assertEqual(response.json(), {"links": [{
+            "law_id": 6, "article": "225", "point_article": "5",
+            "subpoint_article": None,
+        }]})
+
+        semantic = app.state.semantic_analyzer.analyze(
+            app.state.reference_analyzer.analyze(text))
+        spans = [text[item.start:item.end] for item in semantic.references]
+        self.assertEqual(spans, ["пункта 5 части  1  статьи  225  ГПК  РФ"])
+
+    def test_keeps_genuine_standalone_point_nine_citation(self):
+        response = self.client.post("/detect", json={"text": "п. 9 ГПК РФ"})
+
+        self.assertEqual(response.json(), {"links": [{
+            "law_id": 6, "article": None, "point_article": "9",
+            "subpoint_article": None,
+        }]})
+
     def test_uses_minimum_law_id_for_an_ambiguous_alias(self):
         response = self.client.post("/detect", json={
             "text": "статья 2 ФЗ №3-ФЗ",

@@ -1,0 +1,5431 @@
+{
+  "created_at_utc": "2026-10-09T13:57:07.293376+00:00",
+  "source": "https://www.vsrf.ru/files/13975/",
+  "dataset": "data/golden_document-vsrf-13975.json",
+  "dataset_sha256": "50dea805802096ac9a6c6f9589bc31ee0243591111a58e9baf7d29a464627948",
+  "source_sha256": "ef09afbbdb7b3982f787c4bb8e1c4009fcc0cc42bae27a7f071ec03871ea1a87",
+  "code_sha256": {
+    "reference_parser.py": "62888689f3cd868b5349c692bc445cd92598b701805a3e339d5b8d71033bf869",
+    "semantic_analyzer.py": "f2ec36a8929140b4624ff3b757ebe65f6a3fa3fcbe98d834cf1b2ccde9081279",
+    "contextual_resolver.py": "e19d75e1a1746b30fcc9aa673af88ea79be838aa3529d9abee55141352357972",
+    "law_link_mapper.py": "9b06f91981ae139c795d334f70eca03408157988f6745ca647452c275be0461b",
+    "main.py": "9110be67eacfea3ac96a40740eff51fcd261dcbea5e40b8a3e19097e9079cec7",
+    "law_aliases.json": "23bed2195b3f1da3547ef4025ae83e3d67e9a80b438cdcc937dd66b1f0de20c0",
+    "docs/reference-grammar.bnf": "d78e204f4f3e4d03421be14ca4c82d24652ee621987f191cd535c539c8f360d7"
+  },
+  "annotation_status": "agent_reviewed_not_human_adjudicated",
+  "annotation_policy": {
+    "scope": "All article/provision citations representable by LawLink; chapter-only citations and bare act names have no API field and are excluded.",
+    "identity": "Supplied aliases: GPK=6, SK=8, GK=5, consumer law=984, court-information law=287; other explicit acts null.",
+    "ranges": "Read plural numeric hyphen ranges as inclusive from source context; preserve singular inserted labels verbatim. Currently unresolved parser ranges are counted as misses.",
+    "paragraphs": "Ordinal paragraph selectors identify individual provisions; each paragraph produces a link after paragraph omission. Identical projected links remain repeated.",
+    "projection": "Point overrides part when both are present; paragraph omitted, per CONTEXT.md.",
+    "shared_tails": "Compact coordinated branches ending in one explicit law form one reference span with branch-local targets.",
+    "independence": "Labels built from source review and the alias dictionary without production-parser predictions; regex inventory assists location only."
+  },
+  "document_characters": 79807,
+  "gold_references": 211,
+  "predicted_references": 206,
+  "gold_links": 314,
+  "predicted_links": 308,
+  "document_exact_match": false,
+  "api_link_metrics": {
+    "true_positive": 308,
+    "false_positive": 0,
+    "false_negative": 6,
+    "precision": 1.0,
+    "recall": 0.9808917197452229,
+    "f1": 0.9903536977491961
+  },
+  "ordered_link_metrics": {
+    "true_positive": 308,
+    "false_positive": 0,
+    "false_negative": 6,
+    "precision": 1.0,
+    "recall": 0.9808917197452229,
+    "f1": 0.9903536977491961
+  },
+  "reference_boundary_metrics": {
+    "true_positive": 205,
+    "false_positive": 1,
+    "false_negative": 6,
+    "precision": 0.9951456310679612,
+    "recall": 0.9715639810426541,
+    "f1": 0.9832134292565947
+  },
+  "exact_span_and_link_metrics": {
+    "true_positive": 307,
+    "false_positive": 1,
+    "false_negative": 7,
+    "precision": 0.9967532467532467,
+    "recall": 0.9777070063694268,
+    "f1": 0.9871382636655949
+  },
+  "exact_reference_matches": 205,
+  "exact_reference_match_rate": 0.9715639810426541,
+  "runtime": {
+    "startup_seconds": 4.670527250000305,
+    "http_request_seconds": 22.46222828199825,
+    "characters_per_second": 3552.9422547966524,
+    "warm_pipeline_stage_times": {
+      "syntax_seconds": 22.34282052599883,
+      "semantic_seconds": 0.2972460970013344,
+      "context_seconds": 0.0013083000012557022
+    },
+    "measurement": "One complete-document TestClient request; warm direct pipeline measured separately."
+  },
+  "diagnostic_counts": {
+    "competing_syntax_alternatives": 10,
+    "contextual_law_inherited": 1
+  },
+  "result": {
+    "links": [
+      {
+        "law_id": null,
+        "article": "126",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": null,
+        "article": "9",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": null,
+        "article": "14",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "201",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "320",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "34",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "35",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "45",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "45",
+        "point_article": "3",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "13",
+        "point_article": "4",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "320",
+        "point_article": "3",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "48",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "52",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "53",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "54",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "284",
+        "point_article": "3",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "284",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "4",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "34",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "35",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "46",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "47",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": null,
+        "article": "29",
+        "point_article": "1",
+        "subpoint_article": "1"
+      },
+      {
+        "law_id": 6,
+        "article": "198",
+        "point_article": "5",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "225",
+        "point_article": "7",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "321",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "321",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "325",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "321",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "107",
+        "point_article": "3",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "199",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "108",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "199",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "193",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "229",
+        "point_article": "13",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "108",
+        "point_article": "3",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "261",
+        "point_article": "3",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "112",
+        "point_article": "3",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "322",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "325",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "324",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "112",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "112",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "193",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "198",
+        "point_article": "5",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "199",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "214",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "321",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "332",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "225",
+        "point_article": "5",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "112",
+        "point_article": "5",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "322",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "325",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "6-1",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "322",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "325",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "320",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "321",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "322",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "320",
+        "point_article": "3",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "322",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "322",
+        "point_article": "4",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "323",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "322",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "327-1",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "322",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "323",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "322",
+        "point_article": "4",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "330",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "328",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "323",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "322",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "323",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "196",
+        "point_article": "3",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 8,
+        "article": "70",
+        "point_article": "3",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 8,
+        "article": "73",
+        "point_article": "5",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 5,
+        "article": "166",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 5,
+        "article": "167",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 984,
+        "article": "13",
+        "point_article": "6",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "111",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "323",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "324",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "1",
+        "point_article": "4",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "135",
+        "point_article": "4",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "324",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "1",
+        "point_article": "4",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "135",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "324",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "325",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "322",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "325",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "321",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "325",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "325",
+        "point_article": "3",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "200",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "201",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "201",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "200",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "201",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "321",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "322",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "321",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "322",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "322",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "322",
+        "point_article": "3",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "322",
+        "point_article": "5",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "323",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "324",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "325",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "201",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "200",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "201",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "323",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "324",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "325",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "169",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "323",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "324",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "325",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "321",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "321",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "322",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "325",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "54",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "50",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 287,
+        "article": "14",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 287,
+        "article": "16",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "326",
+        "point_article": "3",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "327",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "327-1",
+        "point_article": "4",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "330",
+        "point_article": "4",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "330",
+        "point_article": "5",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "327",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "62",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "166",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "169",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "175",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "176",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "177",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "178",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "179",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "180",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "181",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "182",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "183",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "184",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "185",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "186",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "187",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "188",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "189",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "193",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "194",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "194",
+        "point_article": "3",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "199",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "222",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "222",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "222",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "222",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "222",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "327",
+        "point_article": "5",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "327",
+        "point_article": "6",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "327",
+        "point_article": "6",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "330",
+        "point_article": "4",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "330",
+        "point_article": "5",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "39",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "327-1",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "327-1",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "327-1",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "2",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "329",
+        "point_article": "6",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "330",
+        "point_article": "4",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "220",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "222",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "222",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "222",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "222",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "222",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": null,
+        "article": "6",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "167",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "167",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "222",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "222",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "327",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "12",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "56",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "327",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "330",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "330",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "56",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "327-1",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "224",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "225",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "327",
+        "point_article": "3",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "175",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "176",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "177",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "178",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "179",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "180",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "181",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "182",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "183",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "184",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "185",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "186",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "187",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "188",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "189",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "330",
+        "point_article": "4",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "330",
+        "point_article": "5",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "147",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "330",
+        "point_article": "5",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "327-2",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "327-2",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "327-2",
+        "point_article": "3",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "330",
+        "point_article": "5",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "327-2",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "330",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "328",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "330",
+        "point_article": "4",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "330",
+        "point_article": "5",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "330",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "16",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "16",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "16",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "17",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "330",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": null,
+        "article": "47",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "33",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "330",
+        "point_article": "3",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "152",
+        "point_article": "6",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "330",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "328",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "327",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "330",
+        "point_article": "6",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "330",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "330",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "330",
+        "point_article": "3",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "330",
+        "point_article": "4",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "330",
+        "point_article": "3",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "321",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "328",
+        "point_article": "4",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "322",
+        "point_article": "3",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "1",
+        "point_article": "4",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "222",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "328",
+        "point_article": "4",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "1",
+        "point_article": "4",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "328",
+        "point_article": "4",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "329",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "329",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "329",
+        "point_article": "3",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "329",
+        "point_article": "4",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "209",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "329",
+        "point_article": "5",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "199",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "193",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "329",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "329",
+        "point_article": "4",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "328",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "330",
+        "point_article": "4",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "330",
+        "point_article": "5",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "324",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "331",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "331",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "125",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "202",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "220",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "222",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "331",
+        "point_article": "3",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "333",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "332",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "6-1",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "331",
+        "point_article": "3",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "412",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "413",
+        "point_article": "5",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "416",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "331",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "331",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "320",
+        "point_article": "3",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "333",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "333",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 287,
+        "article": "14",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 287,
+        "article": "16",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "333",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "330",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "330",
+        "point_article": "5",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "333",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "330",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "334",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "332",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "1",
+        "point_article": "4",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "328",
+        "point_article": "4",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "327",
+        "point_article": "5",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "232",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "323",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "98",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "98",
+        "point_article": "3",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "200",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "202",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "200",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "202",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "396",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "329",
+        "point_article": "5",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "201",
+        "point_article": "1",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "201",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "428",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "226",
+        "point_article": null,
+        "subpoint_article": null
+      }
+    ]
+  },
+  "predicted_references_with_spans": [
+    {
+      "start": 1081,
+      "end": 1131,
+      "text": "статьей   126   Конституции   Российской\nФедерации",
+      "links": [
+        {
+          "law_id": null,
+          "article": "126",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 1133,
+      "end": 1242,
+      "text": "статьями 9 и  14  Федерального  конституционного  закона\n\"О судах общей юрисдикции  в  Российской  Федерации\"",
+      "links": [
+        {
+          "law_id": null,
+          "article": "9",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": null,
+          "article": "14",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 2403,
+      "end": 2420,
+      "text": "статьи 201 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "201",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 2717,
+      "end": 2747,
+      "text": "частью 2  статьи  320  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "320",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 2911,
+      "end": 2939,
+      "text": "статей 34, 35 и  45  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "34",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "35",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "45",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 3630,
+      "end": 3654,
+      "text": "часть 3 статьи 45 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "45",
+          "point_article": "3",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 3704,
+      "end": 3750,
+      "text": "части 4 статьи 13  и\nчасти 3 статьи 320 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "13",
+          "point_article": "4",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "320",
+          "point_article": "3",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 4625,
+      "end": 4641,
+      "text": "статья 48 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "48",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 4678,
+      "end": 4700,
+      "text": "статья   52   ГПК   РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "52",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 4803,
+      "end": 4825,
+      "text": "статьями 53, 54 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "53",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "54",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 4920,
+      "end": 4947,
+      "text": "части 3 статьи 284  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "284",
+          "point_article": "3",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 5242,
+      "end": 5287,
+      "text": "абзаца первого части  1  статьи  284  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "284",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 5694,
+      "end": 5730,
+      "text": "статьями 4, 34, 35, 46 и 47  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "4",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "34",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "35",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "46",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "47",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 6125,
+      "end": 6307,
+      "text": "подпункта  1  пункта  1  статьи  29\nФедерального  конституционного  закона  от  26  февраля   1997 года\nN 1-ФКЗ  \"Об Уполномоченном  по  правам   человека   в   Российской\nФедерации\"",
+      "links": [
+        {
+          "law_id": null,
+          "article": "29",
+          "point_article": "1",
+          "subpoint_article": "1"
+        }
+      ]
+    },
+    {
+      "start": 6831,
+      "end": 6895,
+      "text": "частью 5 статьи 198 и  пунктом  7  части  1\nстатьи  225  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "198",
+          "point_article": "5",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "225",
+          "point_article": "7",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 7333,
+      "end": 7359,
+      "text": "частью\n1 статьи 321 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "321",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 7578,
+      "end": 7605,
+      "text": "части 1 статьи  321  ГПК\nРФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "321",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 7799,
+      "end": 7817,
+      "text": "статьей\n325 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "325",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 7992,
+      "end": 8024,
+      "text": "частью  2  статьи  321  ГПК   РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "321",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 8046,
+      "end": 8084,
+      "text": "части 3 статьи 107 и статье 199 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "107",
+          "point_article": "3",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "199",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 8239,
+      "end": 8258,
+      "text": "статье 108  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "108",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 8409,
+      "end": 8429,
+      "text": "статьи  199  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "199",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 8608,
+      "end": 8633,
+      "text": "части 2 статьи 193 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "193",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 8782,
+      "end": 8822,
+      "text": "пункта 13 части  2  статьи  229  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "229",
+          "point_article": "13",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 9076,
+      "end": 9102,
+      "text": "часть  3\nстатьи 108 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "108",
+          "point_article": "3",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 9767,
+      "end": 9793,
+      "text": "части  3\nстатьи 261 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "261",
+          "point_article": "3",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 10618,
+      "end": 10643,
+      "text": "части 3 статьи\n112 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "112",
+          "point_article": "3",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 10724,
+      "end": 10741,
+      "text": "статьи 322 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "322",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 11269,
+      "end": 11288,
+      "text": "статьи  325  ГПК\nРФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "325",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 11558,
+      "end": 11592,
+      "text": "пункта 2 части 1 статьи 324 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "324",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 11890,
+      "end": 11909,
+      "text": "статьи 112  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "112",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 12107,
+      "end": 12130,
+      "text": "статьи   112   ГПК   РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "112",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 12922,
+      "end": 12960,
+      "text": "статьи\n193 и части 5 статьи 198 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "193",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "198",
+          "point_article": "5",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 13037,
+      "end": 13056,
+      "text": "статьей 199 ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "199",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 13158,
+      "end": 13177,
+      "text": "статьей 214 ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "214",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 13874,
+      "end": 13899,
+      "text": "статьями 321, 332  ГПК\nРФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "321",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "332",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 14765,
+      "end": 14804,
+      "text": "пункта 5 части  1  статьи  225  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "225",
+          "point_article": "5",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 15077,
+      "end": 15103,
+      "text": "частью 5 статьи 112 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "112",
+          "point_article": "5",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 15506,
+      "end": 15523,
+      "text": "статьи\n322 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "322",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 15568,
+      "end": 15587,
+      "text": "статьей  325\nГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "325",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 15675,
+      "end": 15693,
+      "text": "статья 6-1 ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "6-1",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 15901,
+      "end": 15918,
+      "text": "статьи 322 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "322",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 16013,
+      "end": 16044,
+      "text": "частью  1  статьи  325  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "325",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 16287,
+      "end": 16316,
+      "text": "статей  320,  321,\n322 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "320",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "321",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "322",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 17218,
+      "end": 17277,
+      "text": "части 3 статьи 320, пунктов 2, 4 части 1  статьи\n322 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "320",
+          "point_article": "3",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "322",
+          "point_article": "2",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "322",
+          "point_article": "4",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 17721,
+      "end": 17747,
+      "text": "частью 1 статьи 323 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "323",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 17907,
+      "end": 17950,
+      "text": "абзаца  второго  части  2\nстатьи 322 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "322",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 18597,
+      "end": 18642,
+      "text": "абзаца второго части 1  статьи  327-1 ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "327-1",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 19268,
+      "end": 19295,
+      "text": "части 1 статьи 322  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "322",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 19967,
+      "end": 19992,
+      "text": "части 1 статьи 323 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "323",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 20355,
+      "end": 20389,
+      "text": "пункта 4 части 1 статьи\n322 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "322",
+          "point_article": "4",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 20562,
+      "end": 20580,
+      "text": "статья 330 ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "330",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 20676,
+      "end": 20694,
+      "text": "статья 328 ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "328",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 20719,
+      "end": 20748,
+      "text": "части 1  статьи  323  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "323",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 20986,
+      "end": 21031,
+      "text": "абзаца первого части  2  статьи  322  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "322",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 21171,
+      "end": 21197,
+      "text": "части  1\nстатьи 323 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "323",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 21617,
+      "end": 21644,
+      "text": "части 3 статьи 196  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "196",
+          "point_article": "3",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 21872,
+      "end": 21958,
+      "text": "пункт  3\nстатьи  70  и  пункт  5  статьи  73  Семейного  кодекса  Российской\nФедерации",
+      "links": [
+        {
+          "law_id": 8,
+          "article": "70",
+          "point_article": "3",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 8,
+          "article": "73",
+          "point_article": "5",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 22114,
+      "end": 22197,
+      "text": "пункт  2  статьи  166  и  статья   167\nГражданского  кодекса  Российской  Федерации",
+      "links": [
+        {
+          "law_id": 5,
+          "article": "166",
+          "point_article": "2",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 5,
+          "article": "167",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 22417,
+      "end": 22506,
+      "text": "пункт 6\nстатьи   13   Закона   Российской    Федерации    \"О защите    прав\nпотребителей\"",
+      "links": [
+        {
+          "law_id": 984,
+          "article": "13",
+          "point_article": "6",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 22969,
+      "end": 22986,
+      "text": "статьи 111 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "111",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 23094,
+      "end": 23111,
+      "text": "статьи 323 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "323",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 23711,
+      "end": 23732,
+      "text": "статьей  324  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "324",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 24643,
+      "end": 24709,
+      "text": "части 4 статьи 1, пункта 4 части 1 статьи 135  и\nстатьи 324 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "1",
+          "point_article": "4",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "135",
+          "point_article": "4",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "324",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 24952,
+      "end": 25019,
+      "text": "части 4  статьи  1,\nпункта 2 части 1 статьи 135 и статьи 324 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "1",
+          "point_article": "4",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "135",
+          "point_article": "2",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "324",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 25341,
+      "end": 25370,
+      "text": "части 1  статьи  325  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "325",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 25494,
+      "end": 25513,
+      "text": "статьей  322\nГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "322",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 25914,
+      "end": 25943,
+      "text": "части  2  статьи\n325  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "325",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 26999,
+      "end": 27030,
+      "text": "частью  2  статьи  321  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "321",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 27105,
+      "end": 27135,
+      "text": "части  2  статьи  325  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "325",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 27494,
+      "end": 27524,
+      "text": "часть  3  статьи  325  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "325",
+          "point_article": "3",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 27892,
+      "end": 27916,
+      "text": "статьями 200, 201 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "200",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "201",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 28187,
+      "end": 28214,
+      "text": "частью  1\nстатьи 201 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "201",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 28295,
+      "end": 28317,
+      "text": "статей 200, 201 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "200",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "201",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 28787,
+      "end": 28805,
+      "text": "статьей 321 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "321",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 28843,
+      "end": 28863,
+      "text": "статьи  322\nГПК   РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "322",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 29508,
+      "end": 29526,
+      "text": "статьей 321 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "321",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 29573,
+      "end": 29607,
+      "text": "частей 1-3 и 5 статьи 322  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "322",
+          "point_article": "1",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "322",
+          "point_article": "2",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "322",
+          "point_article": "3",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "322",
+          "point_article": "5",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 29849,
+      "end": 29878,
+      "text": "статьями 323, 324, 325 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "323",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "324",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "325",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 30110,
+      "end": 30141,
+      "text": "частью  1  статьи  201  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "201",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 30397,
+      "end": 30421,
+      "text": "статьями 200, 201 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "200",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "201",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 31538,
+      "end": 31568,
+      "text": "статьями  323, 324, 325\nГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "323",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "324",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "325",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 31825,
+      "end": 31844,
+      "text": "статье  169  ГПК\nРФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "169",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 31951,
+      "end": 31984,
+      "text": "статьями 323,  324  и  325\nГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "323",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "324",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "325",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 32619,
+      "end": 32640,
+      "text": "статьей  321  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "321",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 32723,
+      "end": 32743,
+      "text": "статьей 321  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "321",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 32858,
+      "end": 32879,
+      "text": "статьи  322  ГПК   РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "322",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 32929,
+      "end": 32959,
+      "text": "частью 1  статьи  325  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "325",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 33873,
+      "end": 33890,
+      "text": "статьей 54 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "54",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 34277,
+      "end": 34293,
+      "text": "статьи 50 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "50",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 34560,
+      "end": 34737,
+      "text": "статьями  14  и  16\nФедерального   закона   от   22    декабря    2008 года    N 262-ФЗ\n\"Об обеспечении  доступа  к  информации  о  деятельности  судов   в\nРоссийской Федерации\"",
+      "links": [
+        {
+          "law_id": 287,
+          "article": "14",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 287,
+          "article": "16",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 35162,
+      "end": 35188,
+      "text": "части 3 статьи  326\nГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "326",
+          "point_article": "3",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 35860,
+      "end": 35879,
+      "text": "статьи  327  ГПК\nРФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "327",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 36323,
+      "end": 36351,
+      "text": "частью 4 статьи 327-1 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "327-1",
+          "point_article": "4",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 36655,
+      "end": 36688,
+      "text": "частями 4 и 5  статьи  330\nГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "330",
+          "point_article": "4",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "330",
+          "point_article": "5",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 36856,
+      "end": 36886,
+      "text": "части  1  статьи  327  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "327",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 37154,
+      "end": 37173,
+      "text": "статья  62  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "62",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 37473,
+      "end": 37490,
+      "text": "статья 166 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "166",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 37543,
+      "end": 37560,
+      "text": "статья 169 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "169",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 37618,
+      "end": 37640,
+      "text": "статьи 175-189 ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "175",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "176",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "177",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "178",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "179",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "180",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "181",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "182",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "183",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "184",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "185",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "186",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "187",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "188",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "189",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 37680,
+      "end": 37697,
+      "text": "статья 193 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "193",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 37734,
+      "end": 37762,
+      "text": "части 2, 3 статьи 194 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "194",
+          "point_article": "2",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "194",
+          "point_article": "3",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 37821,
+      "end": 37841,
+      "text": "статья  199  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "199",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 38034,
+      "end": 38077,
+      "text": "абзацы  второй  -  шестой\nстатьи 222 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "222",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "222",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "222",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "222",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "222",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 38198,
+      "end": 38223,
+      "text": "части 5 статьи 327 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "327",
+          "point_article": "5",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 38517,
+      "end": 38547,
+      "text": "части  6  статьи  327  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "327",
+          "point_article": "6",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 38865,
+      "end": 38891,
+      "text": "частью 6 статьи 327 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "327",
+          "point_article": "6",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 38977,
+      "end": 39008,
+      "text": "частями\n4 и 5 статьи 330 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "330",
+          "point_article": "4",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "330",
+          "point_article": "5",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 39389,
+      "end": 39406,
+      "text": "статьей 39 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "39",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 40113,
+      "end": 40149,
+      "text": "частями 1,  2  статьи  327-1 ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "327-1",
+          "point_article": "1",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "327-1",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 40466,
+      "end": 40508,
+      "text": "абзаца\nвторого части 2 статьи 327-1 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "327-1",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 40860,
+      "end": 40878,
+      "text": "статьи  2  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "2",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 42099,
+      "end": 42134,
+      "text": "пунктом 6 части 2 статьи 329 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "329",
+          "point_article": "6",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 42425,
+      "end": 42451,
+      "text": "частью\n4 статьи 330 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "330",
+          "point_article": "4",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 42602,
+      "end": 42619,
+      "text": "статья 220 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "220",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 42664,
+      "end": 42706,
+      "text": "абзацы второй - шестой статьи  222  ГПК\nРФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "222",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "222",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "222",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "222",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "222",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 42777,
+      "end": 42851,
+      "text": "пунктом 1 статьи 6 Конвенции о  защите  прав  человека  и  основных\nсвобод",
+      "links": [
+        {
+          "law_id": null,
+          "article": "6",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 44045,
+      "end": 44062,
+      "text": "статьи\n167 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "167",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 44223,
+      "end": 44250,
+      "text": "части 1 статьи 167  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "167",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 44758,
+      "end": 44805,
+      "text": "абзацами  седьмым  и  восьмым\nстатьи 222 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "222",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "222",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 44957,
+      "end": 44997,
+      "text": "абзаца второго части 2 статьи 327 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "327",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 45787,
+      "end": 45804,
+      "text": "статьей 12 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "12",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 45853,
+      "end": 45882,
+      "text": "части  1  статьи  56  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "56",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 46093,
+      "end": 46133,
+      "text": "абзацем вторым части 2 статьи 327 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "327",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 47342,
+      "end": 47377,
+      "text": "пункт 1 части  1  статьи\n330 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "330",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 47901,
+      "end": 47936,
+      "text": "пункт 2 части  1  статьи\n330 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "330",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 48019,
+      "end": 48043,
+      "text": "часть 2 статьи 56 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "56",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 48131,
+      "end": 48181,
+      "text": "абзацем  вторым  части  1  статьи  327-1  ГПК   РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "327-1",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 48516,
+      "end": 48540,
+      "text": "статей  224-225  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "224",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "225",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 48801,
+      "end": 48841,
+      "text": "абзаца второго части 3 статьи 327 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "327",
+          "point_article": "3",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 49922,
+      "end": 49945,
+      "text": "статьями 175-189 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "175",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "176",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "177",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "178",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "179",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "180",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "181",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "182",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "183",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "184",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "185",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "186",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "187",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "188",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "189",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 50041,
+      "end": 50060,
+      "text": "частью 4 статьи 330",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "330",
+          "point_article": "4",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 50164,
+      "end": 50193,
+      "text": "части 5  статьи  330  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "330",
+          "point_article": "5",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 51641,
+      "end": 51659,
+      "text": "статьей 147 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "147",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 52373,
+      "end": 52398,
+      "text": "части 5 статьи 330 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "330",
+          "point_article": "5",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 52713,
+      "end": 52752,
+      "text": "частями  1  и  2  статьи  327-2 ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "327-2",
+          "point_article": "1",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "327-2",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 53108,
+      "end": 53137,
+      "text": "частью  3\nстатьи 327-2 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "327-2",
+          "point_article": "3",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 53521,
+      "end": 53546,
+      "text": "части 5 статьи 330 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "330",
+          "point_article": "5",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 53734,
+      "end": 53753,
+      "text": "статье 327-2 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "327-2",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 54055,
+      "end": 54085,
+      "text": "частью 1  статьи  330  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "330",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 54120,
+      "end": 54140,
+      "text": "статьи  328  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "328",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 54388,
+      "end": 54413,
+      "text": "части 4 статьи 330 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "330",
+          "point_article": "4",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 54457,
+      "end": 54483,
+      "text": "части 5 статьи 330 ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "330",
+          "point_article": "5",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 54658,
+      "end": 54695,
+      "text": "пункта 1 части 4 статьи  330  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "330",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 54968,
+      "end": 55017,
+      "text": "пунктами 1, 2 части 1 и частью 2 статьи 16 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "16",
+          "point_article": "1",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "16",
+          "point_article": "2",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "16",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 55094,
+      "end": 55110,
+      "text": "статьи 17\nГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "17",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 55296,
+      "end": 55333,
+      "text": "пункта  1  части  4\nстатьи 330 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "330",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 55420,
+      "end": 55467,
+      "text": "статьей  47  Конституции  Российской  Федерации",
+      "links": [
+        {
+          "law_id": null,
+          "article": "47",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 55471,
+      "end": 55499,
+      "text": "частью 2 статьи  33  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "33",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 55563,
+      "end": 55588,
+      "text": "части 3 статьи 330 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "330",
+          "point_article": "3",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 56930,
+      "end": 56972,
+      "text": "абзац второй части 6  статьи  152  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "152",
+          "point_article": "6",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 57210,
+      "end": 57248,
+      "text": "части 1 статьи 330 и статьи 328 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "330",
+          "point_article": "1",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "328",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 57327,
+      "end": 57367,
+      "text": "абзаца второго части 1 статьи 327 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "327",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 57749,
+      "end": 57774,
+      "text": "части 6 статьи 330 ГПК\nРФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "330",
+          "point_article": "6",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 58448,
+      "end": 58506,
+      "text": "пунктами  1-3  части  1  и\nчастью  4  статьи  330  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "330",
+          "point_article": "1",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "330",
+          "point_article": "2",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "330",
+          "point_article": "3",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "330",
+          "point_article": "4",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 58693,
+      "end": 58718,
+      "text": "часть 3 статьи 330 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "330",
+          "point_article": "3",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 59067,
+      "end": 59086,
+      "text": "статьей 321 ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "321",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 59215,
+      "end": 59245,
+      "text": "пункта 4  статьи  328  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "328",
+          "point_article": "4",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 59532,
+      "end": 59557,
+      "text": "части 3 статьи 322 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "322",
+          "point_article": "3",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 59925,
+      "end": 60002,
+      "text": "части 4 статьи 1, абзаца  четвертого  статьи\n222 и пункта 4 статьи 328 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "1",
+          "point_article": "4",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "222",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "328",
+          "point_article": "4",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 60386,
+      "end": 60434,
+      "text": "части 4 статьи 1 и пункта 4 статьи  328  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "1",
+          "point_article": "4",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "328",
+          "point_article": "4",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 60665,
+      "end": 60691,
+      "text": "частью 1\nстатьи 329 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "329",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 60822,
+      "end": 60851,
+      "text": "частями 2-4 статьи 329 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "329",
+          "point_article": "2",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "329",
+          "point_article": "3",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "329",
+          "point_article": "4",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 60904,
+      "end": 60952,
+      "text": "части  1  статьи\n209 и части 5 статьи 329 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "209",
+          "point_article": "1",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "329",
+          "point_article": "5",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 61362,
+      "end": 61380,
+      "text": "статья 199 ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "199",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 61521,
+      "end": 61541,
+      "text": "статье  193  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "193",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 61777,
+      "end": 61811,
+      "text": "частями 2 и 4 статьи  329  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "329",
+          "point_article": "2",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "329",
+          "point_article": "4",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 61974,
+      "end": 61991,
+      "text": "статье\n328 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "328",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 62380,
+      "end": 62405,
+      "text": "части 4 статьи 330 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "330",
+          "point_article": "4",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 63719,
+      "end": 63746,
+      "text": "части 5 статьи 330  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "330",
+          "point_article": "5",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 64263,
+      "end": 64297,
+      "text": "пункта 2 части 1 статьи 324 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "324",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 64384,
+      "end": 64425,
+      "text": "пунктами 1 и 2 части 1 статьи 331 ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "331",
+          "point_article": "1",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "331",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 64816,
+      "end": 64835,
+      "text": "статья  125  ГПК\nРФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "125",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 64889,
+      "end": 64907,
+      "text": "статья  202\nГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "202",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 64958,
+      "end": 64975,
+      "text": "статья 220\nГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "220",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 65038,
+      "end": 65055,
+      "text": "статья 222 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "222",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 65207,
+      "end": 65232,
+      "text": "части 3 статьи 331 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "331",
+          "point_article": "3",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 65880,
+      "end": 65906,
+      "text": "частью 1 статьи 333 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "333",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 66198,
+      "end": 66217,
+      "text": "статьей 332 ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "332",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 66717,
+      "end": 66735,
+      "text": "статья 6-1 ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "6-1",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 67390,
+      "end": 67487,
+      "text": "пункта 3 части 2 статьи 331,  части  2\nстатьи 412, части 5 статьи 413, части 1 статьи 416 ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "331",
+          "point_article": "3",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "412",
+          "point_article": "2",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "413",
+          "point_article": "5",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "416",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 68280,
+      "end": 68310,
+      "text": "частью 1  статьи  331  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "331",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 68499,
+      "end": 68546,
+      "text": "части 1 статьи 331 и части 3  статьи\n320 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "331",
+          "point_article": "1",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "320",
+          "point_article": "3",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 68981,
+      "end": 69010,
+      "text": "частью  2\nстатьи 333  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "333",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 70272,
+      "end": 70297,
+      "text": "часть 2 статьи 333 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "333",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 70359,
+      "end": 70525,
+      "text": "статьями\n14 и 16  Федерального  закона  от  22  декабря  2008 года  N 262-ФЗ\n\"Об обеспечении  доступа  к  информации  о  деятельности  судов   в\nРоссийской Федерации\"",
+      "links": [
+        {
+          "law_id": 287,
+          "article": "14",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 287,
+          "article": "16",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 71000,
+      "end": 71025,
+      "text": "части 1 статьи 333 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "333",
+          "point_article": "1",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 71162,
+      "end": 71182,
+      "text": "статьей  330\nГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "330",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 71692,
+      "end": 71717,
+      "text": "части 5 статьи 330 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "330",
+          "point_article": "5",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 72023,
+      "end": 72044,
+      "text": "статьей  333  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "333",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 72661,
+      "end": 72679,
+      "text": "статьей 330 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "330",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 72711,
+      "end": 72738,
+      "text": "пункта 2 статьи 334 ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "334",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 74197,
+      "end": 74215,
+      "text": "статьей 332 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "332",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 74328,
+      "end": 74376,
+      "text": "части 4 статьи 1 и пункта 4 статьи  328  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "1",
+          "point_article": "4",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "328",
+          "point_article": "4",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 74660,
+      "end": 74685,
+      "text": "части 5 статьи 327 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "327",
+          "point_article": "5",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 74874,
+      "end": 74892,
+      "text": "статьей 232 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "232",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 75183,
+      "end": 75204,
+      "text": "статьей  323  ГПК  РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "323",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 75370,
+      "end": 75386,
+      "text": "статьи 98 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "98",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 75775,
+      "end": 75809,
+      "text": "частью  3   статьи   98   ГПК   РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "98",
+          "point_article": "3",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 75968,
+      "end": 75996,
+      "text": "частью   2\nстатьи 200 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "200",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 76364,
+      "end": 76381,
+      "text": "статья 202 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "202",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 76589,
+      "end": 76616,
+      "text": "статей 200, 202, 396 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "200",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "202",
+          "point_article": null,
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "396",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 77551,
+      "end": 77577,
+      "text": "частью 5 статьи 329 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "329",
+          "point_article": "5",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 77945,
+      "end": 77984,
+      "text": "пунктах 1 и 2\nчасти 1 статьи 201 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "201",
+          "point_article": "1",
+          "subpoint_article": null
+        },
+        {
+          "law_id": 6,
+          "article": "201",
+          "point_article": "2",
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 78492,
+      "end": 78509,
+      "text": "статьи 428 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "428",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    },
+    {
+      "start": 79260,
+      "end": 79277,
+      "text": "статья 226 ГПК РФ",
+      "links": [
+        {
+          "law_id": 6,
+          "article": "226",
+          "point_article": null,
+          "subpoint_article": null
+        }
+      ]
+    }
+  ],
+  "reference_errors": [
+    {
+      "gold": {
+        "start": 32160,
+        "end": 32180,
+        "text": "статьей 327-2 ГПК РФ",
+        "links": [
+          {
+            "law_id": 6,
+            "article": "327-2",
+            "point_article": null,
+            "subpoint_article": null
+          }
+        ],
+        "reviewed_article_indices": [
+          95
+        ],
+        "provision_paths": [
+          {
+            "law_id": 6,
+            "article": "327-2",
+            "part": null,
+            "point": null,
+            "subpoint": null,
+            "paragraph": null
+          }
+        ]
+      },
+      "overlapping_predictions": []
+    },
+    {
+      "gold": {
+        "start": 32362,
+        "end": 32383,
+        "text": "статья\n6-1   ГПК   РФ",
+        "links": [
+          {
+            "law_id": 6,
+            "article": "6-1",
+            "point_article": null,
+            "subpoint_article": null
+          }
+        ],
+        "reviewed_article_indices": [
+          96
+        ],
+        "provision_paths": [
+          {
+            "law_id": 6,
+            "article": "6-1",
+            "part": null,
+            "point": null,
+            "subpoint": null,
+            "paragraph": null
+          }
+        ]
+      },
+      "overlapping_predictions": []
+    },
+    {
+      "gold": {
+        "start": 36528,
+        "end": 36560,
+        "text": "частью  4  статьи\n327-1  ГПК  РФ",
+        "links": [
+          {
+            "law_id": 6,
+            "article": "327-1",
+            "point_article": "4",
+            "subpoint_article": null
+          }
+        ],
+        "reviewed_article_indices": [
+          107
+        ],
+        "provision_paths": [
+          {
+            "law_id": 6,
+            "article": "327-1",
+            "part": "4",
+            "point": null,
+            "subpoint": null,
+            "paragraph": null
+          }
+        ]
+      },
+      "overlapping_predictions": []
+    },
+    {
+      "gold": {
+        "start": 39714,
+        "end": 39782,
+        "text": "абзацем вторым части 1 статьи 327 и частью 2  статьи\n327-1  ГПК   РФ",
+        "links": [
+          {
+            "law_id": 6,
+            "article": "327",
+            "point_article": "1",
+            "subpoint_article": null
+          },
+          {
+            "law_id": 6,
+            "article": "327-1",
+            "point_article": "2",
+            "subpoint_article": null
+          }
+        ],
+        "reviewed_article_indices": [
+          123,
+          124
+        ],
+        "provision_paths": [
+          {
+            "law_id": 6,
+            "article": "327",
+            "part": "1",
+            "point": null,
+            "subpoint": null,
+            "paragraph": "2"
+          },
+          {
+            "law_id": 6,
+            "article": "327-1",
+            "part": "2",
+            "point": null,
+            "subpoint": null,
+            "paragraph": null
+          }
+        ]
+      },
+      "overlapping_predictions": []
+    },
+    {
+      "gold": {
+        "start": 50041,
+        "end": 50069,
+        "text": "частью 4 статьи 330 ГП К  РФ",
+        "links": [
+          {
+            "law_id": 6,
+            "article": "330",
+            "point_article": "4",
+            "subpoint_article": null
+          }
+        ],
+        "reviewed_article_indices": [
+          147
+        ],
+        "provision_paths": [
+          {
+            "law_id": 6,
+            "article": "330",
+            "part": "4",
+            "point": null,
+            "subpoint": null,
+            "paragraph": null
+          }
+        ]
+      },
+      "overlapping_predictions": [
+        {
+          "start": 50041,
+          "end": 50060,
+          "text": "частью 4 статьи 330",
+          "links": [
+            {
+              "law_id": 6,
+              "article": "330",
+              "point_article": "4",
+              "subpoint_article": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "gold": {
+        "start": 72170,
+        "end": 72192,
+        "text": "статьей 327-2  ГПК  РФ",
+        "links": [
+          {
+            "law_id": 6,
+            "article": "327-2",
+            "point_article": null,
+            "subpoint_article": null
+          }
+        ],
+        "reviewed_article_indices": [
+          215
+        ],
+        "provision_paths": [
+          {
+            "law_id": 6,
+            "article": "327-2",
+            "part": null,
+            "point": null,
+            "subpoint": null,
+            "paragraph": null
+          }
+        ]
+      },
+      "overlapping_predictions": []
+    }
+  ],
+  "predictions_without_gold_overlap": []
+}

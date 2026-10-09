@@ -1,0 +1,5 @@
+grouped_mixed_level_citation: passed=True links=3 refs=1
+measured_t_p_heading_passage: passed=True links=1 refs=1
+genuine_standalone_point_nine: passed=True links=1 refs=1
+ordinary_t_p_without_numbered_heading: passed=True links=0 refs=0
+saved logs/experiments/issue-18-20261009T134900Z/results.json

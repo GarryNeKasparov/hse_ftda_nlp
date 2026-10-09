@@ -76,6 +76,11 @@ local issue files.
   unknown and cannot inherit a prior law. Whole-document links improved from
   299/7/15 to 305/1/9 TP/FP/FN; details are in
   `logs/experiments/issue-17-20261009T134051Z/`.
+- [Issue 18](issues/18-mixed-level-groups-and-heading-boundaries.md) is
+  resolved. Mixed-level grouped clauses retain separate paths and shared law
+  identity; numbered headings after `т. п.` no longer create a point link.
+  Whole-document links improved from 305/1/9 to 308/0/6 TP/FP/FN; details are
+  in `logs/experiments/issue-18-20261009T134900Z/`.
 - Issues 11–13 are focused follow-ups from measured failures: law-name boundary
   and stale-context errors, one part/article citation form, and abbreviated-law
   citation boundaries/recall.
@@ -120,11 +125,12 @@ this table.
 | [15 — Inserted identifiers and ASCII ranges](issues/15-inserted-identifiers-and-ascii-ranges.md) | resolved | 14 | Preserve atomic inserted IDs and expand agreed plural ASCII ranges |
 | [16 — Ordinal paragraph projection](issues/16-ordinal-paragraph-projection.md) | resolved | 14 | Retain supported enclosing targets when paragraphs are omitted from API |
 | [17 — Explicit law titles and context safety](issues/17-explicit-law-titles-and-context-safety.md) | resolved | 14 | Resolve known long titles and avoid stale law inheritance |
-| [18 — Mixed-level groups and heading boundaries](issues/18-mixed-level-groups-and-heading-boundaries.md) | open | 14, 16 | Extract grouped clauses and reject a measured heading false positive |
+| [18 — Mixed-level groups and heading boundaries](issues/18-mixed-level-groups-and-heading-boundaries.md) | resolved | 14, 16 | Extract grouped clauses and reject a measured heading false positive |
 
 ## Frontier
 
-Issue 18 is the current frontier; its dependencies are resolved.
+All current tickets are resolved. Create a new ticket when another implementation
+slice is agreed.
 
 ## Comments
 
