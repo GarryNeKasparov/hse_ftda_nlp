@@ -1,0 +1,30 @@
+{
+  "ticket": "15",
+  "exit_status": 0,
+  "started_at_utc": "2026-10-09T13:07:54.734061+00:00",
+  "duration_seconds": 6.961205894000159,
+  "command": [
+    "/home/vipvl/work/hse/nlp/1/homework_1/.venv/bin/python",
+    "-B",
+    "logs/experiments/issue-15-20261009T125655Z/experiment.py"
+  ],
+  "stdout": "console.stdout.log",
+  "stderr": "console.stderr.log",
+  "python": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+  "dependencies": {
+    "fastapi": "0.118.0",
+    "lark": "1.3.1",
+    "pydantic": "2.13.5"
+  },
+  "inputs_sha256": "11192c1bbecbc19e9699323647f29e5e451b5e0f46bb93cc0340ce2af3939a87",
+  "source_sha256": {
+    "reference_parser.py": "542adcc6290e1c0c0e242f1c0c5a7dd6ab5946c761721246de4ed708dd9284a6",
+    "semantic_analyzer.py": "16245eadc7b6389e5006d0372dab0435e50ba0c2d9aa1527d2c576e46c278f5d",
+    "law_link_mapper.py": "9b06f91981ae139c795d334f70eca03408157988f6745ca647452c275be0461b",
+    "main.py": "9110be67eacfea3ac96a40740eff51fcd261dcbea5e40b8a3e19097e9079cec7",
+    "docs/reference-grammar.bnf": "d78e204f4f3e4d03421be14ca4c82d24652ee621987f191cd535c539c8f360d7",
+    "law_aliases.json": "23bed2195b3f1da3547ef4025ae83e3d67e9a80b438cdcc937dd66b1f0de20c0"
+  },
+  "results": "results.json",
+  "case_count": 10
+}

@@ -456,12 +456,16 @@ class ServiceApiTests(unittest.TestCase):
 
         self.assertEqual(response.json(), {"links": []})
 
-    def test_unsupported_range_does_not_emit_its_first_number(self):
+    def test_expands_ascii_range_for_plural_points(self):
         response = self.client.post("/detect", json={
             "text": "пункты 2-4 статьи 10 НК РФ",
         })
 
-        self.assertEqual(response.json(), {"links": []})
+        self.assertEqual(response.json(), {"links": [
+            {"law_id": 15, "article": "10", "point_article": point,
+             "subpoint_article": None}
+            for point in ("2", "3", "4")
+        ]})
 
     def test_expands_an_explicit_integer_range_through_the_api(self):
         response = self.client.post("/detect", json={
@@ -473,6 +477,83 @@ class ServiceApiTests(unittest.TestCase):
              "subpoint_article": None}
             for point in ("2", "3", "4")
         ]})
+
+    def test_preserves_singular_inserted_article_identifier(self):
+        response = self.client.post("/detect", json={
+            "text": "статья 6-1 ГПК РФ",
+        })
+
+        self.assertEqual(response.json(), {"links": [{
+            "law_id": 6,
+            "article": "6-1",
+            "point_article": None,
+            "subpoint_article": None,
+        }]})
+
+    def test_keeps_abbreviated_hyphen_label_unresolved(self):
+        response = self.client.post("/detect", json={
+            "text": "ст. 28-1 ГПК РФ",
+        })
+
+        self.assertEqual(response.json(), {"links": []})
+
+    def test_expands_parts_under_an_inserted_article_identifier(self):
+        response = self.client.post("/detect", json={
+            "text": "частями 1 и 2 статьи 327-2 ГПК РФ",
+        })
+
+        self.assertEqual(response.json(), {"links": [
+            {"law_id": 6, "article": "327-2", "point_article": "1",
+             "subpoint_article": None},
+            {"law_id": 6, "article": "327-2", "point_article": "2",
+             "subpoint_article": None},
+        ]})
+
+    def test_expands_ascii_range_in_explicit_plural_article_context(self):
+        response = self.client.post("/detect", json={
+            "text": "главу 6 и статьи 175-189 ГПК РФ",
+        })
+
+        self.assertEqual(response.json(), {"links": [
+            {"law_id": 6, "article": str(article), "point_article": None,
+             "subpoint_article": None}
+            for article in range(175, 190)
+        ]})
+
+    def test_expands_ascii_range_before_a_list_item(self):
+        response = self.client.post("/detect", json={
+            "text": "частей 1-3 и 5 статьи 322 ГПК РФ",
+        })
+
+        self.assertEqual(response.json(), {"links": [
+            {"law_id": 6, "article": "322", "point_article": part,
+             "subpoint_article": None}
+            for part in ("1", "2", "3", "5")
+        ]})
+
+    def test_does_not_apply_plural_range_context_across_prose(self):
+        response = self.client.post("/detect", json={
+            "text": "частей 1, перечисленных ранее, 5-7 статьи 322 ГПК РФ",
+        })
+
+        self.assertEqual(response.json(), {"links": [
+            {"law_id": None, "article": None, "point_article": "1",
+             "subpoint_article": None},
+            {"law_id": 6, "article": "322", "point_article": None,
+             "subpoint_article": None},
+        ]})
+
+    def test_malformed_ascii_range_does_not_emit_its_first_selector(self):
+        response = self.client.post("/detect", json={
+            "text": "частей 1- статьи 322",
+        })
+
+        self.assertEqual(response.json(), {"links": [{
+            "law_id": None,
+            "article": "322",
+            "point_article": None,
+            "subpoint_article": None,
+        }]})
 
     def test_projects_point_when_part_is_also_present(self):
         response = self.client.post("/detect", json={

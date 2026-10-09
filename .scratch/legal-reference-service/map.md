@@ -61,6 +61,11 @@ local issue files.
   ranges, ordinal paragraphs, explicit unknown law titles, mixed-level groups,
   and the evidence standard. Follow-up tickets 15–18 carry the implementation
   slices.
+- [Issue 15](issues/15-inserted-identifiers-and-ascii-ranges.md) is resolved.
+  The parser preserves inserted article IDs and expands
+  ASCII ranges only with explicit plural evidence. On the fixed whole-document
+  corpus, links improved from 224/7/90 TP/FP/FN to 276/7/38; focused cases and
+  run details are in `logs/experiments/issue-15-20261009T125655Z/`.
 - Issues 11–13 are focused follow-ups from measured failures: law-name boundary
   and stale-context errors, one part/article citation form, and abbreviated-law
   citation boundaries/recall.
@@ -102,15 +107,15 @@ this table.
 | [12 — Part-before-article citation](issues/12-part-before-article-citations.md) | resolved | 10 | Extract the measured `часть 3, ст. 30.1 КоАП РФ` form |
 | [13 — Abbreviated-law citations](issues/13-abbreviated-law-citation-coverage.md) | resolved | 10 | Improve spans and recall for short law abbreviations |
 | [14 — Full-document follow-ups](issues/14-full-document-quality-followups.md) | resolved | 10 | Set behavior and scope implementation follow-ups from whole-document gaps |
-| [15 — Inserted identifiers and ASCII ranges](issues/15-inserted-identifiers-and-ascii-ranges.md) | open | 14 | Preserve atomic inserted IDs and expand agreed plural ASCII ranges |
+| [15 — Inserted identifiers and ASCII ranges](issues/15-inserted-identifiers-and-ascii-ranges.md) | resolved | 14 | Preserve atomic inserted IDs and expand agreed plural ASCII ranges |
 | [16 — Ordinal paragraph projection](issues/16-ordinal-paragraph-projection.md) | open | 14 | Retain supported enclosing targets when paragraphs are omitted from API |
 | [17 — Explicit law titles and context safety](issues/17-explicit-law-titles-and-context-safety.md) | open | 14 | Resolve known long titles and avoid stale law inheritance |
 | [18 — Mixed-level groups and heading boundaries](issues/18-mixed-level-groups-and-heading-boundaries.md) | open | 14, 16 | Extract grouped clauses and reject a measured heading false positive |
 
 ## Frontier
 
-Issue 15 is the current frontier. Issues 15–17 can proceed independently after
-Issue 14; Issue 18 also depends on paragraph projection in Issue 16.
+Issue 16 is the current frontier. Issues 16 and 17 can proceed independently;
+Issue 18 also depends on paragraph projection in Issue 16.
 
 ## Comments
 
@@ -131,3 +136,8 @@ null identity for explicit unknown law titles, and extraction of all supported
 mixed-level clauses. Agent-reviewed annotations are approved for focused cases
 with individual review and negative coverage, not as a human-adjudicated gold
 set. Tickets 15–18 capture the agreed implementation work.
+
+Issue 15 was implemented and resolved. Singular inserted article labels are
+atomic; ASCII integer ranges expand in explicit plural contexts, while
+abbreviated and singular point ambiguities remain unresolved. Focused tests and
+the whole-document comparison are recorded in the Issue 15 experiment log.

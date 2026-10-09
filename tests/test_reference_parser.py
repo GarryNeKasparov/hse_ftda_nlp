@@ -256,6 +256,17 @@ class ReferenceAnalyzerTests(unittest.TestCase):
         self.assertEqual(prefix.diagnostics[0].code, "unfinished_continuation")
         self.assertTrue(later.complete)
 
+    def test_malformed_ascii_range_is_diagnosed_as_incomplete(self):
+        text = "частей 1- статьи 322"
+
+        result = self.analyzer.analyze(text)
+        prefixes = [candidate for candidate in result.candidates
+                    if candidate.start == 0 and not candidate.complete]
+
+        self.assertTrue(any(any(item.code == "unfinished_continuation"
+                                for item in candidate.diagnostics)
+                            for candidate in prefixes))
+
     def test_finds_the_five_structural_challenge_references_in_raw_text(self):
         references = (
             "статьи 5 и 6 НК РФ",

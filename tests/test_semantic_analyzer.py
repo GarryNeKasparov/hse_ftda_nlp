@@ -149,12 +149,15 @@ class SemanticAnalyzerTests(unittest.TestCase):
         ])
         self.assertLess(result.references[0].start, result.references[1].start)
 
-    def test_unsupported_longer_range_does_not_leak_its_first_number(self):
+    def test_expands_ascii_range_in_explicit_plural_selector(self):
         result = self.analyze("пункты 2-4 статьи 10 НК РФ")
 
-        self.assertEqual(result.references, ())
-        self.assertTrue(any(item.code == "competing_syntax_alternatives"
-                            for item in result.diagnostics))
+        self.assertEqual(result.references[0].provisions, (
+            self.path(law_id=15, article="10", point="2"),
+            self.path(law_id=15, article="10", point="3"),
+            self.path(law_id=15, article="10", point="4"),
+        ))
+        self.assertEqual(result.diagnostics, ())
 
     def test_expands_explicit_integer_range_in_written_order(self):
         for dash in ("–", "—"):
@@ -201,6 +204,20 @@ class SemanticAnalyzerTests(unittest.TestCase):
 
         self.assertEqual(result.references, ())
         self.assertTrue(any(item.code == "reversed_range"
+                            for item in result.diagnostics))
+
+    def test_rejects_reversed_ascii_range_in_plural_context(self):
+        result = self.analyze("частей 5-2 статьи 322 ГПК РФ")
+
+        self.assertEqual(result.references, ())
+        self.assertTrue(any(item.code == "reversed_range"
+                            for item in result.diagnostics))
+
+    def test_rejects_ascii_ranges_over_the_expansion_limit(self):
+        result = self.analyze("частей 1-1001 статьи 322 ГПК РФ")
+
+        self.assertEqual(result.references, ())
+        self.assertTrue(any(item.code == "range_too_large"
                             for item in result.diagnostics))
 
     def test_rejects_ranges_that_expand_to_too_many_provisions(self):

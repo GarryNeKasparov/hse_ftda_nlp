@@ -216,6 +216,8 @@ class ReferenceAnalyzer:
         self._fuzzy_aliases: dict[int, list[_FullLawAlias]] = defaultdict(list)
         self._max_fuzzy_alias_chars = 0
         self._marker_forms: dict[str, str] = {}
+        self._singular_marker_forms: set[str] = set()
+        self._plural_marker_forms: set[str] = set()
         self._fuzzy_marker_forms: tuple[tuple[str, str], ...] = ()
         self._build_marker_index()
         self._build_alias_index(law_aliases)
@@ -269,6 +271,10 @@ class ReferenceAnalyzer:
                 for inflected in parse.lexeme:
                     form = self._matching_form(inflected.word)
                     self._marker_forms[form] = kind
+                    if inflected.tag.number == "sing":
+                        self._singular_marker_forms.add(form)
+                    elif inflected.tag.number == "plur":
+                        self._plural_marker_forms.add(form)
                     if len(form) >= 4:
                         fuzzy_forms.append((form, kind))
         self._fuzzy_marker_forms = tuple(sorted(set(fuzzy_forms)))
@@ -387,6 +393,51 @@ class ReferenceAnalyzer:
                 cursor -= 1
             return False
 
+        def ascii_hyphen_context(index: int) -> str:
+            """Classify selector hyphens from their nearest hierarchy marker."""
+            marker_kinds = {"ARTICLE", "PART", "POINT", "SUBPOINT", "PP", "PARAGRAPH"}
+            for cursor in range(index - 1, -1, -1):
+                if "\n" in text[raw[cursor].end:raw[cursor + 1].start]:
+                    return "ambiguous"
+                kinds = {edge.token.kind for edge in edges.get(cursor, ())}
+                if kinds & marker_kinds:
+                    form = self._matching_form(raw[cursor].value)
+                    is_article = "ARTICLE" in kinds
+                    singular = form in self._singular_marker_forms
+                    plural = form in self._plural_marker_forms
+                    if singular and not plural:
+                        return "singular_article" if is_article else "ambiguous"
+                    if plural and not singular:
+                        return "plural"
+                    if singular and plural:
+                        coordinated = (cursor >= 3
+                                       and raw[cursor - 1].value in {",", "и", "или"}
+                                       and self._is_identifier(raw[cursor - 2].value))
+                        if coordinated:
+                            ranks = {"PARAGRAPH": 0, "SUBPOINT": 1, "PP": 1,
+                                     "POINT": 2, "PART": 3, "ARTICLE": 4}
+                            current_rank = max(ranks[kind] for kind in kinds & ranks.keys())
+                            for previous in range(cursor - 3, -1, -1):
+                                previous_kinds = {edge.token.kind
+                                                  for edge in edges.get(previous, ())}
+                                previous_levels = previous_kinds & ranks.keys()
+                                if previous_levels:
+                                    if max(ranks[kind] for kind in previous_levels) < current_rank:
+                                        break
+                                    return "plural"
+                            else:
+                                return "plural"
+                        return "singular_article" if is_article else "ambiguous"
+                    return "ambiguous"
+                if kinds & {"LAW", "SELF_LAW", "ANAPHORIC_LAW"}:
+                    return "ambiguous"
+                if raw[cursor].value in {".", ";", "!", "?"}:
+                    return "ambiguous"
+                if (not self._is_identifier(raw[cursor].value)
+                        and raw[cursor].value not in {",", "и", "или"}):
+                    return "ambiguous"
+            return "ambiguous"
+
         for index, token in enumerate(raw):
             word = self._matching_form(token.value)
             if word in {key.rstrip(".") for key in _SHORT_MARKERS}:
@@ -418,7 +469,11 @@ class ReferenceAnalyzer:
                 add(index, index + 1, comma_kind)
             if token.value == "в":
                 add(index, index + 1, "IN")
-            if token.value in _RANGE_MARKERS:
+            hyphen_context = (ascii_hyphen_context(index) if token.value == "-"
+                              else "ambiguous")
+            if (token.value in _RANGE_MARKERS
+                    and not (token.value == "-"
+                             and hyphen_context == "singular_article")):
                 add(index, index + 1, "RANGE")
             if self._is_identifier(token.value):
                 add(index, index + 1, "ID", evidence="opaque_identifier")
@@ -427,7 +482,8 @@ class ReferenceAnalyzer:
                 if (raw[index].end == raw[index + 1].start
                         and raw[index + 1].end == raw[index + 2].start
                         and _HYPHEN_ID_RE.fullmatch(combined)):
-                    add(index, index + 3, "ID", evidence="atomic_hyphen_identifier")
+                    if ascii_hyphen_context(index + 1) != "plural":
+                        add(index, index + 3, "ID", evidence="atomic_hyphen_identifier")
 
             if word == "фз":
                 after = index + 1
@@ -744,10 +800,15 @@ class ReferenceAnalyzer:
                                         and not after_join_token.value[:1].isalnum())
                                     is_connector = (has_citation_continuation
                                                     or ends_with_punctuation)
-                            continues = (following_index in edges and any(
-                                edge.token.kind in reference_starts
-                                | {"ID", "ORDINAL", "RANGE", "IN"}
-                                for edge in edges[following_index]))
+                            if next_piece.value in _RANGE_MARKERS:
+                                continues = (following_index in edges and any(
+                                    edge.token.kind in {"ID", "ORDINAL"}
+                                    for edge in edges[following_index]))
+                            else:
+                                continues = (following_index in edges and any(
+                                    edge.token.kind in reference_starts
+                                    | {"ID", "ORDINAL", "RANGE", "IN"}
+                                    for edge in edges[following_index]))
                             ends_at_boundary = (following is None or
                                                 not following.value[:1].isalnum())
                             if (is_connector and not continues

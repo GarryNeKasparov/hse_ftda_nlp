@@ -1,0 +1,11 @@
+singular_inserted_article: passed=True links=1 diagnostics=[]
+part_list_under_inserted_article: passed=True links=2 diagnostics=[]
+explicitly_plural_article_range: passed=True links=15 diagnostics=[]
+plural_part_range_followed_by_item: passed=True links=4 diagnostics=[]
+plural_point_range: passed=True links=3 diagnostics=[]
+ambiguous_abbreviated_identifier: passed=True links=0 diagnostics=['competing_syntax_alternatives']
+ambiguous_singular_point_identifier: passed=True links=0 diagnostics=['competing_syntax_alternatives']
+reversed_plural_range: passed=True links=0 diagnostics=['reversed_range']
+oversized_plural_range: passed=True links=0 diagnostics=['range_too_large']
+malformed_plural_range: passed=True links=1 diagnostics=['unfinished_continuation']
+saved logs/experiments/issue-15-20261009T125655Z/results.json

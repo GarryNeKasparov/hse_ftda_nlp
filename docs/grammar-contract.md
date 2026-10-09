@@ -35,11 +35,13 @@ A future lexer must retain original offsets, raw spelling, normalization
 alternatives, and candidate law IDs. `LAW` recognition does not assert a unique
 ID; `ORDINAL` recognition does not assert a final numeric serialization.
 
-A hyphen-minus may belong to an `ID` or denote a `RANGE`; when the raw text
-allows both readings, keep the alternatives unresolved. En dash and em dash
-are lexed as explicit `RANGE` separators. Semantic expansion currently accepts
-only ascending ranges whose two endpoints are plain decimal integer IDs.
-Dotted, shortened, letter, ordinal, and reversed ranges are not expanded.
+A hyphen-minus may belong to an `ID` or denote a `RANGE`. Treat it as a range
+separator when selector plurality is explicit through morphology or
+coordination; singular inserted article identifiers remain atomic. Keep other
+ambiguous readings unresolved. En dash and em dash are lexed as explicit
+`RANGE` separators. Semantic expansion accepts only ascending ranges whose
+two endpoints are plain decimal integer IDs. Dotted, shortened, letter,
+ordinal, reversed, and oversized ranges are not expanded.
 Under the assignment's README convention, `PP` maps to subpoint. Broader legal
 texts may use the same abbreviation differently; those readings are outside
 this homework-specific token contract.
