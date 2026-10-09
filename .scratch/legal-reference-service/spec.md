@@ -97,17 +97,24 @@ can serve as definitive acceptance criteria.
 - Preserve individual selectors, lists, ranges, coordination, and shared-tail structure in the AST until semantic interpretation and expansion.
 - Compare AST alternatives by the provision paths they describe before adopting attachment preferences. Different tree groupings can describe the same provisions. Equality of interpretation must not deduplicate repeated source occurrences.
 - Expand selector lists across levels within one branch. Keep separate coordinated branches separate. Expand unambiguous integer ranges inclusively.
-- Preserve competing atomic-identifier and range readings where hyphens are ambiguous. Letter-range and shortened dotted-range policies are still open.
+- Preserve competing atomic-identifier and range readings where hyphens are ambiguous. ASCII hyphen-minus ranges are supported only when plurality is explicit through selector morphology or coordination (for example, `статей 175-189`, `главу 6 и статьи 175-189`, and `частей 1-3`); singular inserted identifiers such as `327-1` remain atomic. Letter-range and shortened dotted-range policies are still open.
 - Extract an unspecified-law reference with unresolved identity before contextual resolution. A separate left-to-right resolver fills an omitted law from the most recent law context and retains unresolved identity if no context exists.
 - Preserve recognizable unknown-law references with unresolved identity and internal supporting evidence; their eventual law_id is null. An ambiguous law retains all candidate IDs and status internally; its projected law_id is the smallest candidate ID.
 - Retain self and anaphoric structural targets for contextual resolution. The parser does not supply a numeric identifier for настоящей статьи or a law ID for указанного закона. The resolver uses the most recent compatible context as a fallback because enclosing-document context is unavailable in text-only input.
 - Retain incomplete candidate prefixes with local diagnostics and continue searching for later legal references. A connector joining a valid later reference is not automatically a dangling continuation.
 - Preserve repeated occurrences in textual order. Final occurrence selection must handle overlapping prefixes from candidate discovery without treating each prefix as a separate final mention; the selection policy remains open.
 - Project article to article, point to point_article, and subpoint to subpoint_article. A part alone maps to point_article; when both part and point occur, project the point and omit the part. Omit paragraph from the response while retaining other supported values. Record internal diagnostics when hierarchy levels are omitted.
+- An ordinal paragraph selector does not make an otherwise supported citation unprojectable. Preserve and project its enclosing article, part, and point values; each paragraph target remains a distinct occurrence even if paragraph omission makes projected links identical.
+- A recognizable explicit law or treaty title with no alias match has unresolved identity (`law_id=null`) and clears inherited law context. A known title with an alias match resolves normally.
+- A grouped citation may contain clauses at different hierarchy levels. Preserve each clause as its own provision and apply a shared trailing law to all branches. Do not treat a number after ordinary `т. п.` across a heading boundary as a point selector.
 - Integrate the analyzer and subsequent output stages into the service after the relevant interpretation and projection policies are defined. Reuse initialized recognition resources across requests rather than constructing the full analyzer for every request.
 - Package the grammar, recognition dependencies, law aliases, and service code in the Docker image. Keep port 8978 and the /detect route required by the assignment.
 - Save each experiment in a separate log directory with input/source snapshots, hashes, interpreter and dependency versions, command, duration, exit status, and captured output. Historical runs retain their original results.
 - Use grammar-based extraction as the current approach. The assignment does not require an ML model, and no ML training stage has been agreed.
+
+## Issue 14 Decisions
+
+The full-document follow-up review settled the policies above using the exact examples recorded in [issue 14](issues/14-full-document-quality-followups.md). The agent-reviewed labels may guide focused acceptance cases; review affected examples and negative cases individually, and revisit a label if implementation evidence exposes a policy dispute. The complete annotation set is not a human-adjudicated benchmark.
 
 ## Testing Decisions
 
