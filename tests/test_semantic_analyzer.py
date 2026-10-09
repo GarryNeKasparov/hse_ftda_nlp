@@ -227,6 +227,42 @@ class SemanticAnalyzerTests(unittest.TestCase):
         self.assertTrue(any(item.code == "range_too_large"
                             for item in result.diagnostics))
 
+    def test_converts_ordinal_paragraph_to_its_enclosing_provision(self):
+        result = self.analyze("абзаца первого части 1 статьи 284 ГПК РФ")
+
+        self.assertEqual(result.references[0].provisions, (
+            self.path(law_id=6, article="284", part="1", paragraph="1"),
+        ))
+        self.assertEqual(result.diagnostics, ())
+
+    def test_preserves_article_for_ordinal_paragraph(self):
+        result = self.analyze("абзаца второго статьи 284 ГПК РФ")
+
+        self.assertEqual(result.references[0].provisions, (
+            self.path(law_id=6, article="284", paragraph="2"),
+        ))
+
+    def test_expands_ordinal_paragraph_list_and_range_in_written_order(self):
+        result = self.analyze(
+            "абзацев первого-третьего и пятого части 1 статьи 284 ГПК РФ")
+
+        self.assertEqual([item.paragraph for item in result.references[0].provisions],
+                         ["1", "2", "3", "5"])
+        self.assertTrue(all(item.article == "284" and item.part == "1"
+                            for item in result.references[0].provisions))
+
+    def test_keeps_paragraph_selector_under_point_and_article(self):
+        result = self.analyze("абзаца второго пункта 2 статьи 284 ГПК РФ")
+
+        self.assertEqual(result.references[0].provisions, (
+            self.path(law_id=6, article="284", point="2", paragraph="2"),
+        ))
+
+    def test_ordinary_ordinal_prose_is_not_a_reference(self):
+        result = self.analyze("Это первый абзац обычного текста.")
+
+        self.assertEqual(result.references, ())
+
     @staticmethod
     def path(*, law_id, article=None, part=None, point=None, subpoint=None,
              paragraph=None, law_status="known_unique", law_candidate_ids=()):

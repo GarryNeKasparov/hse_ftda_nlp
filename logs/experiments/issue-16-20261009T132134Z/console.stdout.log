@@ -1,0 +1,7 @@
+paragraph_under_article: passed=True links=1 diagnostics=[]
+paragraph_under_part_and_article: passed=True links=1 diagnostics=[]
+paragraph_under_point_and_article: passed=True links=1 diagnostics=[]
+paragraph_list_keeps_multiplicity: passed=True links=2 diagnostics=[]
+paragraph_range_followed_by_list_item: passed=True links=4 diagnostics=[]
+ordinary_ordinal_prose: passed=True links=0 diagnostics=[]
+saved logs/experiments/issue-16-20261009T132134Z/results.json

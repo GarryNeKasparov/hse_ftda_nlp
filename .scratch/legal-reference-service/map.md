@@ -66,6 +66,11 @@ local issue files.
   ASCII ranges only with explicit plural evidence. On the fixed whole-document
   corpus, links improved from 224/7/90 TP/FP/FN to 276/7/38; focused cases and
   run details are in `logs/experiments/issue-15-20261009T125655Z/`.
+- [Issue 16](issues/16-ordinal-paragraph-projection.md) is resolved. Supported
+  paragraph ordinals and their lists/ranges now retain enclosing paths and
+  project one link per paragraph, including identical projected links. The
+  whole-document comparison improved from 276/7/38 to 299/7/15 TP/FP/FN;
+  details are in `logs/experiments/issue-16-20261009T132134Z/`.
 - Issues 11–13 are focused follow-ups from measured failures: law-name boundary
   and stale-context errors, one part/article citation form, and abbreviated-law
   citation boundaries/recall.
@@ -108,14 +113,13 @@ this table.
 | [13 — Abbreviated-law citations](issues/13-abbreviated-law-citation-coverage.md) | resolved | 10 | Improve spans and recall for short law abbreviations |
 | [14 — Full-document follow-ups](issues/14-full-document-quality-followups.md) | resolved | 10 | Set behavior and scope implementation follow-ups from whole-document gaps |
 | [15 — Inserted identifiers and ASCII ranges](issues/15-inserted-identifiers-and-ascii-ranges.md) | resolved | 14 | Preserve atomic inserted IDs and expand agreed plural ASCII ranges |
-| [16 — Ordinal paragraph projection](issues/16-ordinal-paragraph-projection.md) | open | 14 | Retain supported enclosing targets when paragraphs are omitted from API |
+| [16 — Ordinal paragraph projection](issues/16-ordinal-paragraph-projection.md) | resolved | 14 | Retain supported enclosing targets when paragraphs are omitted from API |
 | [17 — Explicit law titles and context safety](issues/17-explicit-law-titles-and-context-safety.md) | open | 14 | Resolve known long titles and avoid stale law inheritance |
 | [18 — Mixed-level groups and heading boundaries](issues/18-mixed-level-groups-and-heading-boundaries.md) | open | 14, 16 | Extract grouped clauses and reject a measured heading false positive |
 
 ## Frontier
 
-Issue 16 is the current frontier. Issues 16 and 17 can proceed independently;
-Issue 18 also depends on paragraph projection in Issue 16.
+Issue 17 is the current frontier. Issues 17 and 18 can proceed independently.
 
 ## Comments
 

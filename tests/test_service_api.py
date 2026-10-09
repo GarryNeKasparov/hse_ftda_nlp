@@ -579,6 +579,43 @@ class ServiceApiTests(unittest.TestCase):
             "subpoint_article": "3",
         }]})
 
+    def test_projects_ordinal_paragraph_under_article_and_part(self):
+        response = self.client.post("/detect", json={
+            "text": "абзаца первого части 1 статьи 284 ГПК РФ",
+        })
+
+        self.assertEqual(response.json(), {"links": [{
+            "law_id": 6,
+            "article": "284",
+            "point_article": "1",
+            "subpoint_article": None,
+        }]})
+
+    def test_projects_each_ordinal_paragraph_without_collapsing_duplicates(self):
+        response = self.client.post("/detect", json={
+            "text": "абзацев первого и второго пункта 2 статьи 284 ГПК РФ",
+        })
+
+        expected = {"law_id": 6, "article": "284", "point_article": "2",
+                    "subpoint_article": None}
+        self.assertEqual(response.json(), {"links": [expected, expected]})
+
+    def test_expands_ordinal_paragraph_range_and_list_without_deduplication(self):
+        response = self.client.post("/detect", json={
+            "text": "абзацев первого-третьего и пятого статьи 284 ГПК РФ",
+        })
+
+        expected = {"law_id": 6, "article": "284", "point_article": None,
+                    "subpoint_article": None}
+        self.assertEqual(response.json(), {"links": [expected] * 4})
+
+    def test_ordinary_ordinal_prose_does_not_create_a_link(self):
+        response = self.client.post("/detect", json={
+            "text": "Это первый абзац обычного текста.",
+        })
+
+        self.assertEqual(response.json(), {"links": []})
+
     def test_uses_minimum_law_id_for_an_ambiguous_alias(self):
         response = self.client.post("/detect", json={
             "text": "статья 2 ФЗ №3-ФЗ",

@@ -47,6 +47,17 @@ _SHORT_MARKERS = {
 }
 _WORD_CONJUNCTIONS = {"и": "AND", "или": "OR"}
 _RANGE_MARKERS = {"-", "–", "—"}
+_ORDINAL_NUMBERS = {
+    "первый": 1, "второй": 2, "третий": 3, "четвертый": 4,
+    "пятый": 5, "шестой": 6, "седьмой": 7, "восьмой": 8,
+    "девятый": 9, "десятый": 10, "одиннадцатый": 11,
+    "двенадцатый": 12, "тринадцатый": 13, "четырнадцатый": 14,
+    "пятнадцатый": 15, "шестнадцатый": 16, "семнадцатый": 17,
+    "восемнадцатый": 18, "девятнадцатый": 19, "двадцатый": 20,
+    "тридцатый": 30, "сороковой": 40, "пятидесятый": 50,
+    "шестидесятый": 60, "семидесятый": 70, "восьмидесятый": 80,
+    "девяностый": 90, "сотый": 100,
+}
 _QUOTE_MARKS = {"\"", "«", "»", "“", "”", "„", "‟", "\u201e", "\u201c", "\u201d"}
 _LOOKALIKE_LETTERS = "ckaeopxymtbh"
 _LOOKALIKE_TRANSLATION = str.maketrans({"c": "с", "k": "к", "a": "а", "e": "е",
@@ -571,7 +582,10 @@ class ReferenceAnalyzer:
                             for edge in edges.get(index - 1, ()))):
                 fuzzy_starts.append(index)
             if self._is_ordinal(token.value):
-                add(index, index + 1, "ORDINAL", evidence="morphological_ordinal")
+                ordinal_value = self._ordinal_number(token.value)
+                evidence = (f"ordinal_value:{ordinal_value}" if ordinal_value is not None
+                            else "morphological_ordinal")
+                add(index, index + 1, "ORDINAL", evidence=evidence)
 
             modifier_forms = self._word_forms(token.value)
             if modifier_forms & {"настоящий", "указанный", "этот"} and index + 1 < len(raw):
@@ -723,6 +737,16 @@ class ReferenceAnalyzer:
         """Recognize ordinal word forms without choosing a ranked parse."""
         return any(parse.tag.POS == "NUMR" or "Anum" in str(parse.tag)
                    for parse in self._morphology.parse(value))
+
+    @lru_cache(maxsize=32768)
+    def _ordinal_number(self, value: str) -> int | None:
+        """Return a supported ordinal's numeric value from its morphological lemma."""
+        for parse in self._morphology.parse(value):
+            if parse.tag.POS == "NUMR" or "Anum" in str(parse.tag):
+                number = _ORDINAL_NUMBERS.get(parse.normal_form)
+                if number is not None:
+                    return number
+        return None
 
     @lru_cache(maxsize=32768)
     def _can_precede_code_name(self, value: str) -> bool:

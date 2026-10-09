@@ -1,0 +1,305 @@
+[
+  {
+    "id": "paragraph_under_article",
+    "text": "абзаца второго статьи 284 ГПК РФ",
+    "expected_links": [
+      {
+        "law_id": 6,
+        "article": "284",
+        "point_article": null,
+        "subpoint_article": null
+      }
+    ],
+    "actual_links": [
+      {
+        "law_id": 6,
+        "article": "284",
+        "point_article": null,
+        "subpoint_article": null
+      }
+    ],
+    "semantic_paths": [
+      {
+        "law_id": 6,
+        "law_status": "known_unique",
+        "law_candidate_ids": [
+          6
+        ],
+        "law_target_status": "explicit",
+        "article": "284",
+        "article_status": "explicit",
+        "part": null,
+        "point": null,
+        "subpoint": null,
+        "paragraph": "2"
+      }
+    ],
+    "diagnostics": [],
+    "passed": true
+  },
+  {
+    "id": "paragraph_under_part_and_article",
+    "text": "абзаца первого части 1 статьи 284 ГПК РФ",
+    "expected_links": [
+      {
+        "law_id": 6,
+        "article": "284",
+        "point_article": "1",
+        "subpoint_article": null
+      }
+    ],
+    "actual_links": [
+      {
+        "law_id": 6,
+        "article": "284",
+        "point_article": "1",
+        "subpoint_article": null
+      }
+    ],
+    "semantic_paths": [
+      {
+        "law_id": 6,
+        "law_status": "known_unique",
+        "law_candidate_ids": [
+          6
+        ],
+        "law_target_status": "explicit",
+        "article": "284",
+        "article_status": "explicit",
+        "part": "1",
+        "point": null,
+        "subpoint": null,
+        "paragraph": "1"
+      }
+    ],
+    "diagnostics": [],
+    "passed": true
+  },
+  {
+    "id": "paragraph_under_point_and_article",
+    "text": "абзаца второго пункта 2 статьи 284 ГПК РФ",
+    "expected_links": [
+      {
+        "law_id": 6,
+        "article": "284",
+        "point_article": "2",
+        "subpoint_article": null
+      }
+    ],
+    "actual_links": [
+      {
+        "law_id": 6,
+        "article": "284",
+        "point_article": "2",
+        "subpoint_article": null
+      }
+    ],
+    "semantic_paths": [
+      {
+        "law_id": 6,
+        "law_status": "known_unique",
+        "law_candidate_ids": [
+          6
+        ],
+        "law_target_status": "explicit",
+        "article": "284",
+        "article_status": "explicit",
+        "part": null,
+        "point": "2",
+        "subpoint": null,
+        "paragraph": "2"
+      }
+    ],
+    "diagnostics": [],
+    "passed": true
+  },
+  {
+    "id": "paragraph_list_keeps_multiplicity",
+    "text": "абзацев первого и второго пункта 2 статьи 284 ГПК РФ",
+    "expected_links": [
+      {
+        "law_id": 6,
+        "article": "284",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "284",
+        "point_article": "2",
+        "subpoint_article": null
+      }
+    ],
+    "actual_links": [
+      {
+        "law_id": 6,
+        "article": "284",
+        "point_article": "2",
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "284",
+        "point_article": "2",
+        "subpoint_article": null
+      }
+    ],
+    "semantic_paths": [
+      {
+        "law_id": 6,
+        "law_status": "known_unique",
+        "law_candidate_ids": [
+          6
+        ],
+        "law_target_status": "explicit",
+        "article": "284",
+        "article_status": "explicit",
+        "part": null,
+        "point": "2",
+        "subpoint": null,
+        "paragraph": "1"
+      },
+      {
+        "law_id": 6,
+        "law_status": "known_unique",
+        "law_candidate_ids": [
+          6
+        ],
+        "law_target_status": "explicit",
+        "article": "284",
+        "article_status": "explicit",
+        "part": null,
+        "point": "2",
+        "subpoint": null,
+        "paragraph": "2"
+      }
+    ],
+    "diagnostics": [],
+    "passed": true
+  },
+  {
+    "id": "paragraph_range_followed_by_list_item",
+    "text": "абзацев первого-третьего и пятого статьи 284 ГПК РФ",
+    "expected_links": [
+      {
+        "law_id": 6,
+        "article": "284",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "284",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "284",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "284",
+        "point_article": null,
+        "subpoint_article": null
+      }
+    ],
+    "actual_links": [
+      {
+        "law_id": 6,
+        "article": "284",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "284",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "284",
+        "point_article": null,
+        "subpoint_article": null
+      },
+      {
+        "law_id": 6,
+        "article": "284",
+        "point_article": null,
+        "subpoint_article": null
+      }
+    ],
+    "semantic_paths": [
+      {
+        "law_id": 6,
+        "law_status": "known_unique",
+        "law_candidate_ids": [
+          6
+        ],
+        "law_target_status": "explicit",
+        "article": "284",
+        "article_status": "explicit",
+        "part": null,
+        "point": null,
+        "subpoint": null,
+        "paragraph": "1"
+      },
+      {
+        "law_id": 6,
+        "law_status": "known_unique",
+        "law_candidate_ids": [
+          6
+        ],
+        "law_target_status": "explicit",
+        "article": "284",
+        "article_status": "explicit",
+        "part": null,
+        "point": null,
+        "subpoint": null,
+        "paragraph": "2"
+      },
+      {
+        "law_id": 6,
+        "law_status": "known_unique",
+        "law_candidate_ids": [
+          6
+        ],
+        "law_target_status": "explicit",
+        "article": "284",
+        "article_status": "explicit",
+        "part": null,
+        "point": null,
+        "subpoint": null,
+        "paragraph": "3"
+      },
+      {
+        "law_id": 6,
+        "law_status": "known_unique",
+        "law_candidate_ids": [
+          6
+        ],
+        "law_target_status": "explicit",
+        "article": "284",
+        "article_status": "explicit",
+        "part": null,
+        "point": null,
+        "subpoint": null,
+        "paragraph": "5"
+      }
+    ],
+    "diagnostics": [],
+    "passed": true
+  },
+  {
+    "id": "ordinary_ordinal_prose",
+    "text": "Это первый абзац обычного текста.",
+    "expected_links": [],
+    "actual_links": [],
+    "semantic_paths": [],
+    "diagnostics": [],
+    "passed": true
+  }
+]

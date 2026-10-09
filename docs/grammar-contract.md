@@ -41,7 +41,11 @@ coordination; singular inserted article identifiers remain atomic. Keep other
 ambiguous readings unresolved. En dash and em dash are lexed as explicit
 `RANGE` separators. Semantic expansion accepts only ascending ranges whose
 two endpoints are plain decimal integer IDs. Dotted, shortened, letter,
-ordinal, reversed, and oversized ranges are not expanded.
+reversed, and oversized ranges are not expanded. Ordinal ranges are supported
+only for paragraph selectors: Russian ordinals from first through twentieth
+and the round tens through hundredth are normalized to decimal positions;
+ordinal lists and ranges use the same inclusive size limit. Other ordinal
+forms remain unresolved.
 Under the assignment's README convention, `PP` maps to subpoint. Broader legal
 texts may use the same abbreviation differently; those readings are outside
 this homework-specific token contract.

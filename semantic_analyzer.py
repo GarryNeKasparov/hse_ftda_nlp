@@ -255,7 +255,8 @@ class SemanticAnalyzer:
         structural_self = (field == "article" and any(
             leaf.kind in {"SELF_ARTICLE", "ANAPHORIC_ARTICLE"}
             for leaf in self._walk_leaves(level_nodes[0])))
-        values = [None] if structural_self else self._selector_values(level_nodes[0])
+        values = ([None] if structural_self else
+                  self._selector_values(level_nodes[0], allow_ordinals=field == "paragraph"))
         children = self._child_groups(group)
         if children:
             lower_paths = [path for child in children
@@ -264,7 +265,8 @@ class SemanticAnalyzer:
             lower_paths = [{}]
         return [{**lower, field: value} for lower in lower_paths for value in values]
 
-    def _selector_values(self, level: AstNode) -> list[str]:
+    def _selector_values(self, level: AstNode, *,
+                         allow_ordinals: bool = False) -> list[str]:
         selectors = [node for node in self._walk_nodes(level) if node.kind == "selector"]
         if len(selectors) != 1:
             raise _UnsupportedSemantics("missing_or_repeated_selector")
@@ -279,9 +281,14 @@ class SemanticAnalyzer:
             ranges = [leaf for leaf in leaves if leaf.kind == "RANGE"]
             if ranges:
                 if (len(ranges) != 1 or len(identifiers) != 2
-                        or any(identifier.kind != "ID" for identifier in identifiers)):
+                        or any(identifier.kind != "ID"
+                               and not (allow_ordinals and identifier.kind == "ORDINAL")
+                               for identifier in identifiers)):
                     raise _UnsupportedSemantics("unsupported_range_endpoints")
-                first, last = (identifier.value for identifier in identifiers)
+                first, last = (self._selector_number(identifier, allow_ordinals)
+                               for identifier in identifiers)
+                if first is None or last is None:
+                    raise _UnsupportedSemantics("unsupported_range_endpoints")
                 if any(not endpoint.isascii() or not endpoint.isdigit()
                        for endpoint in (first, last)):
                     raise _UnsupportedSemantics("unsupported_range_endpoints")
@@ -292,9 +299,14 @@ class SemanticAnalyzer:
                     raise _UnsupportedSemantics("range_too_large")
                 values.extend(str(number) for number in range(first_number, last_number + 1))
                 continue
-            if len(identifiers) != 1 or identifiers[0].kind != "ID":
+            if (len(identifiers) != 1
+                    or (identifiers[0].kind != "ID"
+                        and not (allow_ordinals and identifiers[0].kind == "ORDINAL"))):
                 raise _UnsupportedSemantics("non_scalar_or_ordinal_selector")
-            values.append(identifiers[0].value)
+            value = self._selector_number(identifiers[0], allow_ordinals)
+            if value is None:
+                raise _UnsupportedSemantics("unsupported_ordinal_selector")
+            values.append(value)
         connectors = [leaf for leaf in self._walk_leaves(selector)
                       if leaf.kind in {"COMMA", "AND", "OR", "AND_OR"}]
         item_spans = []
@@ -309,6 +321,18 @@ class SemanticAnalyzer:
                 or sum(joins) != len(connectors)):
             raise _UnsupportedSemantics("unsupported_selector_separator")
         return values
+
+    @staticmethod
+    def _selector_number(leaf: AstLeaf, allow_ordinals: bool) -> str | None:
+        """Return a scalar selector or a supported paragraph ordinal value."""
+        if leaf.kind == "ID":
+            return leaf.value
+        if not allow_ordinals or leaf.kind != "ORDINAL":
+            return None
+        prefix = "ordinal_value:"
+        value = next((item[len(prefix):] for item in leaf.evidence
+                      if item.startswith(prefix)), None)
+        return value if value is not None and value.isascii() and value.isdigit() else None
 
     @classmethod
     def _child_groups(cls, group: AstNode) -> list[AstNode]:
