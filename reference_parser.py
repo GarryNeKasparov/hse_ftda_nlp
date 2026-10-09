@@ -23,7 +23,7 @@ GRAMMAR_PATH = Path(__file__).resolve().parent / "docs" / "reference-grammar.bnf
 _TOKEN_RE = re.compile(
     r"[^\W\d_](?:\.\d+)+(?:[⁰¹²³⁴⁵⁶⁷⁸⁹]+)?"
     r"|\d+(?:\.\d+)*(?:[⁰¹²³⁴⁵⁶⁷⁸⁹]+)?"
-    r"|[^\W\d_]+"
+    r"|[^\W\d_](?:[^\W\d_]|[\u0300-\u036f])*"
     r"|[^\w\s]",
     re.UNICODE,
 )
@@ -315,17 +315,77 @@ class ReferenceAnalyzer:
         fuzzy_starts = []
         unknown_law_spans: list[tuple[int, int]] = []
 
-        def add(first: int, after: int, kind: str, law_ids: Iterable[int] = (), evidence: str = ""):
-            if after <= first:
-                return
+        def add(first: int, after: int, kind: str, law_ids: Iterable[int] = (),
+                evidence: str = "", token_value: str | None = None):
             source = text[raw[first].start:raw[after - 1].end]
             forms = tuple(sorted({f"{position - first}:{form}"
                                   for position in range(first, after)
                                   for form in self._word_forms(raw[position].value)}))
-            candidate = LexicalCandidate(kind, source, raw[first].start, raw[after - 1].end,
+            candidate = LexicalCandidate(kind, token_value if token_value is not None else source,
+                                         raw[first].start, raw[after - 1].end,
                                          tuple(sorted(set(law_ids))), (evidence,) if evidence else (),
                                          forms)
             edges[first].append(_Edge(candidate, first, after))
+
+        def quoted_subpoint_context(opening: int, closing: int) -> bool:
+            """Recognize a quoted letter after a subpoint marker or within its list."""
+            if closing != opening + 2:
+                return False
+            letter = raw[opening + 1].value
+            if not self._is_identifier(letter) or len(letter) != 1:
+                return False
+
+            cursor = opening
+            while cursor >= 0:
+                marker = cursor - 1
+                if marker >= 0 and raw[marker].value == ".":
+                    marker -= 1
+                if marker >= 0 and any(
+                        edge.token.kind in {"SUBPOINT", "PP"}
+                        for edge in edges.get(marker, ())):
+                    return True
+
+                # A later quoted letter inherits the marker through a list of
+                # one-letter quoted selectors joined by comma or conjunction.
+                previous_close = cursor - 1
+                if (previous_close >= 0
+                        and (raw[previous_close].value == ","
+                             or self._matching_form(raw[previous_close].value)
+                             in _WORD_CONJUNCTIONS)):
+                    previous_close -= 1
+                if (previous_close < 2
+                        or raw[previous_close].value not in _QUOTE_MARKS
+                        or not self._is_identifier(raw[previous_close - 1].value)
+                        or len(raw[previous_close - 1].value) != 1
+                        or raw[previous_close - 2].value not in _QUOTE_MARKS):
+                    return False
+                cursor = previous_close - 2
+            return False
+
+        def comma_bridges_hierarchy(comma_index: int, higher_kind: str | None) -> bool:
+            """Mark a comma as a level gap after a complete lower-level selector."""
+            ranks = {"PARAGRAPH": 0, "SUBPOINT": 1, "PP": 1,
+                     "POINT": 2, "PART": 3, "ARTICLE": 4}
+            if higher_kind not in ranks:
+                return False
+            cursor = comma_index - 1
+            saw_identifier = False
+            while cursor >= 0:
+                kinds = {item.token.kind for item in edges.get(cursor, ())}
+                lower_kinds = kinds & ranks.keys()
+                if lower_kinds:
+                    return (saw_identifier and any(
+                        ranks[kind] < ranks[higher_kind] for kind in lower_kinds))
+                if kinds & {"ID", "ORDINAL"}:
+                    saw_identifier = True
+                elif kinds & {"COMMA", "AND", "OR", "AND_OR", "RANGE"}:
+                    pass
+                elif raw[cursor].value in _QUOTE_MARKS or raw[cursor].value == ".":
+                    pass
+                else:
+                    return False
+                cursor -= 1
+            return False
 
         for index, token in enumerate(raw):
             word = self._matching_form(token.value)
@@ -352,18 +412,8 @@ class ReferenceAnalyzer:
                 following_marker = (self._marker_forms.get(
                     self._matching_form(raw[index + 1].value))
                     if index + 1 < len(raw) else None)
-                follows_article = following_marker == "ARTICLE"
-                precedes_part_value = any(
-                    edge.token.kind == "PART"
-                    and edge.after < index
-                    and any(self._is_identifier(item.value)
-                            for item in raw[edge.after:index])
-                    and all(self._is_identifier(item.value) or item.value == "."
-                            for item in raw[edge.after:index])
-                    for start in range(max(0, index - 4), index)
-                    for edge in edges.get(start, ())
-                )
-                comma_kind = ("LEVEL_COMMA" if follows_article and precedes_part_value
+                precedes_lower_level = comma_bridges_hierarchy(index, following_marker)
+                comma_kind = ("LEVEL_COMMA" if precedes_lower_level
                               else "COMMA")
                 add(index, index + 1, comma_kind)
             if token.value == "в":
@@ -417,7 +467,12 @@ class ReferenceAnalyzer:
                                 if raw[after].value == closing_mark
                                 and "\n" not in text[raw[after - 1].end:raw[after].start]), None)
                 if closing is not None:
-                    add(index, closing + 1, "LAW", evidence="unknown_quoted_title")
+                    quoted_letter = quoted_subpoint_context(index, closing)
+                    if quoted_letter:
+                        add(index, closing + 1, "ID", evidence="quoted_subpoint",
+                            token_value=raw[index + 1].value)
+                    else:
+                        add(index, closing + 1, "LAW", evidence="unknown_quoted_title")
 
             if "кодекс" in self._word_forms(token.value):
                 start = index
@@ -503,9 +558,23 @@ class ReferenceAnalyzer:
                 if first < title_start and title_after == after
             )) if any(first < title_start and title_after == after
                       for title_start, title_after in known_law_spans) else set()
+            fuzzy_title_ids = set()
+            if not exact_ids and not title_ids:
+                opening = next((position for position in range(first, after)
+                                if raw[position].value in _QUOTE_MARKS), None)
+                if opening is not None:
+                    if opening + 1 < after:
+                        fuzzy_title_ids = set().union(*(
+                            edge.token.law_ids
+                            for edge in self._fuzzy_law_edges(raw, opening, text)
+                            if edge.after == after
+                        ))
             if not exact_ids:
-                add(first, after, "LAW", law_ids=title_ids,
-                    evidence="law_alias_title" if title_ids else "unknown_explicit_law")
+                resolved_ids = title_ids or fuzzy_title_ids
+                evidence = ("law_alias_title" if title_ids else
+                            "fuzzy_law_alias_title" if fuzzy_title_ids else
+                            "unknown_explicit_law")
+                add(first, after, "LAW", law_ids=resolved_ids, evidence=evidence)
         for (first, after, kind, value), ids in by_span.items():
             forms = tuple(sorted({f"{position - first}:{form}"
                                   for position in range(first, after)
@@ -681,7 +750,8 @@ class ReferenceAnalyzer:
                                 for edge in edges[following_index]))
                             ends_at_boundary = (following is None or
                                                 not following.value[:1].isalnum())
-                            if is_connector and not continues and ends_at_boundary:
+                            if (is_connector and not continues
+                                    and (ends_at_boundary or next_piece.value in _RANGE_MARKERS)):
                                 incomplete_spans[span] = next_piece.end
                     for edge in sorted(edges.get(cursor, ()), key=lambda item: (
                             item.token.kind, item.token.value, item.after)):

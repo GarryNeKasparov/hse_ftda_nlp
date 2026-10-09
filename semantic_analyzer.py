@@ -62,7 +62,6 @@ _GROUP_FIELDS = {
     "subpoint_group": ("subpoint_level", "subpoint"),
     "paragraph_group": ("paragraph_level", "paragraph"),
 }
-_LIST_CONNECTORS = {"COMMA", "AND", "OR", "AND_OR"}
 _MAX_RANGE_VALUES = 1000
 
 
@@ -286,10 +285,7 @@ class SemanticAnalyzer:
                 if any(not endpoint.isascii() or not endpoint.isdigit()
                        for endpoint in (first, last)):
                     raise _UnsupportedSemantics("unsupported_range_endpoints")
-                try:
-                    first_number, last_number = int(first), int(last)
-                except ValueError as error:
-                    raise _UnsupportedSemantics("unsupported_range_endpoints") from error
+                first_number, last_number = int(first), int(last)
                 if first_number > last_number:
                     raise _UnsupportedSemantics("reversed_range")
                 if last_number - first_number + 1 > _MAX_RANGE_VALUES:
@@ -299,11 +295,18 @@ class SemanticAnalyzer:
             if len(identifiers) != 1 or identifiers[0].kind != "ID":
                 raise _UnsupportedSemantics("non_scalar_or_ordinal_selector")
             values.append(identifiers[0].value)
-        connectors = [leaf.kind for leaf in self._walk_leaves(selector)
+        connectors = [leaf for leaf in self._walk_leaves(selector)
                       if leaf.kind in {"COMMA", "AND", "OR", "AND_OR"}]
-        if any(connector not in _LIST_CONNECTORS for connector in connectors):
-            raise _UnsupportedSemantics("disjunctive_selector_policy_not_yet_resolved")
-        if len(connectors) != len(items) - 1:
+        item_spans = []
+        for item in items:
+            item_leaves = tuple(self._walk_leaves(item))
+            item_spans.append((min(leaf.start for leaf in item_leaves),
+                               max(leaf.end for leaf in item_leaves)))
+        joins = [sum(left_end <= leaf.start and leaf.end <= right_start
+                     for leaf in connectors)
+                 for (_, left_end), (right_start, _) in zip(item_spans, item_spans[1:])]
+        if (len(joins) != len(items) - 1 or any(count == 0 for count in joins)
+                or sum(joins) != len(connectors)):
             raise _UnsupportedSemantics("unsupported_selector_separator")
         return values
 

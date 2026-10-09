@@ -71,4 +71,6 @@ class ContextualResolver:
             return True
         current_ids = set(current[2])
         antecedent_ids = set(antecedent[2])
+        if current_ids and not antecedent_ids:
+            return False
         return not current_ids or not antecedent_ids or bool(current_ids & antecedent_ids)

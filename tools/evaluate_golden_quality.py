@@ -59,6 +59,14 @@ def _link_key(link: dict) -> tuple:
     return tuple(link[field] for field in LINK_FIELDS)
 
 
+def _extraction_sample_exact(predicted_refs: list[dict], gold_refs: list[dict]) -> bool:
+    """Compare complete extraction occurrences, including their source spans."""
+    normalized_gold_refs = [{
+        key: ref[key] for key in ("start", "end", "text", "links")
+    } for ref in gold_refs]
+    return predicted_refs == normalized_gold_refs
+
+
 def _pr(tp: int, fp: int, fn: int) -> dict:
     return {
         "true_positive": tp,
@@ -102,9 +110,6 @@ def evaluate() -> dict:
                 if response.status_code != 200:
                     errors.append({"id": row["id"], "error": "non_200_response",
                                    "status_code": response.status_code})
-                if actual == expected:
-                    exact += 1
-
                 gold_link_counts = Counter(_link_key(link) for link in expected)
                 actual_link_counts = Counter(_link_key(link) for link in actual)
                 overlap = gold_link_counts & actual_link_counts
@@ -133,9 +138,6 @@ def evaluate() -> dict:
                     raise AssertionError(f"Analyzer/API output diverged for {row['id']}")
 
                 if "extraction" in suite:
-                    normalized_gold_refs = [{
-                        key: ref[key] for key in ("start", "end", "text", "links")
-                    } for ref in gold_refs]
                     gold_spans = Counter((ref["start"], ref["end"]) for ref in gold_refs)
                     pred_spans = Counter((ref["start"], ref["end"])
                                          for ref in predicted_refs)
@@ -154,7 +156,7 @@ def evaluate() -> dict:
                     grounded_tp += sum(occurrence_overlap.values())
                     grounded_fp += sum((pred_occurrences - occurrence_overlap).values())
                     grounded_fn += sum((gold_occurrences - occurrence_overlap).values())
-                    sample_exact = predicted_refs == normalized_gold_refs
+                    sample_exact = _extraction_sample_exact(predicted_refs, gold_refs)
                     false_predicted = list((pred_occurrences - gold_occurrences).elements())
                     missed = list((gold_occurrences - pred_occurrences).elements())
                 else:
@@ -162,6 +164,8 @@ def evaluate() -> dict:
                     false_predicted = []
                     missed = []
 
+                if sample_exact:
+                    exact += 1
                 if not sample_exact:
                     errors.append({
                         "id": row["id"],

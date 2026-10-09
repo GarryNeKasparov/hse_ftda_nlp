@@ -42,6 +42,19 @@ class ReferenceAnalyzerTests(unittest.TestCase):
         law_names = [leaf.value for leaf in leaves(matches[0]) if leaf.kind == "LAW"]
         self.assertIn("НК РФ", law_names)
 
+    def test_keeps_explicit_law_complete_before_prose_starting_with_in(self):
+        for law, expected_id in (("АПК", "0"), ("НК РФ", "15")):
+            with self.subTest(law=law):
+                citation = f"ст. 5 {law}"
+                text = f"Согласно {citation} в рассматриваемом деле действует правило."
+
+                result = self.analyzer.analyze(text)
+                candidate = find_candidate(result, text, citation)
+
+                self.assertTrue(candidate.complete)
+                self.assertEqual(law_ids(candidate), [expected_id])
+                self.assertEqual(node_values(candidate, "ID"), ["5"])
+
     def test_interprets_pp_as_subpoint_under_point(self):
         text = "пп. 1 п. 1 ст. 374 НК РФ"
 
@@ -55,6 +68,31 @@ class ReferenceAnalyzerTests(unittest.TestCase):
         leaves_by_kind = [(leaf.kind, leaf.value) for leaf in leaves(candidate)]
         self.assertIn(("PP", "пп."), leaves_by_kind)
         self.assertIn(("POINT", "п."), leaves_by_kind)
+
+    def test_keeps_quoted_lettered_subpoint_in_full_reference_span(self):
+        for opening, closing in (("«", "»"), ('"', '"')):
+            with self.subTest(quote=opening + closing):
+                text = f"подпункт {opening}а{closing} пункта 2 статьи 10 НК РФ"
+
+                result = self.analyzer.analyze(text)
+                candidate = find_candidate(result, text, text)
+
+                self.assertTrue(candidate.complete)
+                self.assertEqual((candidate.start, candidate.end), (0, len(text)))
+                self.assertEqual(node_values(candidate, "ID"), ["а", "2", "10"])
+
+    def test_recognizes_quoted_subpoint_after_abbreviation_and_in_list(self):
+        examples = (
+            ("пп. «а» п. 1 ст. 5 НК РФ", ["а", "1", "5"]),
+            ("подпункты «а», «б» пункта 1 статьи 5 НК РФ",
+             ["а", "б", "1", "5"]),
+        )
+        for text, expected_ids in examples:
+            with self.subTest(text=text):
+                candidate = find_candidate(self.analyzer.analyze(text), text, text)
+
+                self.assertTrue(candidate.complete)
+                self.assertEqual(node_values(candidate, "ID"), expected_ids)
 
     def test_extracts_article_without_law_for_later_context_resolution(self):
         text = "согласно ст. 6"
@@ -132,6 +170,19 @@ class ReferenceAnalyzerTests(unittest.TestCase):
         self.assertEqual(candidate.start, 3)
         self.assertEqual(text[candidate.start:candidate.end], "статья 5 АПК")
 
+    def test_extracts_decomposed_unicode_marker_with_original_source_offsets(self):
+        citation = "статье\u0308и\u0306 5 НК РФ"
+        text = f"Согласно {citation}, применяется правило."
+
+        result = self.analyzer.analyze(text)
+        candidate = find_candidate(result, text, citation)
+
+        self.assertTrue(candidate.complete)
+        self.assertEqual((candidate.start, candidate.end),
+                         (len("Согласно "), len("Согласно ") + len(citation)))
+        self.assertEqual(node_values(candidate, "ID"), ["5"])
+        self.assertEqual(law_ids(candidate), ["15"])
+
     def test_recognizes_self_and_anaphoric_targets_without_inventing_ids(self):
         self_target = "пункт 2 настоящей статьи настоящего закона"
         anaphoric_target = "статья 8 указанного закона"
@@ -182,6 +233,28 @@ class ReferenceAnalyzerTests(unittest.TestCase):
         self.assertEqual(len(law_mentions), 1)
         self.assertEqual(law_mentions[0].law_ids, (42,))
         self.assertEqual(law_mentions[0].law_status, "known_unique")
+
+    def test_fuzzy_matches_a_misspelled_explicit_federal_law_title(self):
+        text = 'ст. 5 Федерального закона "О персональных данныз"'
+
+        result = self.analyzer.analyze(text)
+        candidate = find_candidate(result, text, text)
+
+        law_mentions = [leaf for leaf in leaves(candidate) if leaf.kind == "LAW"]
+        self.assertEqual(len(law_mentions), 1)
+        self.assertEqual(law_mentions[0].law_ids, (330,))
+        self.assertEqual(law_mentions[0].law_status, "known_unique")
+
+    def test_keeps_malformed_range_continuation_incomplete(self):
+        text = "ст. 5 - неизвестно. Ст. 7 УК РФ"
+
+        result = self.analyzer.analyze(text)
+        prefix = find_candidate(result, text, "ст. 5")
+        later = find_candidate(result, text, "Ст. 7 УК РФ")
+
+        self.assertFalse(prefix.complete)
+        self.assertEqual(prefix.diagnostics[0].code, "unfinished_continuation")
+        self.assertTrue(later.complete)
 
     def test_finds_the_five_structural_challenge_references_in_raw_text(self):
         references = (

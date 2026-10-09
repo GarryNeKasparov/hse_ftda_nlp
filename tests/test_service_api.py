@@ -32,6 +32,157 @@ class ServiceApiTests(unittest.TestCase):
             "subpoint_article": "1",
         }]})
 
+    def test_returns_quoted_lettered_subpoint_for_each_quote_style(self):
+        for opening, closing in (("«", "»"), ('"', '"')):
+            with self.subTest(quote=opening + closing):
+                text = f"подпункт {opening}а{closing} пункта 2 статьи 10 НК РФ"
+
+                response = self.client.post("/detect", json={"text": text})
+
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(response.json(), {"links": [{
+                    "law_id": 15,
+                    "article": "10",
+                    "point_article": "2",
+                    "subpoint_article": "а",
+                }]})
+
+    def test_returns_quoted_subpoint_after_abbreviated_marker(self):
+        response = self.client.post("/detect", json={
+            "text": "пп. «а» п. 1 ст. 5 НК РФ",
+        })
+
+        self.assertEqual(response.json(), {"links": [{
+            "law_id": 15, "article": "5", "point_article": "1",
+            "subpoint_article": "а",
+        }]})
+
+    def test_expands_quoted_subpoint_list_with_its_parent_path(self):
+        response = self.client.post("/detect", json={
+            "text": "подпункты «а», «б» пункта 1 статьи 5 НК РФ",
+        })
+
+        self.assertEqual(response.json(), {"links": [
+            {"law_id": 15, "article": "5", "point_article": "1",
+             "subpoint_article": "а"},
+            {"law_id": 15, "article": "5", "point_article": "1",
+             "subpoint_article": "б"},
+        ]})
+
+    def test_expands_quoted_subpoint_list_ending_in_conjunction(self):
+        response = self.client.post("/detect", json={
+            "text": "подпункты «а», «б» и «в» пункта 1 статьи 5 НК РФ",
+        })
+
+        self.assertEqual(response.json(), {"links": [
+            {"law_id": 15, "article": "5", "point_article": "1",
+             "subpoint_article": letter}
+            for letter in ("а", "б", "в")
+        ]})
+
+    def test_expands_numeric_list_with_comma_and_final_conjunction(self):
+        response = self.client.post("/detect", json={
+            "text": "статьи 5, 6 и 7 НК РФ",
+        })
+
+        self.assertEqual(response.json(), {"links": [
+            {"law_id": 15, "article": article, "point_article": None,
+             "subpoint_article": None}
+            for article in ("5", "6", "7")
+        ]})
+
+    def test_comma_between_point_and_article_nests_the_hierarchy(self):
+        response = self.client.post("/detect", json={
+            "text": "п. 1, ст. 5 НК РФ",
+        })
+
+        self.assertEqual(response.json(), {"links": [{
+            "law_id": 15, "article": "5", "point_article": "1",
+            "subpoint_article": None,
+        }]})
+
+    def test_commas_can_bridge_multiple_reverse_hierarchy_levels(self):
+        response = self.client.post("/detect", json={
+            "text": "пп. а, п. 1, ст. 5 НК РФ",
+        })
+
+        self.assertEqual(response.json(), {"links": [{
+            "law_id": 15, "article": "5", "point_article": "1",
+            "subpoint_article": "а",
+        }]})
+
+    def test_comma_followed_by_conjunction_expands_selector_list(self):
+        response = self.client.post("/detect", json={
+            "text": "статьи 5, и 6 НК РФ",
+        })
+
+        self.assertEqual(response.json(), {"links": [
+            {"law_id": 15, "article": "5", "point_article": None,
+             "subpoint_article": None},
+            {"law_id": 15, "article": "6", "point_article": None,
+             "subpoint_article": None},
+        ]})
+
+    def test_unknown_law_article_does_not_override_known_law_anaphora(self):
+        response = self.client.post("/detect", json={
+            "text": ("ст. 5 ГК РФ. ст. 6 неизвестного кодекса. "
+                     "п. 2 указанной статьи ГК РФ"),
+        })
+
+        self.assertEqual(response.json(), {"links": [
+            {"law_id": 5, "article": "5", "point_article": None,
+             "subpoint_article": None},
+            {"law_id": None, "article": "6", "point_article": None,
+             "subpoint_article": None},
+            {"law_id": 5, "article": "5", "point_article": "2",
+             "subpoint_article": None},
+        ]})
+
+    def test_unknown_article_is_not_anaphoric_context_for_known_law(self):
+        response = self.client.post("/detect", json={
+            "text": "ст. 6 неизвестного кодекса. п. 2 указанной статьи НК РФ",
+        })
+
+        self.assertEqual(response.json(), {"links": [
+            {"law_id": None, "article": "6", "point_article": None,
+             "subpoint_article": None},
+            {"law_id": 15, "article": None, "point_article": "2",
+             "subpoint_article": None},
+        ]})
+
+    def test_keeps_explicit_law_before_prose_instead_of_inheriting_context(self):
+        citation = "Согласно ст. 5 АПК в рассматриваемом деле действует правило."
+        for prefix in ("", "Ст. 8 НК РФ. "):
+            with self.subTest(prefix=prefix):
+                expected = []
+                if prefix:
+                    expected.append({
+                        "law_id": 15, "article": "8", "point_article": None,
+                        "subpoint_article": None,
+                    })
+                expected.append({
+                    "law_id": 0, "article": "5", "point_article": None,
+                    "subpoint_article": None,
+                })
+
+                response = self.client.post("/detect", json={"text": prefix + citation})
+
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(response.json(), {"links": expected})
+
+    def test_recognizes_composed_and_decomposed_unicode_article_markers(self):
+        for marker in ("статьёй", "статье\u0308и\u0306"):
+            with self.subTest(marker=marker):
+                response = self.client.post("/detect", json={
+                    "text": f"Согласно {marker} 5 НК РФ, применяется правило.",
+                })
+
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(response.json(), {"links": [{
+                    "law_id": 15, "article": "5", "point_article": None,
+                    "subpoint_article": None,
+                }]})
+
     def test_returns_unknown_law_with_null_id(self):
         response = self.client.post("/detect", json={"text": "ст. 37 ФЗ №20-456"})
 
