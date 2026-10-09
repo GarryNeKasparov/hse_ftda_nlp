@@ -1,0 +1,52 @@
+{
+  "gold_references": 211,
+  "predicted_references": 206,
+  "gold_links": 314,
+  "predicted_links": 306,
+  "document_exact_match": false,
+  "api_link_metrics": {
+    "true_positive": 305,
+    "false_positive": 1,
+    "false_negative": 9,
+    "precision": 0.9967320261437909,
+    "recall": 0.9713375796178344,
+    "f1": 0.9838709677419355
+  },
+  "ordered_link_metrics": {
+    "true_positive": 305,
+    "false_positive": 1,
+    "false_negative": 9,
+    "precision": 0.9967320261437909,
+    "recall": 0.9713375796178344,
+    "f1": 0.9838709677419355
+  },
+  "reference_boundary_metrics": {
+    "true_positive": 204,
+    "false_positive": 2,
+    "false_negative": 7,
+    "precision": 0.9902912621359223,
+    "recall": 0.966824644549763,
+    "f1": 0.9784172661870504
+  },
+  "exact_span_and_link_metrics": {
+    "true_positive": 304,
+    "false_positive": 2,
+    "false_negative": 10,
+    "precision": 0.9934640522875817,
+    "recall": 0.9681528662420382,
+    "f1": 0.9806451612903225
+  },
+  "exact_reference_matches": 204,
+  "runtime": {
+    "startup_seconds": 5.951530169000762,
+    "http_request_seconds": 21.99553756000023,
+    "characters_per_second": 3628.326872316694,
+    "warm_pipeline_stage_times": {
+      "syntax_seconds": 21.054650047000905,
+      "semantic_seconds": 0.1778037990006851,
+      "context_seconds": 0.0008655000019643921
+    },
+    "measurement": "One complete-document TestClient request; warm direct pipeline measured separately."
+  }
+}
+Report: logs/experiments/issue-17-20261009T134051Z/full_document_quality.json

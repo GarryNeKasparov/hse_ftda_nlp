@@ -71,6 +71,11 @@ local issue files.
   project one link per paragraph, including identical projected links. The
   whole-document comparison improved from 276/7/38 to 299/7/15 TP/FP/FN;
   details are in `logs/experiments/issue-16-20261009T132134Z/`.
+- [Issue 17](issues/17-explicit-law-titles-and-context-safety.md) is resolved.
+  Dated titles resolve through exact aliases; unlisted titles remain explicitly
+  unknown and cannot inherit a prior law. Whole-document links improved from
+  299/7/15 to 305/1/9 TP/FP/FN; details are in
+  `logs/experiments/issue-17-20261009T134051Z/`.
 - Issues 11–13 are focused follow-ups from measured failures: law-name boundary
   and stale-context errors, one part/article citation form, and abbreviated-law
   citation boundaries/recall.
@@ -114,12 +119,12 @@ this table.
 | [14 — Full-document follow-ups](issues/14-full-document-quality-followups.md) | resolved | 10 | Set behavior and scope implementation follow-ups from whole-document gaps |
 | [15 — Inserted identifiers and ASCII ranges](issues/15-inserted-identifiers-and-ascii-ranges.md) | resolved | 14 | Preserve atomic inserted IDs and expand agreed plural ASCII ranges |
 | [16 — Ordinal paragraph projection](issues/16-ordinal-paragraph-projection.md) | resolved | 14 | Retain supported enclosing targets when paragraphs are omitted from API |
-| [17 — Explicit law titles and context safety](issues/17-explicit-law-titles-and-context-safety.md) | open | 14 | Resolve known long titles and avoid stale law inheritance |
+| [17 — Explicit law titles and context safety](issues/17-explicit-law-titles-and-context-safety.md) | resolved | 14 | Resolve known long titles and avoid stale law inheritance |
 | [18 — Mixed-level groups and heading boundaries](issues/18-mixed-level-groups-and-heading-boundaries.md) | open | 14, 16 | Extract grouped clauses and reject a measured heading false positive |
 
 ## Frontier
 
-Issue 17 is the current frontier. Issues 17 and 18 can proceed independently.
+Issue 18 is the current frontier; its dependencies are resolved.
 
 ## Comments
 

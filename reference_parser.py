@@ -554,11 +554,35 @@ class ReferenceAnalyzer:
             forms = self._word_forms(token.value)
             if forms & {"закон", "конституция"}:
                 start = index
-                if index > 0 and self._word_forms(raw[index - 1].value) & {
-                        "федеральный", "российский"}:
-                    start = index - 1
+                while start > 0 and self._word_forms(raw[start - 1].value) & {
+                        "федеральный", "конституционный", "российский"}:
+                    start -= 1
                 after = index + 1
-                if after < len(raw) and raw[after].value in _QUOTE_MARKS:
+                if after < len(raw) and raw[after].value.casefold() == "от":
+                    cursor = after + 1
+                    month_forms = {"январь", "февраль", "март", "апрель", "май",
+                                   "июнь", "июль", "август", "сентябрь", "октябрь",
+                                   "ноябрь", "декабрь"}
+                    date_forms = month_forms | {"год", "n", "№", "фз", "фкз"}
+                    while cursor < len(raw) and cursor - after <= 16:
+                        value = raw[cursor].value
+                        if value in _QUOTE_MARKS:
+                            opening = value
+                            closing_mark = {"«": "»", "„": "“", "“": "”", "‟": "”"}.get(
+                                opening, opening)
+                            closing = next((position for position in range(cursor + 1, len(raw))
+                                            if raw[position].value == closing_mark), None)
+                            if closing is not None:
+                                after = closing + 1
+                            break
+                        word_forms = self._word_forms(value)
+                        is_date_number = bool(re.fullmatch(r"\d+(?:[./]\d+)*", value))
+                        if (not is_date_number and not word_forms & date_forms
+                                and value not in {"-", ".", "/"}):
+                            break
+                        cursor += 1
+                if after == index + 1 and after < len(raw) \
+                        and raw[after].value in _QUOTE_MARKS:
                     opening = raw[after].value
                     closing_mark = {"«": "»", "„": "“", "“": "”", "‟": "”"}.get(
                         opening, opening)
@@ -576,6 +600,20 @@ class ReferenceAnalyzer:
                         after += 1
                 if after > index + 1:
                     unknown_law_spans.append((start, after))
+
+            if "конвенция" in forms:
+                convention_title = (
+                    {"конвенция"}, {"о"}, {"защита"}, {"право"},
+                    {"человек"}, {"и"}, {"основной", "основный"}, {"свобода"},
+                )
+                after = index + len(convention_title)
+                is_known_form = (after <= len(raw) and all(
+                    expected & self._word_forms(raw[position].value)
+                    for position, expected in zip(range(index, after), convention_title)))
+                if is_known_form:
+                    unknown_law_spans.append((index, after))
+                else:
+                    add(index, index + 1, "LAW", evidence="unknown_explicit_law")
 
             if (index > 0 and token.value and token.value[0].isalpha()
                     and any(edge.token.kind in {"ID", "ORDINAL"}

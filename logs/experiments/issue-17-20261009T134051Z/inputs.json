@@ -1,0 +1,93 @@
+[
+  {
+    "id": "dated_262_title_after_prior_gpk",
+    "text": "Статья 5 ГПК РФ. статьями 14 и 16 Федерального закона от 22 декабря 2008 года N 262-ФЗ \"Об обеспечении доступа к информации о деятельности судов в Российской Федерации\"",
+    "expected_links": [
+      {"law_id": 6, "article": "5", "point_article": null, "subpoint_article": null},
+      {"law_id": 287, "article": "14", "point_article": null, "subpoint_article": null},
+      {"law_id": 287, "article": "16", "point_article": null, "subpoint_article": null}
+    ],
+    "expected_reference_texts": [
+      "Статья 5 ГПК РФ",
+      "статьями 14 и 16 Федерального закона от 22 декабря 2008 года N 262-ФЗ \"Об обеспечении доступа к информации о деятельности судов в Российской Федерации\""
+    ],
+    "expected_identity": ["known_unique", "known_unique", "known_unique"]
+  },
+  {
+    "id": "dated_262_title_with_line_break",
+    "text": "Статья 5 ГПК РФ. статьями\n14 и 16 Федерального закона от 22 декабря 2008 года N 262-ФЗ \"Об обеспечении доступа к информации о деятельности судов в Российской Федерации\"",
+    "expected_links": [
+      {"law_id": 6, "article": "5", "point_article": null, "subpoint_article": null},
+      {"law_id": 287, "article": "14", "point_article": null, "subpoint_article": null},
+      {"law_id": 287, "article": "16", "point_article": null, "subpoint_article": null}
+    ],
+    "expected_reference_texts": [
+      "Статья 5 ГПК РФ",
+      "статьями\n14 и 16 Федерального закона от 22 декабря 2008 года N 262-ФЗ \"Об обеспечении доступа к информации о деятельности судов в Российской Федерации\""
+    ],
+    "expected_identity": ["known_unique", "known_unique", "known_unique"]
+  },
+  {
+    "id": "unknown_ombudsman_and_convention_do_not_inherit",
+    "text": "Статья 5 ГПК РФ. подпункта 1 пункта 1 статьи 29 Федерального конституционного закона от 26 февраля 1997 года N 1-ФКЗ \"Об Уполномоченном по правам человека в Российской Федерации\". пунктом 1 статьи 6 Конвенции о защите прав человека и основных свобод. Затем статья 7 НК РФ.",
+    "expected_links": [
+      {"law_id": 6, "article": "5", "point_article": null, "subpoint_article": null},
+      {"law_id": null, "article": "29", "point_article": "1", "subpoint_article": "1"},
+      {"law_id": null, "article": "6", "point_article": "1", "subpoint_article": null},
+      {"law_id": 15, "article": "7", "point_article": null, "subpoint_article": null}
+    ],
+    "expected_reference_texts": [
+      "Статья 5 ГПК РФ",
+      "подпункта 1 пункта 1 статьи 29 Федерального конституционного закона от 26 февраля 1997 года N 1-ФКЗ \"Об Уполномоченном по правам человека в Российской Федерации\"",
+      "пунктом 1 статьи 6 Конвенции о защите прав человека и основных свобод",
+      "статья 7 НК РФ"
+    ],
+    "expected_identity": ["known_unique", "unknown", "unknown", "known_unique"]
+  },
+  {
+    "id": "convention_exact_focus",
+    "text": "пунктом 1 статьи 6 Конвенции о защите прав человека и основных свобод",
+    "expected_links": [
+      {"law_id": null, "article": "6", "point_article": "1", "subpoint_article": null}
+    ],
+    "expected_reference_texts": ["пунктом 1 статьи 6 Конвенции о защите прав человека и основных свобод"],
+    "expected_identity": ["unknown"]
+  },
+  {
+    "id": "unlisted_federal_constitutional_law_full_span",
+    "text": "руководствуясь статьей 126 Конституции Российской Федерации, статьями 9 и 14 Федерального конституционного закона \"О судах общей юрисдикции в Российской Федерации\", постановляет",
+    "expected_links": [
+      {"law_id": null, "article": "126", "point_article": null, "subpoint_article": null},
+      {"law_id": null, "article": "9", "point_article": null, "subpoint_article": null},
+      {"law_id": null, "article": "14", "point_article": null, "subpoint_article": null}
+    ],
+    "expected_reference_texts": [
+      "статьей 126 Конституции Российской Федерации",
+      "статьями 9 и 14 Федерального конституционного закона \"О судах общей юрисдикции в Российской Федерации\""
+    ],
+    "expected_identity": ["unknown", "unknown", "unknown"]
+  },
+  {
+    "id": "near_matching_known_title_stays_unknown",
+    "text": "Статья 5 ГПК РФ. статьи 14 и 16 Федерального закона от 22 декабря 2008 года N 262-ФЗ \"Об обеспечении доступа к сведениям о деятельности судов в Российской Федерации\"",
+    "expected_links": [
+      {"law_id": 6, "article": "5", "point_article": null, "subpoint_article": null},
+      {"law_id": null, "article": "14", "point_article": null, "subpoint_article": null},
+      {"law_id": null, "article": "16", "point_article": null, "subpoint_article": null}
+    ],
+    "expected_reference_texts": [
+      "Статья 5 ГПК РФ",
+      "статьи 14 и 16 Федерального закона от 22 декабря 2008 года N 262-ФЗ \"Об обеспечении доступа к сведениям о деятельности судов в Российской Федерации\""
+    ],
+    "expected_identity": ["known_unique", "unknown", "unknown"]
+  },
+  {
+    "id": "unrelated_law_prose_does_not_extend_citation",
+    "text": "Статья 5 ГПК РФ. Федеральный закон был принят позднее.",
+    "expected_links": [
+      {"law_id": 6, "article": "5", "point_article": null, "subpoint_article": null}
+    ],
+    "expected_reference_texts": ["Статья 5 ГПК РФ"],
+    "expected_identity": ["known_unique"]
+  }
+]

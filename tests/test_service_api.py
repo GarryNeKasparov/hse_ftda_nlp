@@ -616,6 +616,100 @@ class ServiceApiTests(unittest.TestCase):
 
         self.assertEqual(response.json(), {"links": []})
 
+    def test_resolves_both_dated_federal_law_262_titles(self):
+        texts = (
+            "Статья 5 ГПК РФ. статьями 14 и 16 Федерального закона от "
+            "22 декабря 2008 года N 262-ФЗ \"Об обеспечении доступа к информации "
+            "о деятельности судов в Российской Федерации\"",
+            "Статья 5 ГПК РФ. статьями\n14 и 16 Федерального закона от "
+            "22 декабря 2008 года N 262-ФЗ \"Об обеспечении доступа к информации "
+            "о деятельности судов в Российской Федерации\"",
+        )
+        expected_tail = [
+            {"law_id": 287, "article": "14", "point_article": None,
+             "subpoint_article": None},
+            {"law_id": 287, "article": "16", "point_article": None,
+             "subpoint_article": None},
+        ]
+
+        for text in texts:
+            response = self.client.post("/detect", json={"text": text})
+            self.assertEqual(response.json(), {"links": [
+                {"law_id": 6, "article": "5", "point_article": None,
+                 "subpoint_article": None}, *expected_tail,
+            ]})
+
+    def test_unmatched_law_titles_do_not_inherit_previous_law(self):
+        text = (
+            "Статья 5 ГПК РФ. подпункта 1 пункта 1 статьи 29 "
+            "Федерального конституционного закона от 26 февраля 1997 года "
+            "N 1-ФКЗ \"Об Уполномоченном по правам человека в Российской Федерации\". "
+            "пунктом 1 статьи 6 Конвенции о защите прав человека и основных свобод. "
+            "Затем статья 7 НК РФ."
+        )
+        response = self.client.post("/detect", json={"text": text})
+
+        self.assertEqual(response.json(), {"links": [
+            {"law_id": 6, "article": "5", "point_article": None,
+             "subpoint_article": None},
+            {"law_id": None, "article": "29", "point_article": "1",
+             "subpoint_article": "1"},
+            {"law_id": None, "article": "6", "point_article": "1",
+             "subpoint_article": None},
+            {"law_id": 15, "article": "7", "point_article": None,
+             "subpoint_article": None},
+        ]})
+
+    def test_explicit_unknown_title_keeps_its_full_span(self):
+        text = ('руководствуясь статьей 126 Конституции Российской Федерации, '
+                'статьями 9 и 14 Федерального конституционного закона '
+                '"О судах общей юрисдикции в Российской Федерации", постановляет')
+        analysis = app.state.reference_analyzer.analyze(text)
+        semantic = app.state.semantic_analyzer.analyze(analysis)
+
+        self.assertEqual(len(semantic.references), 2)
+        reference = semantic.references[1]
+        self.assertEqual(text[reference.start:reference.end],
+                         'статьями 9 и 14 Федерального конституционного закона '
+                         '"О судах общей юрисдикции в Российской Федерации"')
+        self.assertTrue(all(path.law_target_status == "explicit"
+                            and path.law_status == "unknown"
+                            and path.law_candidate_ids == ()
+                            for path in reference.provisions))
+
+        response = self.client.post("/detect", json={"text": text})
+        self.assertEqual(response.json(), {"links": [
+            {"law_id": None, "article": "126", "point_article": None,
+             "subpoint_article": None},
+            {"law_id": None, "article": "9", "point_article": None,
+             "subpoint_article": None},
+            {"law_id": None, "article": "14", "point_article": None,
+             "subpoint_article": None},
+        ]})
+
+    def test_unrelated_prose_does_not_extend_a_known_citation(self):
+        text = "Статья 5 ГПК РФ. Федеральный закон был принят позднее."
+        analysis = app.state.reference_analyzer.analyze(text)
+        semantic = app.state.semantic_analyzer.analyze(analysis)
+
+        self.assertEqual(len(semantic.references), 1)
+        reference = semantic.references[0]
+        self.assertEqual(text[reference.start:reference.end], "Статья 5 ГПК РФ")
+
+    def test_near_matching_title_does_not_invent_an_alias(self):
+        response = self.client.post("/detect", json={
+            "text": ('статьи 14 и 16 Федерального закона от 22 декабря 2008 года '
+                     'N 262-ФЗ "Об обеспечении доступа к сведениям о деятельности '
+                     'судов в Российской Федерации"'),
+        })
+
+        self.assertEqual(response.json(), {"links": [
+            {"law_id": None, "article": "14", "point_article": None,
+             "subpoint_article": None},
+            {"law_id": None, "article": "16", "point_article": None,
+             "subpoint_article": None},
+        ]})
+
     def test_uses_minimum_law_id_for_an_ambiguous_alias(self):
         response = self.client.post("/detect", json={
             "text": "статья 2 ФЗ №3-ФЗ",
