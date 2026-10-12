@@ -331,6 +331,7 @@ class ReferenceAnalyzer:
         by_span: dict[tuple[int, int, str, str], set[int]] = defaultdict(set)
         fuzzy_starts = []
         unknown_law_spans: list[tuple[int, int]] = []
+        compound_conjunction_tokens: set[int] = set()
 
         def add(first: int, after: int, kind: str, law_ids: Iterable[int] = (),
                 evidence: str = "", token_value: str | None = None):
@@ -343,6 +344,20 @@ class ReferenceAnalyzer:
                                          tuple(sorted(set(law_ids))), (evidence,) if evidence else (),
                                          forms)
             edges[first].append(_Edge(candidate, first, after))
+
+        # Keep the parenthesized spelling as one lexical item. Whitespace may
+        # occur around either parenthesis, but punctuation or prose may not.
+        for index in range(len(raw) - 3):
+            if (self._matching_form(raw[index].value) != "и"
+                    or raw[index + 1].value != "("
+                    or self._matching_form(raw[index + 2].value) != "или"
+                    or raw[index + 3].value != ")"):
+                continue
+            if any(text[raw[position].end:raw[position + 1].start].strip()
+                   for position in range(index, index + 3)):
+                continue
+            add(index, index + 4, "AND_OR")
+            compound_conjunction_tokens.update(range(index, index + 4))
 
         def quoted_subpoint_context(opening: int, closing: int) -> bool:
             """Recognize a quoted letter after a subpoint marker or within its list."""
@@ -481,10 +496,8 @@ class ReferenceAnalyzer:
                 for kind in kinds:
                     add(index, index + 1, kind, evidence="fuzzy_marker")
 
-            if word in _WORD_CONJUNCTIONS:
+            if word in _WORD_CONJUNCTIONS and index not in compound_conjunction_tokens:
                 add(index, index + 1, _WORD_CONJUNCTIONS[word])
-            if word in {"и", "или"}:
-                add(index, index + 1, "AND_OR")
             if token.value == ",":
                 following_marker = (self._marker_forms.get(
                     self._matching_form(raw[index + 1].value))

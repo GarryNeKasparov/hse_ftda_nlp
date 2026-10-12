@@ -81,6 +81,9 @@ local issue files.
   identity; numbered headings after `т. п.` no longer create a point link.
   Whole-document links improved from 305/1/9 to 308/0/6 TP/FP/FN; details are
   in `logs/experiments/issue-18-20261009T134900Z/`.
+- [Issue 19](issues/19-compound-conjunction-recognition.md) is resolved. The
+  lexer recognizes `и (или)` as one source-spanned `AND_OR` token and classifies
+  ordinary `и` and `или` only as `AND` and `OR`; all 131 tests pass.
 - Issues 11–13 are focused follow-ups from measured failures: law-name boundary
   and stale-context errors, one part/article citation form, and abbreviated-law
   citation boundaries/recall.
@@ -126,6 +129,7 @@ this table.
 | [16 — Ordinal paragraph projection](issues/16-ordinal-paragraph-projection.md) | resolved | 14 | Retain supported enclosing targets when paragraphs are omitted from API |
 | [17 — Explicit law titles and context safety](issues/17-explicit-law-titles-and-context-safety.md) | resolved | 14 | Resolve known long titles and avoid stale law inheritance |
 | [18 — Mixed-level groups and heading boundaries](issues/18-mixed-level-groups-and-heading-boundaries.md) | resolved | 14, 16 | Extract grouped clauses and reject a measured heading false positive |
+| [19 — Compound conjunction recognition](issues/19-compound-conjunction-recognition.md) | resolved | None | Recognize compound conjunctions without duplicate lexical alternatives |
 
 ## Frontier
 

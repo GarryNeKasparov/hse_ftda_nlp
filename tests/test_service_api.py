@@ -91,6 +91,28 @@ class ServiceApiTests(unittest.TestCase):
             for article in ("5", "6", "7")
         ]})
 
+    def test_expands_compound_conjunctions_with_shared_article_level(self):
+        for text in ("статьи 5 и 6 НК РФ", "статьи 5 или 6 НК РФ",
+                     "статьи 5 и (или) 6 НК РФ",
+                     "п. 1 и (или) п. 2 ст. 5 НК РФ"):
+            with self.subTest(text=text):
+                response = self.client.post("/detect", json={"text": text})
+
+                self.assertEqual(response.status_code, 200)
+                if text.startswith("статьи"):
+                    expected = [
+                        {"law_id": 15, "article": article,
+                         "point_article": None, "subpoint_article": None}
+                        for article in ("5", "6")
+                    ]
+                else:
+                    expected = [
+                        {"law_id": 15, "article": "5", "point_article": point,
+                         "subpoint_article": None}
+                        for point in ("1", "2")
+                    ]
+                self.assertEqual(response.json(), {"links": expected})
+
     def test_comma_between_point_and_article_nests_the_hierarchy(self):
         response = self.client.post("/detect", json={
             "text": "п. 1, ст. 5 НК РФ",

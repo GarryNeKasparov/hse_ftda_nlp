@@ -35,6 +35,10 @@ A future lexer must retain original offsets, raw spelling, normalization
 alternatives, and candidate law IDs. `LAW` recognition does not assert a unique
 ID; `ORDINAL` recognition does not assert a final numeric serialization.
 
+The raw-text lexer classifies ordinary `и` as `AND` and `или` as `OR`. The
+case-insensitive phrase `и (или)`, including whitespace variations around its
+parentheses, is one `AND_OR` token whose source span covers the full phrase.
+
 A hyphen-minus may belong to an `ID` or denote a `RANGE`. Treat it as a range
 separator when selector plurality is explicit through morphology or
 coordination; singular inserted article identifiers remain atomic. Keep other

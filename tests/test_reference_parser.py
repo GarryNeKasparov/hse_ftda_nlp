@@ -220,6 +220,34 @@ class ReferenceAnalyzerTests(unittest.TestCase):
         self.assertEqual(len(spans), 2)
         self.assertLess(spans[0][0], spans[1][0])
 
+    def test_classifies_conjunctions_once_and_preserves_compound_span(self):
+        for text, spelling, kind in (
+                ("статьи 5 и 6 НК РФ", "и", "AND"),
+                ("статьи 5 или 6 НК РФ", "или", "OR"),
+                ("статьи 5 и (или) 6 НК РФ", "и (или)", "AND_OR"),
+                ("статьи 5 И( ИЛИ ) 6 НК РФ", "И( ИЛИ )", "AND_OR")):
+            with self.subTest(text=text):
+                result = self.analyzer.analyze(text)
+                conjunctions = [token for token in result.lexical_candidates
+                                if token.kind in {"AND", "OR", "AND_OR"}]
+                expected = text.index(f" {spelling}") + 1
+                self.assertEqual(len(conjunctions), 1)
+                self.assertEqual(conjunctions[0].kind, kind)
+                self.assertEqual((conjunctions[0].start, conjunctions[0].end),
+                                 (expected, expected + len(spelling)))
+                self.assertEqual(text[conjunctions[0].start:conjunctions[0].end], spelling)
+                candidate = find_candidate(result, text, text)
+                self.assertTrue(candidate.complete)
+                self.assertEqual(len(candidate.alternatives), 1)
+                self.assertFalse(candidate.diagnostics)
+
+    def test_malformed_compound_does_not_become_a_valid_full_reference(self):
+        for text in ("статьи 5 и (или 6 НК РФ", "статьи 5 и (либо) 6 НК РФ"):
+            with self.subTest(text=text):
+                result = self.analyzer.analyze(text)
+                self.assertFalse(any(candidate.complete and text[candidate.start:candidate.end]
+                                     == text for candidate in result.candidates))
+
     def test_matches_a_misspelled_full_law_name_with_bounded_fuzzy_fallback(self):
         analyzer = ReferenceAnalyzer({
             "42": ["Большой необычный закон Российской Федерации"],
