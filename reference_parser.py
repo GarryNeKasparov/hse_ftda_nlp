@@ -281,13 +281,17 @@ class ReferenceAnalyzer:
                     continue
                 for inflected in parse.lexeme:
                     form = self._matching_form(inflected.word)
-                    self._marker_forms[form] = kind
-                    if inflected.tag.number == "sing":
-                        self._singular_marker_forms.add(form)
-                    elif inflected.tag.number == "plur":
-                        self._plural_marker_forms.add(form)
-                    if len(form) >= 4:
-                        fuzzy_forms.append((form, kind))
+                    # Treat ё/е spellings as equivalent during marker lookup,
+                    # while retaining the original source form on each edge.
+                    matching_forms = {form, form.replace("ё", "е")}
+                    for matching_form in matching_forms:
+                        self._marker_forms[matching_form] = kind
+                        if inflected.tag.number == "sing":
+                            self._singular_marker_forms.add(matching_form)
+                        elif inflected.tag.number == "plur":
+                            self._plural_marker_forms.add(matching_form)
+                        if len(matching_form) >= 4:
+                            fuzzy_forms.append((matching_form, kind))
         self._fuzzy_marker_forms = tuple(sorted(set(fuzzy_forms)))
 
     def _build_alias_index(self, law_aliases: Mapping[str, Sequence[str]]) -> None:

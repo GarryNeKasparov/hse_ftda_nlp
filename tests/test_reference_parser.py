@@ -161,6 +161,19 @@ class ReferenceAnalyzerTests(unittest.TestCase):
         self.assertTrue(any(("ID", "28") in path and ("RANGE", "-") in path
                             and ("ID", "1") in path for path in token_paths))
 
+    def test_classifies_yo_e_instrumental_article_marker_for_inserted_id(self):
+        text = "статьей 327-2 ГПК РФ"
+
+        result = self.analyzer.analyze(text)
+
+        article_marker = next(token for token in result.lexical_candidates
+                              if token.start == 0 and token.kind == "ARTICLE")
+        inserted_id = next(token for token in result.lexical_candidates
+                            if token.kind == "ID" and token.value == "327-2")
+        self.assertIn("exact_marker", article_marker.evidence)
+        self.assertIn("atomic_hyphen_identifier", inserted_id.evidence)
+        self.assertFalse(any(token.kind == "RANGE" for token in result.lexical_candidates))
+
     def test_offsets_refer_to_original_decomposed_unicode_text(self):
         text = "е\u0308 статья 5 АПК"
 

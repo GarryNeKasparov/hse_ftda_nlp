@@ -512,6 +512,18 @@ class ServiceApiTests(unittest.TestCase):
             "subpoint_article": None,
         }]})
 
+    def test_preserves_inserted_article_id_after_instrumental_marker(self):
+        response = self.client.post("/detect", json={
+            "text": "статьей 327-2 ГПК РФ",
+        })
+
+        self.assertEqual(response.json(), {"links": [{
+            "law_id": 6,
+            "article": "327-2",
+            "point_article": None,
+            "subpoint_article": None,
+        }]})
+
     def test_keeps_abbreviated_hyphen_label_unresolved(self):
         response = self.client.post("/detect", json={
             "text": "ст. 28-1 ГПК РФ",
