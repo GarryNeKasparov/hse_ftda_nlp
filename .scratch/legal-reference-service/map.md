@@ -93,6 +93,11 @@ local issue files.
   indexes narrow fuzzy alias candidates while preserving the two-edit matcher
   and ambiguous IDs. Indexed and full-scan analyses and `/detect` outputs
   matched across the README example, all gold samples, and four boundary cases.
+- [Issue 22](issues/22-pass-length-matched-runtime-benchmark.md) is resolved.
+  The deterministic 2,000-request, 4,092-character `/detect` workload completes
+  in 229.5 seconds including startup, with 99.6% parse-cache and 98.3%
+  fuzzy-lookup-cache hit rates. Profiling led to precomputing dirty-alias token
+  joins once per source position; local golden outputs remained unchanged.
 - Issues 11–13 are focused follow-ups from measured failures: law-name boundary
   and stale-context errors, one part/article citation form, and abbreviated-law
   citation boundaries/recall.
@@ -141,11 +146,11 @@ this table.
 | [19 — Compound conjunction recognition](issues/19-compound-conjunction-recognition.md) | resolved | None | Recognize compound conjunctions without duplicate lexical alternatives |
 | [20 — Cache grammar structures](issues/20-cache-grammar-structures.md) | resolved | None | Reuse parsing work for repeated token-kind sequences |
 | [21 — Index fuzzy law matching](issues/21-index-fuzzy-law-matching.md) | resolved | None | Narrow fuzzy alias lookup while preserving matching behavior |
-| [22 — Length-matched runtime benchmark](issues/22-pass-length-matched-runtime-benchmark.md) | ready-for-agent | 20, 21 | Meet the instructor's five-minute limit on 2,000 length-matched requests |
+| [22 — Length-matched runtime benchmark](issues/22-pass-length-matched-runtime-benchmark.md) | resolved | 20, 21 | Meet the instructor's five-minute limit on 2,000 length-matched requests |
 
 ## Frontier
 
-Ticket 22 is now unblocked by completion of tickets 20 and 21.
+No implementation ticket is currently queued after ticket 22.
 
 ## Comments
 

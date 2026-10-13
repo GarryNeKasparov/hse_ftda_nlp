@@ -1,0 +1,200 @@
+{
+  "interpretation": {
+    "dataset": "data/golden_interpretation.jsonl",
+    "samples": 31,
+    "gold_references": 31,
+    "gold_links": 36,
+    "predicted_links": 36,
+    "exact_sample_matches": 31,
+    "exact_sample_match_rate": 1.0,
+    "api_link_precision_recall": {
+      "true_positive": 36,
+      "false_positive": 0,
+      "false_negative": 0,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "errors": []
+  },
+  "extraction": {
+    "dataset": "data/golden_extraction.jsonl",
+    "samples": 12,
+    "gold_references": 29,
+    "gold_links": 32,
+    "predicted_links": 32,
+    "exact_sample_matches": 12,
+    "exact_sample_match_rate": 1.0,
+    "api_link_precision_recall": {
+      "true_positive": 32,
+      "false_positive": 0,
+      "false_negative": 0,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "errors": [],
+    "reference_boundary_precision_recall": {
+      "true_positive": 29,
+      "false_positive": 0,
+      "false_negative": 0,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "exact_span_and_link_precision_recall": {
+      "true_positive": 32,
+      "false_positive": 0,
+      "false_negative": 0,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "false_positive_examples": [],
+    "false_negative_examples": []
+  },
+  "real_interpretation": {
+    "dataset": "data/golden_real_interpretation.jsonl",
+    "samples": 26,
+    "gold_references": 26,
+    "gold_links": 27,
+    "predicted_links": 27,
+    "exact_sample_matches": 26,
+    "exact_sample_match_rate": 1.0,
+    "api_link_precision_recall": {
+      "true_positive": 27,
+      "false_positive": 0,
+      "false_negative": 0,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "errors": []
+  },
+  "real_extraction": {
+    "dataset": "data/golden_real_extraction.jsonl",
+    "samples": 19,
+    "gold_references": 26,
+    "gold_links": 27,
+    "predicted_links": 27,
+    "exact_sample_matches": 19,
+    "exact_sample_match_rate": 1.0,
+    "api_link_precision_recall": {
+      "true_positive": 27,
+      "false_positive": 0,
+      "false_negative": 0,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "errors": [],
+    "reference_boundary_precision_recall": {
+      "true_positive": 26,
+      "false_positive": 0,
+      "false_negative": 0,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "exact_span_and_link_precision_recall": {
+      "true_positive": 27,
+      "false_positive": 0,
+      "false_negative": 0,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "false_positive_examples": [],
+    "false_negative_examples": []
+  },
+  "recognition_boundary_probes": {
+    "samples": 5,
+    "exact_matches": 5,
+    "cases": [
+      {
+        "name": "one_edit_marker_typo_positive",
+        "text": "пунта б статьи 20",
+        "expected": [
+          {
+            "law_id": null,
+            "article": "20",
+            "point_article": "б",
+            "subpoint_article": null
+          }
+        ],
+        "predicted": [
+          {
+            "law_id": null,
+            "article": "20",
+            "point_article": "б",
+            "subpoint_article": null
+          }
+        ],
+        "exact_match": true
+      },
+      {
+        "name": "distant_marker_typo_negative",
+        "text": "статьйа 20",
+        "expected": [],
+        "predicted": [],
+        "exact_match": true
+      },
+      {
+        "name": "one_edit_full_law_alias_positive",
+        "text": "ст. 5 Гражданского процессуального кодекса Российской Федерацци",
+        "expected": [
+          {
+            "law_id": 6,
+            "article": "5",
+            "point_article": null,
+            "subpoint_article": null
+          }
+        ],
+        "predicted": [
+          {
+            "law_id": 6,
+            "article": "5",
+            "point_article": null,
+            "subpoint_article": null
+          }
+        ],
+        "exact_match": true
+      },
+      {
+        "name": "distant_code_name_typo_stays_unknown",
+        "text": "ст. 5 Гражданского процессуального кодддекса Российской Федерации",
+        "expected": [
+          {
+            "law_id": null,
+            "article": "5",
+            "point_article": null,
+            "subpoint_article": null
+          }
+        ],
+        "predicted": [
+          {
+            "law_id": null,
+            "article": "5",
+            "point_article": null,
+            "subpoint_article": null
+          }
+        ],
+        "exact_match": true
+      },
+      {
+        "name": "short_abbreviation_typo_stays_unmatched",
+        "text": "ст. 5 НКФ",
+        "expected": [
+          {
+            "law_id": null,
+            "article": "5",
+            "point_article": null,
+            "subpoint_article": null
+          }
+        ],
+        "predicted": [
+          {
+            "law_id": null,
+            "article": "5",
+            "point_article": null,
+            "subpoint_article": null
+          }
+        ],
+        "exact_match": true
+      }
+    ],
+    "interpretation": "Curated probes check one-edit marker/law acceptance, distant typo rejection, and unknown-name boundaries; they are not a representative corpus."
+  }
+}

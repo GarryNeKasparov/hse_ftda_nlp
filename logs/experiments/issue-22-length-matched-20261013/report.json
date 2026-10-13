@@ -1,0 +1,85 @@
+{
+  "created_at_utc": "2026-10-13T11:05:45.869450+00:00",
+  "python": "3.14.4",
+  "generation": {
+    "seed": 20261013,
+    "command": ".venv/bin/python tools/benchmark_length_matched.py --seed 20261013 --requests-per-track 500 --target-chars 4092 --output logs/experiments/issue-22-length-matched-20261013/report.json",
+    "target_chars": 4092,
+    "requests_per_track": {
+      "readme_interpretation": 500,
+      "readme_extraction": 500,
+      "real_interpretation": 500,
+      "real_extraction": 500
+    },
+    "total_requests": 2000,
+    "workload_sha256": "186508b39008d518c34c6c553ffa9a02e1cb4fead0a6d4efb0df061d143a9aed",
+    "construction": "Shuffle complete gold samples within each track and cycle them across requests; put one whole sample at the start, followed by neutral prose separated by a blank line."
+  },
+  "startup_seconds": 7.677106494000327,
+  "elapsed_including_startup_seconds": 229.5269144490003,
+  "requests": {
+    "per_track": {
+      "readme_interpretation": {
+        "count": 500,
+        "total_seconds": 66.49332962498738,
+        "mean_ms": 132.98665924997476,
+        "median_ms": 126.6332770005647,
+        "p95_ms": 175.79484599991702,
+        "max_ms": 723.2229769997502
+      },
+      "readme_extraction": {
+        "count": 500,
+        "total_seconds": 59.54118817000108,
+        "mean_ms": 119.08237634000216,
+        "median_ms": 112.33154549972824,
+        "p95_ms": 177.42398500013223,
+        "max_ms": 321.3032749999911
+      },
+      "real_interpretation": {
+        "count": 500,
+        "total_seconds": 45.11879563898583,
+        "mean_ms": 90.23759127797166,
+        "median_ms": 86.62516100002904,
+        "p95_ms": 113.92421399978048,
+        "max_ms": 467.3942290000923
+      },
+      "real_extraction": {
+        "count": 500,
+        "total_seconds": 50.68824022199806,
+        "mean_ms": 101.37648044399612,
+        "median_ms": 94.87203750040862,
+        "p95_ms": 140.4613069998959,
+        "max_ms": 482.9802259991993
+      }
+    },
+    "aggregate": {
+      "count": 2000,
+      "total_seconds": 221.84155365597235,
+      "mean_ms": 110.92077682798617,
+      "median_ms": 105.80443199978617,
+      "p95_ms": 158.46630899977754,
+      "max_ms": 723.2229769997502
+    }
+  },
+  "caches": {
+    "parse": {
+      "hits": 16239,
+      "misses": 63,
+      "size": 63,
+      "maxsize": 4096,
+      "failures": 19,
+      "hit_rate": 0.9961354435038645
+    },
+    "fuzzy_lookup": {
+      "hits": 367839,
+      "misses": 6187,
+      "size": 6187,
+      "maxsize": 32768,
+      "aliases_checked": 0,
+      "hit_rate": 0.9834583692042799
+    }
+  },
+  "target_seconds": 240,
+  "within_target": true,
+  "hidden_benchmark_claim": false
+}

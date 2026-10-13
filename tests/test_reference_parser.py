@@ -198,6 +198,33 @@ class ReferenceAnalyzerTests(unittest.TestCase):
         self.assertIn("atomic_hyphen_identifier", inserted_id.evidence)
         self.assertFalse(any(token.kind == "RANGE" for token in result.lexical_candidates))
 
+    def test_matches_known_short_alias_tokens_split_by_dirty_separators(self):
+        examples = (
+            ("ст. 5 Н-К РФ", "Н-К РФ", (15,)),
+            ("статья 5 А\tПК РФ", "А\tПК РФ", (0,)),
+            ("ст. 5 ГП\nК РФ", "ГП\nК РФ", (6,)),
+            (r"ст. 5 ГП\К РФ", r"ГП\К РФ", (6,)),
+        )
+        for text, law_spelling, expected_ids in examples:
+            with self.subTest(text=text):
+                result = self.analyzer.analyze(text)
+                matches = [token for token in result.lexical_candidates
+                           if token.kind == "LAW"
+                           and text[token.start:token.end] == law_spelling]
+
+                self.assertEqual(len(matches), 1)
+                self.assertEqual(matches[0].law_ids, expected_ids)
+
+    def test_does_not_join_alias_fragments_across_letters_or_digits(self):
+        for text in ("ст. 5 ГП2К РФ", "ст. 5 ГП-Х РФ",
+                     "ст. 5 ГП, повреждено, К РФ"):
+            with self.subTest(text=text):
+                result = self.analyzer.analyze(text)
+                law_ids = {law_id for token in result.lexical_candidates
+                           if token.kind == "LAW" for law_id in token.law_ids}
+
+                self.assertNotIn(6, law_ids)
+
     def test_offsets_refer_to_original_decomposed_unicode_text(self):
         text = "е\u0308 статья 5 АПК"
 

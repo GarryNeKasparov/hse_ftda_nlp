@@ -487,6 +487,7 @@ class ReferenceAnalyzer:
         fuzzy_starts = []
         unknown_law_spans: list[tuple[int, int]] = []
         compound_conjunction_tokens: set[int] = set()
+        dirty_alias_ends: dict[int, dict[str, tuple[int, ...]]] = {}
 
         def add(first: int, after: int, kind: str, law_ids: Iterable[int] = (),
                 evidence: str = "", token_value: str | None = None):
@@ -499,6 +500,38 @@ class ReferenceAnalyzer:
                                          tuple(sorted(set(law_ids))), (evidence,) if evidence else (),
                                          forms)
             edges[first].append(_Edge(candidate, first, after))
+
+        def alias_token_ends(expected: frozenset[str], cursor: int) -> tuple[int, ...]:
+            """Match one alias word directly or across dirty non-alphanumeric splits."""
+            if cursor >= len(raw):
+                return ()
+            if expected.intersection(self._word_forms(raw[cursor].value)):
+                return (cursor + 1,)
+
+            compact_forms = {form for form in expected
+                             if form.isalpha() and 2 <= len(form) <= 6}
+            if not compact_forms or not raw[cursor].value.isalpha():
+                return ()
+            by_form = dirty_alias_ends.get(cursor)
+            if by_form is None:
+                ends_by_form: dict[str, list[int]] = defaultdict(list)
+                joined = ""
+                fragments = 0
+                for index in range(cursor, len(raw)):
+                    value = raw[index].value
+                    if value.isalpha():
+                        joined += self._matching_form(value)
+                        fragments += 1
+                        if fragments >= 2 and len(joined) <= 6:
+                            ends_by_form[joined].append(index + 1)
+                        if len(joined) > 6:
+                            break
+                    elif value.isalnum():
+                        break
+                by_form = {form: tuple(ends) for form, ends in ends_by_form.items()}
+                dirty_alias_ends[cursor] = by_form
+            return tuple(sorted({after for form in compact_forms
+                                 for after in by_form.get(form, ())}))
 
         # Keep the parenthesized spelling as one lexical item. Whitespace may
         # occur around either parenthesis, but punctuation or prose may not.
@@ -578,8 +611,6 @@ class ReferenceAnalyzer:
             """Classify selector hyphens from their nearest hierarchy marker."""
             marker_kinds = {"ARTICLE", "PART", "POINT", "SUBPOINT", "PP", "PARAGRAPH"}
             for cursor in range(index - 1, -1, -1):
-                if "\n" in text[raw[cursor].end:raw[cursor + 1].start]:
-                    return "ambiguous"
                 kinds = {edge.token.kind for edge in edges.get(cursor, ())}
                 if kinds & marker_kinds:
                     form = self._matching_form(raw[cursor].value)
@@ -609,6 +640,8 @@ class ReferenceAnalyzer:
                             else:
                                 return "plural"
                         return "singular_article" if is_article else "ambiguous"
+                    return "ambiguous"
+                if "\n" in text[raw[cursor].end:raw[cursor + 1].start]:
                     return "ambiguous"
                 if kinds & {"LAW", "SELF_LAW", "ANAPHORIC_LAW"}:
                     return "ambiguous"
@@ -821,23 +854,23 @@ class ReferenceAnalyzer:
                     add(index, index + 2, f"{target_kind}_LAW",
                         evidence="contextual_law_reference")
 
-            nodes = [self._alias_trie]
-            cursor = index
-            while cursor < len(raw):
-                forms = self._word_forms(raw[cursor].value)
-                next_nodes = [child for node in nodes for expected, child in node.items()
-                              if expected is not None and expected.intersection(forms)]
-                if not next_nodes:
-                    break
-                for child in next_nodes:
-                    ids = child.get(None, ())
-                    if ids:
-                        by_span[(index, cursor + 1, "LAW", text[raw[index].start:raw[cursor].end])].update(ids)
-                if cursor + 1 < len(raw) and text[raw[cursor].end:raw[cursor + 1].start].strip():
-                    break
-                # Keep all morphology paths; alias alternatives are not ranked.
-                nodes = next_nodes
-                cursor += 1
+            pending = [(self._alias_trie, index)]
+            visited = set()
+            while pending:
+                node, cursor = pending.pop()
+                state = (id(node), cursor)
+                if state in visited or cursor >= len(raw):
+                    continue
+                visited.add(state)
+                for expected, child in node.items():
+                    if expected is None:
+                        continue
+                    for after in alias_token_ends(expected, cursor):
+                        ids = child.get(None, ())
+                        if ids:
+                            by_span[(index, after, "LAW",
+                                     text[raw[index].start:raw[after - 1].end])].update(ids)
+                        pending.append((child, after))
 
         known_law_spans = {(first, after): ids
                            for (first, after, kind, _), ids in by_span.items()
