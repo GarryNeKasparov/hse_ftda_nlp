@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections import defaultdict
+from collections import OrderedDict, defaultdict
 from dataclasses import dataclass
 from bisect import bisect_left
 from functools import lru_cache
@@ -171,6 +171,10 @@ class _CandidateLexer(Lexer):
             yield Token(item.kind, item.value, start_pos=item.start, end_pos=item.end)
 
 
+_ParseShape = tuple[str, int | str, tuple["_ParseShape", ...]]
+_PARSE_CACHE_MAXSIZE = 4096
+
+
 def _read_grammar(path: Path) -> tuple[dict[str, list[tuple[str, ...]]], set[str]]:
     """Read the shared BNF and collect its productions and terminal names."""
     rules: dict[str, list[tuple[str, ...]]] = defaultdict(list)
@@ -236,6 +240,61 @@ class ReferenceAnalyzer:
         self._parser = Lark(_to_lark_grammar(rules, terminals), parser="earley",
                             lexer=_CandidateLexer, ambiguity="explicit", keep_all_tokens=True,
                             propagate_positions=True)
+        self._parse_shapes: OrderedDict[tuple[str, ...], _ParseShape | None] = OrderedDict()
+        self._parse_cache_hits = 0
+        self._parse_cache_misses = 0
+
+    @property
+    def parse_cache_info(self) -> dict[str, int]:
+        """Return bounded grammar-shape cache counters for profiling."""
+        return {"hits": self._parse_cache_hits, "misses": self._parse_cache_misses,
+                "size": len(self._parse_shapes), "maxsize": _PARSE_CACHE_MAXSIZE,
+                "failures": sum(shape is None for shape in self._parse_shapes.values())}
+
+    def _parse_shape(self, path):
+        """Return cached grammar structure, rebinding its terminals to this path."""
+        key = tuple(item.kind for item in path)
+        if key in self._parse_shapes:
+            self._parse_cache_hits += 1
+            shape = self._parse_shapes.pop(key)
+            self._parse_shapes[key] = shape
+        else:
+            self._parse_cache_misses += 1
+            try:
+                parsed = self._parser.parse(path)
+            except UnexpectedInput:
+                shape = None
+            else:
+                token_positions = {
+                    (item.kind, item.start, item.end, item.value): index
+                    for index, item in enumerate(path)
+                }
+
+                def encode(tree):
+                    if isinstance(tree, Token):
+                        token_key = (tree.type, tree.start_pos or 0, tree.end_pos or 0,
+                                     str(tree))
+                        return ("token", token_positions[token_key], ())
+                    return ("tree", str(tree.data),
+                            tuple(encode(child) for child in tree.children))
+
+                shape = encode(parsed)
+            self._parse_shapes[key] = shape
+            if len(self._parse_shapes) > _PARSE_CACHE_MAXSIZE:
+                self._parse_shapes.popitem(last=False)
+        if shape is None:
+            return None
+
+        def materialize(node):
+            kind, value, children = node
+            if kind == "token":
+                assert isinstance(value, int)
+                item = path[value]
+                return Token(item.kind, item.value, start_pos=item.start, end_pos=item.end)
+            assert isinstance(value, str)
+            return Tree(value, [materialize(child) for child in children])
+
+        return materialize(shape)
 
     @classmethod
     def from_alias_file(cls, path: str | Path) -> ReferenceAnalyzer:
@@ -852,10 +911,7 @@ class ReferenceAnalyzer:
                                          "ANAPHORIC_ARTICLE",
                                          "SELF_ARTICLE", "SELF_PART", "SELF_POINT",
                                          "SELF_SUBPOINT", "SELF_PARAGRAPH"}:
-                        try:
-                            tree = self._parser.parse(path)
-                        except UnexpectedInput:
-                            pass
+                        tree = self._parse_shape(path)
                     if tree is not None:
                         lexical = {(item.kind, item.start, item.end, item.value): item
                                    for item in path}

@@ -29,6 +29,30 @@ class ReferenceAnalyzerTests(unittest.TestCase):
         self.assertIn("0", law_ids(candidate))
         self.assertEqual(node_values(candidate, "ID"), ["5"])
 
+    def test_reuses_parse_shape_but_binds_each_occurrence_to_its_source(self):
+        analyzer = ReferenceAnalyzer({"15": ["НК РФ"], "0": ["АПК"]})
+        text = "статью 5 НК РФ; статью 8 АПК"
+
+        result = analyzer.analyze(text)
+
+        first = find_candidate(result, text, "статью 5 НК РФ")
+        second = find_candidate(result, text, "статью 8 АПК")
+        self.assertEqual(node_values(first, "ID"), ["5"])
+        self.assertEqual(law_ids(first), ["15"])
+        self.assertEqual(node_values(second, "ID"), ["8"])
+        self.assertEqual(law_ids(second), ["0"])
+        self.assertGreater(analyzer.parse_cache_info["hits"], 0)
+
+    def test_caches_unparseable_token_shapes(self):
+        analyzer = ReferenceAnalyzer({})
+
+        analyzer.analyze("статья 5 статья 6; статья 7 статья 8")
+
+        self.assertGreater(analyzer.parse_cache_info["hits"], 0)
+        self.assertGreater(analyzer.parse_cache_info["failures"], 0)
+        self.assertLessEqual(analyzer.parse_cache_info["size"],
+                             analyzer.parse_cache_info["maxsize"])
+
     def test_keeps_full_law_alias_when_sentence_comma_follows(self):
         text = "Согласно пункту 2 статьи 5 НК РФ, применяется правило."
         expected_span = "пункту 2 статьи 5 НК РФ"

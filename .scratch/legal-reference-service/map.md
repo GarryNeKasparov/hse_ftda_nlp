@@ -84,6 +84,11 @@ local issue files.
 - [Issue 19](issues/19-compound-conjunction-recognition.md) is resolved. The
   lexer recognizes `и (или)` as one source-spanned `AND_OR` token and classifies
   ordinary `и` and `или` only as `AND` and `OR`; all 131 tests pass.
+- [Issue 20](issues/20-cache-grammar-structures.md) is resolved. A bounded LRU
+  cache reuses parse-tree shapes, including failed parses, while rebinding each
+  occurrence's terminals. Analyses and `/detect` outputs matched the uncached
+  parser across the README example and all 88 gold samples; the varied sample
+  pass ran about twice as fast.
 - Issues 11–13 are focused follow-ups from measured failures: law-name boundary
   and stale-context errors, one part/article citation form, and abbreviated-law
   citation boundaries/recall.
@@ -130,11 +135,14 @@ this table.
 | [17 — Explicit law titles and context safety](issues/17-explicit-law-titles-and-context-safety.md) | resolved | 14 | Resolve known long titles and avoid stale law inheritance |
 | [18 — Mixed-level groups and heading boundaries](issues/18-mixed-level-groups-and-heading-boundaries.md) | resolved | 14, 16 | Extract grouped clauses and reject a measured heading false positive |
 | [19 — Compound conjunction recognition](issues/19-compound-conjunction-recognition.md) | resolved | None | Recognize compound conjunctions without duplicate lexical alternatives |
+| [20 — Cache grammar structures](issues/20-cache-grammar-structures.md) | resolved | None | Reuse parsing work for repeated token-kind sequences |
+| [21 — Index fuzzy law matching](issues/21-index-fuzzy-law-matching.md) | ready-for-agent | None | Narrow fuzzy alias lookup while preserving matching behavior |
+| [22 — Length-matched runtime benchmark](issues/22-pass-length-matched-runtime-benchmark.md) | ready-for-agent | 20, 21 | Meet the instructor's five-minute limit on 2,000 length-matched requests |
 
 ## Frontier
 
-All current tickets are resolved. Create a new ticket when another implementation
-slice is agreed.
+Ticket 21 is the next unblocked optimization. Ticket 22 starts after tickets
+20 and 21 are resolved.
 
 ## Comments
 
