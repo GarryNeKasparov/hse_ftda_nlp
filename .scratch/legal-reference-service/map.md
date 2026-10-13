@@ -89,6 +89,10 @@ local issue files.
   occurrence's terminals. Analyses and `/detect` outputs matched the uncached
   parser across the README example and all 88 gold samples; the varied sample
   pass ran about twice as fast.
+- [Issue 21](issues/21-index-fuzzy-law-matching.md) is resolved. BK-tree token
+  indexes narrow fuzzy alias candidates while preserving the two-edit matcher
+  and ambiguous IDs. Indexed and full-scan analyses and `/detect` outputs
+  matched across the README example, all gold samples, and four boundary cases.
 - Issues 11–13 are focused follow-ups from measured failures: law-name boundary
   and stale-context errors, one part/article citation form, and abbreviated-law
   citation boundaries/recall.
@@ -136,13 +140,12 @@ this table.
 | [18 — Mixed-level groups and heading boundaries](issues/18-mixed-level-groups-and-heading-boundaries.md) | resolved | 14, 16 | Extract grouped clauses and reject a measured heading false positive |
 | [19 — Compound conjunction recognition](issues/19-compound-conjunction-recognition.md) | resolved | None | Recognize compound conjunctions without duplicate lexical alternatives |
 | [20 — Cache grammar structures](issues/20-cache-grammar-structures.md) | resolved | None | Reuse parsing work for repeated token-kind sequences |
-| [21 — Index fuzzy law matching](issues/21-index-fuzzy-law-matching.md) | ready-for-agent | None | Narrow fuzzy alias lookup while preserving matching behavior |
+| [21 — Index fuzzy law matching](issues/21-index-fuzzy-law-matching.md) | resolved | None | Narrow fuzzy alias lookup while preserving matching behavior |
 | [22 — Length-matched runtime benchmark](issues/22-pass-length-matched-runtime-benchmark.md) | ready-for-agent | 20, 21 | Meet the instructor's five-minute limit on 2,000 length-matched requests |
 
 ## Frontier
 
-Ticket 21 is the next unblocked optimization. Ticket 22 starts after tickets
-20 and 21 are resolved.
+Ticket 22 is now unblocked by completion of tickets 20 and 21.
 
 ## Comments
 

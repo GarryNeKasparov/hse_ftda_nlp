@@ -310,6 +310,42 @@ class ReferenceAnalyzerTests(unittest.TestCase):
         self.assertEqual(law_mentions[0].law_ids, (330,))
         self.assertEqual(law_mentions[0].law_status, "known_unique")
 
+    def test_fuzzy_index_preserves_ambiguous_ids_and_reuses_form_lookups(self):
+        alias = "Большой необычный закон Российской Федерации"
+        analyzer = ReferenceAnalyzer({
+            "42": [alias],
+            "43": [alias],
+            "99": ["Иной редкий федеральный норматив Федерации"],
+        })
+        text = ("ст. 2 Большой необычный закоон Российской Федерации; "
+                "ст. 3 Большой необычный закоон Российской Федерации")
+
+        result = analyzer.analyze(text)
+
+        fuzzy_laws = [token for token in result.lexical_candidates
+                      if token.kind == "LAW" and "fuzzy_law_alias" in token.evidence]
+        self.assertEqual(len(fuzzy_laws), 2)
+        self.assertTrue(all(token.law_ids == (42, 43) for token in fuzzy_laws))
+        self.assertGreater(analyzer.fuzzy_cache_info["hits"], 0)
+        self.assertLessEqual(analyzer.fuzzy_cache_info["size"],
+                             analyzer.fuzzy_cache_info["maxsize"])
+        alias_count = sum(map(len, analyzer._fuzzy_aliases.values()))
+        self.assertLess(analyzer.fuzzy_cache_info["aliases_checked"],
+                        alias_count * analyzer.fuzzy_cache_info["misses"])
+
+    def test_fuzzy_index_preserves_the_two_edit_cumulative_boundary(self):
+        analyzer = ReferenceAnalyzer({
+            "42": ["Большой необычный закон Российской Федерации"],
+        })
+        accepted = "Большой необычный закоон Российской Федераци"
+        rejected = "Большой необычнный закоон Российской Федераци"
+
+        accepted_edges = analyzer._fuzzy_law_edges(analyzer._tokenize(accepted), 0, accepted)
+        rejected_edges = analyzer._fuzzy_law_edges(analyzer._tokenize(rejected), 0, rejected)
+
+        self.assertEqual([edge.token.law_ids for edge in accepted_edges], [(42,)])
+        self.assertEqual(rejected_edges, ())
+
     def test_keeps_malformed_range_continuation_incomplete(self):
         text = "ст. 5 - неизвестно. Ст. 7 УК РФ"
 

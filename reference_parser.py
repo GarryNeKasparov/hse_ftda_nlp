@@ -160,6 +160,15 @@ class _FullLawAlias:
     law_ids: tuple[int, ...]
 
 
+@dataclass
+class _FuzzyFormIndexNode:
+    """A BK-tree node mapping a normalized token form to alias positions."""
+
+    form: str
+    alias_positions: set[int]
+    children: dict[int, _FuzzyFormIndexNode]
+
+
 class _CandidateLexer(Lexer):
     """Feed provenance-bearing candidate tokens into Lark's Earley parser."""
 
@@ -173,6 +182,7 @@ class _CandidateLexer(Lexer):
 
 _ParseShape = tuple[str, int | str, tuple["_ParseShape", ...]]
 _PARSE_CACHE_MAXSIZE = 4096
+_FUZZY_FORM_CACHE_MAXSIZE = 32768
 
 
 def _read_grammar(path: Path) -> tuple[dict[str, list[tuple[str, ...]]], set[str]]:
@@ -229,6 +239,13 @@ class ReferenceAnalyzer:
         self._morphology = morphology or MorphAnalyzer()
         self._alias_trie: dict = {}
         self._fuzzy_aliases: dict[int, list[_FullLawAlias]] = defaultdict(list)
+        self._fuzzy_form_indexes: dict[int, tuple[_FuzzyFormIndexNode | None, ...]] = {}
+        self._fuzzy_form_cache: OrderedDict[
+            tuple[int, int, tuple[str, ...]], frozenset[int]
+        ] = OrderedDict()
+        self._fuzzy_cache_hits = 0
+        self._fuzzy_cache_misses = 0
+        self._fuzzy_aliases_checked = 0
         self._max_fuzzy_alias_chars = 0
         self._marker_forms: dict[str, str] = {}
         self._singular_marker_forms: set[str] = set()
@@ -250,6 +267,80 @@ class ReferenceAnalyzer:
         return {"hits": self._parse_cache_hits, "misses": self._parse_cache_misses,
                 "size": len(self._parse_shapes), "maxsize": _PARSE_CACHE_MAXSIZE,
                 "failures": sum(shape is None for shape in self._parse_shapes.values())}
+
+    @property
+    def fuzzy_cache_info(self) -> dict[str, int]:
+        """Return bounded fuzzy-form lookup counters for profiling."""
+        return {"hits": self._fuzzy_cache_hits, "misses": self._fuzzy_cache_misses,
+                "size": len(self._fuzzy_form_cache), "maxsize": _FUZZY_FORM_CACHE_MAXSIZE,
+                "aliases_checked": self._fuzzy_aliases_checked}
+
+    def _build_fuzzy_form_indexes(self) -> None:
+        """Build one BK-tree per token position and alias token count."""
+        indexes = {}
+        for token_count, aliases in self._fuzzy_aliases.items():
+            roots: list[_FuzzyFormIndexNode | None] = [None] * token_count
+            forms_by_position: list[dict[str, set[int]]] = [
+                defaultdict(set) for _ in range(token_count)
+            ]
+            for alias_position, alias in enumerate(aliases):
+                for token_position, forms in enumerate(alias.forms):
+                    for form in forms:
+                        forms_by_position[token_position][form].add(alias_position)
+
+            for token_position, forms in enumerate(forms_by_position):
+                root = None
+                for form, alias_positions in forms.items():
+                    if root is None:
+                        root = _FuzzyFormIndexNode(form, alias_positions, {})
+                        continue
+                    node = root
+                    while True:
+                        distance = Levenshtein.distance(form, node.form)
+                        child = node.children.get(distance)
+                        if child is None:
+                            node.children[distance] = _FuzzyFormIndexNode(
+                                form, alias_positions, {})
+                            break
+                        node = child
+                roots[token_position] = root
+            indexes[token_count] = tuple(roots)
+        self._fuzzy_form_indexes = indexes
+        self._fuzzy_form_cache.clear()
+        self._fuzzy_cache_hits = 0
+        self._fuzzy_cache_misses = 0
+        self._fuzzy_aliases_checked = 0
+
+    def _fuzzy_form_alias_candidates(self, token_count: int, token_position: int,
+                                     source_forms: tuple[str, ...]) -> frozenset[int]:
+        """Find aliases with a token form no more than two edits from the source."""
+        key = (token_count, token_position, source_forms)
+        if key in self._fuzzy_form_cache:
+            self._fuzzy_cache_hits += 1
+            candidates = self._fuzzy_form_cache.pop(key)
+            self._fuzzy_form_cache[key] = candidates
+            return candidates
+
+        self._fuzzy_cache_misses += 1
+        roots = self._fuzzy_form_indexes.get(token_count, ())
+        root = roots[token_position] if token_position < len(roots) else None
+        candidates: set[int] = set()
+        if root is not None:
+            for source_form in source_forms:
+                pending = [root]
+                while pending:
+                    node = pending.pop()
+                    distance = Levenshtein.distance(source_form, node.form)
+                    if distance <= 2:
+                        candidates.update(node.alias_positions)
+                    lower, upper = distance - 2, distance + 2
+                    pending.extend(child for edge, child in node.children.items()
+                                   if lower <= edge <= upper)
+        result = frozenset(candidates)
+        self._fuzzy_form_cache[key] = result
+        if len(self._fuzzy_form_cache) > _FUZZY_FORM_CACHE_MAXSIZE:
+            self._fuzzy_form_cache.popitem(last=False)
+        return result
 
     def _parse_shape(self, path):
         """Return cached grammar structure, rebinding its terminals to this path."""
@@ -381,6 +472,7 @@ class ReferenceAnalyzer:
             alias = _FullLawAlias(forms, surface, tuple(sorted(law_ids)))
             self._fuzzy_aliases[len(forms)].append(alias)
             self._max_fuzzy_alias_chars = max(self._max_fuzzy_alias_chars, len(surface))
+        self._build_fuzzy_form_indexes()
 
     @staticmethod
     def _tokenize(text: str) -> tuple[_RawToken, ...]:
@@ -816,17 +908,28 @@ class ReferenceAnalyzer:
                 continue
             if len(surface) > self._max_fuzzy_alias_chars + 2:
                 break
-            for alias in self._fuzzy_aliases.get(after - start, ()):
+            token_count = after - start
+            source_token_forms = tuple(self._word_forms(item.value) for item in raw[start:after])
+            candidate_positions = None
+            for token_position, forms in enumerate(source_token_forms):
+                indexed_positions = self._fuzzy_form_alias_candidates(
+                    token_count, token_position, tuple(sorted(forms)))
+                candidate_positions = (set(indexed_positions) if candidate_positions is None
+                                       else candidate_positions.intersection(indexed_positions))
+                if not candidate_positions:
+                    break
+            for alias_position in candidate_positions or ():
+                alias = self._fuzzy_aliases[token_count][alias_position]
+                self._fuzzy_aliases_checked += 1
                 if abs(len(surface) - len(alias.surface)) > 2:
                     continue
                 remaining = 2
-                for source_forms, alias_forms in zip(
-                        (self._word_forms(item.value) for item in raw[start:after]), alias.forms):
-                    if source_forms.intersection(alias_forms):
+                for word_forms, alias_forms in zip(source_token_forms, alias.forms):
+                    if word_forms.intersection(alias_forms):
                         continue
                     best = min((Levenshtein.distance(source, target,
                                                      score_cutoff=remaining)
-                                for source in source_forms for target in alias_forms),
+                                for source in word_forms for target in alias_forms),
                                default=remaining + 1)
                     remaining -= best
                     if remaining < 0:
