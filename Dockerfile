@@ -7,12 +7,8 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY main.py .
-COPY reference_parser.py .
-COPY semantic_analyzer.py .
-COPY contextual_resolver.py .
-COPY law_link_mapper.py .
-COPY docs/reference-grammar.bnf docs/reference-grammar.bnf
-COPY law_aliases.json .
+COPY law_links/ law_links/
+COPY data/law_aliases.json data/law_aliases.json
 
 EXPOSE 8978
 

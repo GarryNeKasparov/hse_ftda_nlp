@@ -5,13 +5,22 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 dockerfile = (ROOT / "Dockerfile").read_text(encoding="utf-8")
 required_sources = (
-    "main.py", "reference_parser.py", "semantic_analyzer.py",
-    "contextual_resolver.py", "law_link_mapper.py", "docs/reference-grammar.bnf",
-    "law_aliases.json", "requirements.txt",
+    "main.py", "law_links/__init__.py", "law_links/application.py",
+    "law_links/http.py", "law_links/syntax/analyzer.py",
+    "law_links/syntax/models.py", "law_links/syntax/grammar.py",
+    "law_links/syntax/numbers.py", "law_links/semantic.py",
+    "law_links/context.py", "law_links/projection.py",
+    "law_links/resources/reference-grammar.bnf", "data/law_aliases.json",
+    "requirements.txt",
 )
-missing = [source for source in required_sources
-           if not (ROOT / source).is_file() or f"COPY {source} " not in dockerfile]
+missing = [source for source in required_sources if not (ROOT / source).is_file()]
 assert not missing, f"Missing Docker COPY inputs: {missing}"
+required_copy_lines = (
+    "COPY main.py .", "COPY law_links/ law_links/",
+    "COPY data/law_aliases.json data/law_aliases.json", "COPY requirements.txt .",
+)
+missing_copy_lines = [line for line in required_copy_lines if line not in dockerfile]
+assert not missing_copy_lines, f"Dockerfile does not include: {missing_copy_lines}"
 assert "EXPOSE 8978" in dockerfile, "Docker image must expose port 8978"
 assert '"main:app"' in dockerfile and '"--port", "8978"' in dockerfile, (
     "Docker CMD must start the app on port 8978")

@@ -51,7 +51,8 @@ def derivation_count(tree: Tree | Token) -> int:
 def main() -> int:
     root = Path(__file__).resolve().parents[1]
     cli = argparse.ArgumentParser(description=__doc__)
-    cli.add_argument('--grammar', type=Path, default=root / 'docs/reference-grammar.bnf')
+    cli.add_argument('--grammar', type=Path,
+                     default=root / 'law_links/resources/reference-grammar.bnf')
     cli.add_argument('--examples', type=Path, default=root / 'docs/grammar-examples.json')
     cli.add_argument('--output', type=Path, default=root / 'docs/lark-grammar-analysis.md')
     args = cli.parse_args()

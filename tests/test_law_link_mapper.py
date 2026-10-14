@@ -3,9 +3,9 @@
 from pathlib import Path
 import unittest
 
-from law_link_mapper import map_semantic_analysis
-from reference_parser import ReferenceAnalyzer
-from semantic_analyzer import SemanticAnalyzer
+from law_links.projection import map_semantic_analysis
+from law_links.syntax.analyzer import ReferenceAnalyzer
+from law_links.semantic import SemanticAnalyzer
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 class LawLinkMapperTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.syntax = ReferenceAnalyzer.from_alias_file(ROOT / "law_aliases.json")
+        cls.syntax = ReferenceAnalyzer.from_alias_file(ROOT / "data/law_aliases.json")
         cls.semantic = SemanticAnalyzer()
 
     def map_text(self, text):

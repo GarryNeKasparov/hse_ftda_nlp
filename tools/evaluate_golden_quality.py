@@ -14,9 +14,9 @@ sys.path.insert(0, str(ROOT))
 
 from fastapi.testclient import TestClient
 
-from law_link_mapper import map_semantic_analysis
+from law_links.projection import map_semantic_analysis
 from main import app
-from semantic_analyzer import SemanticAnalysis
+from law_links.semantic import SemanticAnalysis
 
 
 DATASETS = {

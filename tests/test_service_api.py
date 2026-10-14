@@ -32,6 +32,19 @@ class ServiceApiTests(unittest.TestCase):
             "subpoint_article": "1",
         }]})
 
+    def test_recognizes_a_typo_in_a_full_law_name(self):
+        response = self.client.post("/detect", json={
+            "text": "ст. 5 Налоговго кодекса Российской Федерации",
+        })
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {"links": [{
+            "law_id": 15,
+            "article": "5",
+            "point_article": None,
+            "subpoint_article": None,
+        }]})
+
     def test_returns_quoted_lettered_subpoint_for_each_quote_style(self):
         for opening, closing in (("«", "»"), ('"', '"')):
             with self.subTest(quote=opening + closing):
@@ -524,6 +537,33 @@ class ServiceApiTests(unittest.TestCase):
             "subpoint_article": None,
         }]})
 
+    def test_resolves_known_law_alias_split_by_nonletter_separator(self):
+        response = self.client.post("/detect", json={
+            "text": "частью 4 статьи 330 ГП К  РФ",
+        })
+
+        self.assertEqual(response.json(), {"links": [{
+            "law_id": 6,
+            "article": "330",
+            "point_article": "4",
+            "subpoint_article": None,
+        }]})
+
+    def test_resolves_inserted_article_id_after_dirty_marker_separator(self):
+        for text, article in (
+            ("статья\n6-1 ГПК РФ", "6-1"),
+            ("частью 4 статьи\n327-1 ГПК РФ", "327-1"),
+            ("абзацем вторым части 1 статьи\n327-1 ГПК РФ", "327-1"),
+        ):
+            with self.subTest(text=text):
+                response = self.client.post("/detect", json={"text": text})
+                self.assertEqual(response.json(), {"links": [{
+                    "law_id": 6,
+                    "article": article,
+                    "point_article": "4" if "частью 4" in text else "1" if "части 1" in text else None,
+                    "subpoint_article": None,
+                }]})
+
     def test_keeps_abbreviated_hyphen_label_unresolved(self):
         response = self.client.post("/detect", json={
             "text": "ст. 28-1 ГПК РФ",
@@ -789,6 +829,16 @@ class ServiceApiTests(unittest.TestCase):
 
         self.assertEqual(response.json(), {"links": [{
             "law_id": 6, "article": None, "point_article": "9",
+            "subpoint_article": None,
+        }]})
+
+    def test_keeps_point_marker_before_a_newline_and_dotted_number(self):
+        response = self.client.post("/detect", json={
+            "text": "п.\n9. ГПК РФ",
+        })
+
+        self.assertEqual(response.json(), {"links": [{
+            "law_id": None, "article": None, "point_article": "9",
             "subpoint_article": None,
         }]})
 

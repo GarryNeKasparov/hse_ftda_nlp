@@ -3,8 +3,8 @@
 from pathlib import Path
 import unittest
 
-from reference_parser import ReferenceAnalyzer
-from semantic_analyzer import SemanticAnalyzer
+from law_links.syntax.analyzer import ReferenceAnalyzer
+from law_links.semantic import SemanticAnalyzer
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 class SemanticAnalyzerTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.syntax = ReferenceAnalyzer.from_alias_file(ROOT / "law_aliases.json")
+        cls.syntax = ReferenceAnalyzer.from_alias_file(ROOT / "data/law_aliases.json")
         cls.semantic = SemanticAnalyzer()
 
     def analyze(self, text):
@@ -247,6 +247,73 @@ class SemanticAnalyzerTests(unittest.TestCase):
         ))
         self.assertEqual(result.diagnostics, ())
 
+    def test_converts_ordinal_paragraph_above_the_old_limit(self):
+        result = self.analyze("абзаца тысячного статьи 284 ГПК РФ")
+
+        self.assertEqual(result.references[0].provisions, (
+            self.path(law_id=6, article="284", paragraph="1000"),
+        ))
+        self.assertEqual(result.diagnostics, ())
+
+    def test_converts_composed_ordinal_paragraph(self):
+        result = self.analyze("абзаца сто двадцать первого статьи 284 ГПК РФ")
+
+        self.assertEqual(result.references[0].provisions, (
+            self.path(law_id=6, article="284", paragraph="121"),
+        ))
+        self.assertEqual(result.diagnostics, ())
+
+    def test_converts_composed_ordinal_across_a_line_break(self):
+        result = self.analyze(
+            "абзаца сто двадцать\nпервого статьи 284 ГПК РФ")
+
+        self.assertEqual(result.references[0].provisions, (
+            self.path(law_id=6, article="284", paragraph="121"),
+        ))
+        self.assertEqual(result.diagnostics, ())
+
+    def test_converts_fused_compound_ordinal_paragraph(self):
+        result = self.analyze("абзаца двухтысячного статьи 284 ГПК РФ")
+
+        self.assertEqual(result.references[0].provisions, (
+            self.path(law_id=6, article="284", paragraph="2000"),
+        ))
+        self.assertEqual(result.diagnostics, ())
+
+    def test_converts_compound_hundred_ordinal_paragraph(self):
+        result = self.analyze("абзаца двухсотого статьи 284 ГПК РФ")
+
+        self.assertEqual(result.references[0].provisions, (
+            self.path(law_id=6, article="284", paragraph="200"),
+        ))
+        self.assertEqual(result.diagnostics, ())
+
+    def test_converts_cardinal_hundred_followed_by_an_ordinal(self):
+        result = self.analyze("абзаца двести первого статьи 284 ГПК РФ")
+
+        self.assertEqual(result.references[0].provisions, (
+            self.path(law_id=6, article="284", paragraph="201"),
+        ))
+        self.assertEqual(result.diagnostics, ())
+
+    def test_converts_composed_ordinal_with_a_thousand_scale(self):
+        result = self.analyze(
+            "абзаца одна тысяча двадцать первого статьи 284 ГПК РФ")
+
+        self.assertEqual(result.references[0].provisions, (
+            self.path(law_id=6, article="284", paragraph="1021"),
+        ))
+        self.assertEqual(result.diagnostics, ())
+
+    def test_converts_composed_ordinal_with_multiple_scale_words(self):
+        result = self.analyze(
+            "абзаца два миллиона сто двадцать первого статьи 284 ГПК РФ")
+
+        self.assertEqual(result.references[0].provisions, (
+            self.path(law_id=6, article="284", paragraph="2000121"),
+        ))
+        self.assertEqual(result.diagnostics, ())
+
     def test_preserves_article_for_ordinal_paragraph(self):
         result = self.analyze("абзаца второго статьи 284 ГПК РФ")
 
@@ -275,11 +342,16 @@ class SemanticAnalyzerTests(unittest.TestCase):
 
         self.assertEqual(result.references, ())
 
+    def test_ordinary_cardinal_prose_is_not_a_reference(self):
+        result = self.analyze("В документе было сто двадцать страниц.")
+
+        self.assertEqual(result.references, ())
+
     @staticmethod
     def path(*, law_id, article=None, part=None, point=None, subpoint=None,
              paragraph=None, law_status="known_unique", law_candidate_ids=()):
         """Construct one independently specified provision path."""
-        from semantic_analyzer import ProvisionPath
+        from law_links.semantic import ProvisionPath
         if law_id is not None and not law_candidate_ids:
             law_candidate_ids = (law_id,)
         return ProvisionPath(law_id=law_id, law_status=law_status,

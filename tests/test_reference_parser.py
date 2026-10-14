@@ -1,9 +1,11 @@
 """Behavioral tests for the public reference-analysis interface."""
 
 from pathlib import Path
+import re
 import unittest
 
-from reference_parser import AstLeaf, ReferenceAnalyzer
+from law_links.syntax.analyzer import ReferenceAnalyzer
+from law_links.syntax.models import AstLeaf
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -14,7 +16,7 @@ class ReferenceAnalyzerTests(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.analyzer = ReferenceAnalyzer.from_alias_file(ROOT / "law_aliases.json")
+        cls.analyzer = ReferenceAnalyzer.from_alias_file(ROOT / "data/law_aliases.json")
 
     def test_finds_reference_span_and_zero_valued_law_id(self):
         text = "См. статью 5 АПК."
@@ -337,6 +339,85 @@ class ReferenceAnalyzerTests(unittest.TestCase):
         self.assertEqual(law_mentions[0].law_ids, (330,))
         self.assertEqual(law_mentions[0].law_status, "known_unique")
 
+    def test_recognizes_typos_created_from_exact_full_law_aliases(self):
+        examples = (
+            ("ст. 5 Налогового кодекса Российской Федерации",
+             "ст. 5 Налоговго кодекса Российской Федерации", 15),
+            ('ст. 5 Федерального закона "О персональных данных"',
+             'ст. 5 Федерального закона "О персональных данныз"', 330),
+        )
+
+        for exact_text, typo_text, expected_law_id in examples:
+            with self.subTest(text=exact_text):
+                exact_result = self.analyzer.analyze(exact_text)
+                typo_result = self.analyzer.analyze(typo_text)
+
+                self.assertTrue(any(
+                    token.kind == "LAW"
+                    and token.start == len("ст. 5 ")
+                    and token.end == len(typo_text)
+                    and token.law_ids == (expected_law_id,)
+                    for token in typo_result.lexical_candidates
+                ))
+                self.assertTrue(any(
+                    token.kind == "LAW" and token.end == len(exact_text)
+                    and token.law_ids == (expected_law_id,)
+                    for token in exact_result.lexical_candidates
+                ))
+
+    def test_recognizes_single_letter_deletions_across_full_law_names(self):
+        known_citations = (
+            ("ст. 5 ", "Налоговый кодекс Российской Федерации", "", 15),
+            ("ст. 5 ", 'Федерального закона "О персональных данных', '"', 330),
+        )
+        checked = 0
+        seen_typos = set()
+
+        for prefix, alias, suffix, expected_law_id in known_citations:
+            exact_text = prefix + alias + suffix
+            exact_result = self.analyzer.analyze(exact_text)
+            self.assertTrue(any(
+                token.kind == "LAW" and token.start == len(prefix)
+                and token.end == len(exact_text)
+                and token.law_ids == (expected_law_id,)
+                for token in exact_result.lexical_candidates
+            ))
+
+            for match in re.finditer(r"[А-Яа-яЁё]+", alias):
+                word = match.group()
+                if len(word) < 5:
+                    continue
+                for position in range(len(word)):
+                    typo_alias = (alias[:match.start()] + word[:position]
+                                  + word[position + 1:] + alias[match.end():])
+                    typo_text = prefix + typo_alias + suffix
+                    if typo_text in seen_typos:
+                        continue
+                    seen_typos.add(typo_text)
+                    with self.subTest(text=typo_text):
+                        result = self.analyzer.analyze(typo_text)
+                        self.assertTrue(any(
+                            token.kind == "LAW" and token.start == len(prefix)
+                            and token.end == len(typo_text)
+                            and token.law_ids == (expected_law_id,)
+                            for token in result.lexical_candidates
+                        ))
+                    checked += 1
+
+        self.assertGreaterEqual(checked, 30)
+
+    def test_fuzzy_full_alias_can_extend_a_known_short_alias(self):
+        text = "ст. 5 Налоговый кодекс Российскцй Федерации"
+
+        result = self.analyzer.analyze(text)
+
+        self.assertTrue(any(
+            token.kind == "LAW" and token.start == len("ст. 5 ")
+            and token.end == len(text) and token.law_ids == (15,)
+            and "fuzzy_law_alias" in token.evidence
+            for token in result.lexical_candidates
+        ))
+
     def test_fuzzy_index_preserves_ambiguous_ids_and_reuses_form_lookups(self):
         alias = "Большой необычный закон Российской Федерации"
         analyzer = ReferenceAnalyzer({
@@ -422,6 +503,31 @@ class ReferenceAnalyzerTests(unittest.TestCase):
         self.assertTrue(any(item.kind == "POINT" and "fuzzy_marker" in item.evidence
                             for item in point_markers))
         self.assertEqual(node_values(candidate, "ID"), ["б", "20"])
+
+    def test_fuzzy_marker_index_matches_brute_force_edit_rule(self):
+        from rapidfuzz.distance import Levenshtein
+
+        forms = self.analyzer._fuzzy_marker_forms
+        samples = set()
+        for form, _ in forms:
+            samples.add(form)
+            samples.update(form[:index] + form[index + 1:]
+                           for index in range(len(form)))
+            samples.update(form[:index] + "я" + form[index + 1:]
+                           for index in range(len(form)) if form[index] != "я")
+            samples.add("я" + form)
+            samples.add(form + "я")
+
+        for word in samples:
+            if len(word) < 4:
+                continue
+            expected = frozenset(
+                kind for form, kind in forms
+                if not (len(word) > len(form) and word.endswith(form))
+                and Levenshtein.distance(word, form, score_cutoff=1) <= 1
+            )
+            with self.subTest(word=word):
+                self.assertEqual(self.analyzer._fuzzy_marker_kinds(word), expected)
 
     def test_matches_a_controlled_latin_cyrillic_alias_variant(self):
         text = "статья 5 СК РФ"

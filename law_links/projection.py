@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from semantic_analyzer import (ProvisionPath, SemanticAnalysis,
-                               SemanticDiagnostic)
+from law_links.semantic import (ProvisionPath, SemanticAnalysis,
+                                SemanticDiagnostic)
 
 
 @dataclass(frozen=True)

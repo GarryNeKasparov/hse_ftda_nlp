@@ -55,7 +55,7 @@ def normalize(value):
 
 
 def audit(dataset):
-    aliases_path = ROOT / "law_aliases.json"
+    aliases_path = ROOT / "data/law_aliases.json"
     rows = [json.loads(line) for line in dataset.read_text().splitlines() if line.strip()]
     aliases = json.loads(aliases_path.read_text())
     source_manifest = ROOT / "data/sources/manifest.json"

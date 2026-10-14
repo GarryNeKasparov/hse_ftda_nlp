@@ -5,11 +5,11 @@ import runpy
 from unittest import TestCase
 from unittest.mock import patch
 
-from contextual_resolver import ContextualResolver
-from reference_parser import (AstLeaf, AstNode, CandidateSpan,
-                              LexicalCandidate, ReferenceAnalyzer, _Edge,
-                              _RawToken)
-from semantic_analyzer import (ProvisionPath, SemanticAnalysis,
+from law_links.context import ContextualResolver
+from law_links.syntax.analyzer import ReferenceAnalyzer, _Edge, _RawToken
+from law_links.syntax.models import (AstLeaf, AstNode, CandidateSpan,
+                                     LexicalCandidate)
+from law_links.semantic import (ProvisionPath, SemanticAnalysis,
                                SemanticAnalyzer, SemanticReference,
                                _UnsupportedSemantics)
 
@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 class CoverageEdgeTests(TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.parser = ReferenceAnalyzer.from_alias_file(ROOT / "law_aliases.json")
+        cls.parser = ReferenceAnalyzer.from_alias_file(ROOT / "data/law_aliases.json")
         cls.semantic = SemanticAnalyzer()
 
     def test_incompatible_law_article_context_and_empty_antecedent(self):

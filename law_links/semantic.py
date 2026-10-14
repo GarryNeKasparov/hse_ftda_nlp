@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Iterable
 
-from reference_parser import Analysis, AstLeaf, AstNode, CandidateSpan
+from law_links.syntax.models import Analysis, AstLeaf, AstNode, CandidateSpan
 
 
 @dataclass(frozen=True)

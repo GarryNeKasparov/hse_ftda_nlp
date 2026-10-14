@@ -12,14 +12,17 @@ import re
 import unicodedata
 from typing import Iterable, Mapping, Sequence
 
-from lark import Lark, Token, Tree
-from lark.exceptions import UnexpectedInput
-from lark.lexer import Lexer
+from lark import Token, Tree
+from lark.exceptions import UnexpectedInput, UnexpectedToken
 from pymorphy3 import MorphAnalyzer
 from rapidfuzz.distance import Levenshtein
 
+from law_links.syntax.grammar import (create_parser, expand_trees, materialize_shape,
+                                      tree_to_ast)
+from law_links.syntax.models import (Analysis, AstLeaf, AstNode, CandidateSpan,
+                                     Diagnostic, LexicalCandidate)
+from law_links.syntax.numbers import NumberNormalizer
 
-GRAMMAR_PATH = Path(__file__).resolve().parent / "docs" / "reference-grammar.bnf"
 _TOKEN_RE = re.compile(
     r"[^\W\d_](?:\.\d+)+(?:[⁰¹²³⁴⁵⁶⁷⁸⁹]+)?"
     r"|\d+(?:\.\d+)*(?:[⁰¹²³⁴⁵⁶⁷⁸⁹]+)?"
@@ -47,90 +50,11 @@ _SHORT_MARKERS = {
 }
 _WORD_CONJUNCTIONS = {"и": "AND", "или": "OR"}
 _RANGE_MARKERS = {"-", "–", "—"}
-_ORDINAL_NUMBERS = {
-    "первый": 1, "второй": 2, "третий": 3, "четвертый": 4,
-    "пятый": 5, "шестой": 6, "седьмой": 7, "восьмой": 8,
-    "девятый": 9, "десятый": 10, "одиннадцатый": 11,
-    "двенадцатый": 12, "тринадцатый": 13, "четырнадцатый": 14,
-    "пятнадцатый": 15, "шестнадцатый": 16, "семнадцатый": 17,
-    "восемнадцатый": 18, "девятнадцатый": 19, "двадцатый": 20,
-    "тридцатый": 30, "сороковой": 40, "пятидесятый": 50,
-    "шестидесятый": 60, "семидесятый": 70, "восьмидесятый": 80,
-    "девяностый": 90, "сотый": 100,
-}
 _QUOTE_MARKS = {"\"", "«", "»", "“", "”", "„", "‟", "\u201e", "\u201c", "\u201d"}
 _LOOKALIKE_LETTERS = "ckaeopxymtbh"
 _LOOKALIKE_TRANSLATION = str.maketrans({"c": "с", "k": "к", "a": "а", "e": "е",
                                         "o": "о", "p": "р", "x": "х", "y": "у",
                                         "m": "м", "t": "т", "b": "в", "h": "н"})
-
-
-@dataclass(frozen=True)
-class LexicalCandidate:
-    """A recognized token alternative with provenance in the original text."""
-
-    kind: str
-    value: str
-    start: int
-    end: int
-    law_ids: tuple[int, ...] = ()
-    evidence: tuple[str, ...] = ()
-    matching_forms: tuple[str, ...] = ()
-
-
-@dataclass(frozen=True)
-class AstLeaf:
-    """A terminal in a parsed alternative, retaining its original span."""
-
-    kind: str
-    value: str
-    start: int
-    end: int
-    law_ids: tuple[int, ...] = ()
-    law_status: str | None = None
-    evidence: tuple[str, ...] = ()
-    matching_forms: tuple[str, ...] = ()
-
-
-@dataclass(frozen=True)
-class AstNode:
-    """A grammar production with its ordered child nodes and source span."""
-
-    kind: str | None
-    value: str | None = None
-    start: int = 0
-    end: int = 0
-    children: tuple[AstNode | AstLeaf, ...] = ()
-    law_ids: tuple[int, ...] = ()
-
-
-@dataclass(frozen=True)
-class Diagnostic:
-    """A candidate-local issue retained for review and later resolution."""
-
-    code: str
-    start: int
-    end: int
-
-
-@dataclass(frozen=True)
-class CandidateSpan:
-    """A source span and every grammar interpretation found for that span."""
-
-    start: int
-    end: int
-    alternatives: tuple[AstNode, ...]
-    complete: bool = True
-    diagnostics: tuple[Diagnostic, ...] = ()
-
-
-@dataclass(frozen=True)
-class Analysis:
-    """The lexical candidates, parsed spans, and diagnostics for one text."""
-
-    lexical_candidates: tuple[LexicalCandidate, ...]
-    candidates: tuple[CandidateSpan, ...]
-    diagnostics: tuple[Diagnostic, ...]
 
 
 @dataclass(frozen=True)
@@ -169,67 +93,10 @@ class _FuzzyFormIndexNode:
     children: dict[int, _FuzzyFormIndexNode]
 
 
-class _CandidateLexer(Lexer):
-    """Feed provenance-bearing candidate tokens into Lark's Earley parser."""
-
-    def __init__(self, lexer_conf):
-        self.lexer_conf = lexer_conf
-
-    def lex(self, data):
-        for item in data:
-            yield Token(item.kind, item.value, start_pos=item.start, end_pos=item.end)
-
-
 _ParseShape = tuple[str, int | str, tuple["_ParseShape", ...]]
 _PARSE_CACHE_MAXSIZE = 4096
 _FUZZY_FORM_CACHE_MAXSIZE = 32768
-
-
-def _read_grammar(path: Path) -> tuple[dict[str, list[tuple[str, ...]]], set[str]]:
-    """Read the shared BNF and collect its productions and terminal names."""
-    rules: dict[str, list[tuple[str, ...]]] = defaultdict(list)
-    for raw_line in path.read_text(encoding="utf-8").splitlines():
-        line = raw_line.split("#", 1)[0].strip()
-        if not line:
-            continue
-        lhs, alternatives = line.split("::=", 1)
-        for alternative in alternatives.split("|"):
-            rhs = tuple(alternative.split())
-            rules[lhs.strip()].append(() if rhs == ("EPS",) else rhs)
-    nonterminals = set(rules)
-    terminals = {symbol for alternatives in rules.values() for rhs in alternatives
-                 for symbol in rhs if symbol not in nonterminals}
-    return rules, terminals
-
-
-def _to_lark_grammar(rules: Mapping[str, Sequence[tuple[str, ...]]], terminals: set[str]) -> str:
-    """Translate the BNF rules into Lark rules without precedence changes."""
-    lines = []
-    for lhs, alternatives in rules.items():
-        rendered = [" ".join(rhs) for rhs in alternatives]
-        lines.append(f"{lhs}: " + "\n    | ".join(rendered))
-    lines.append("%declare " + " ".join(sorted(terminals)))
-    return "\n".join(lines)
-
-
-def _tree_to_ast(tree: Tree | Token,
-                 lexical: Mapping[tuple[str, int, int, str], LexicalCandidate]) -> AstNode | AstLeaf:
-    """Convert a Lark tree into a grammar-preserving AST with source offsets."""
-    if isinstance(tree, Token):
-        key = (tree.type, tree.start_pos or 0, tree.end_pos or 0, str(tree))
-        candidate = lexical.get(key)
-        ids = candidate.law_ids if candidate else ()
-        status = None if tree.type != "LAW" else (
-            "unknown" if not ids else "known_unique" if len(ids) == 1 else "known_ambiguous")
-        evidence = candidate.evidence if candidate else ()
-        forms = candidate.matching_forms if candidate else ()
-        return AstLeaf(tree.type, str(tree), tree.start_pos or 0, tree.end_pos or 0,
-                       ids, status, evidence, forms)
-    children = tuple(_tree_to_ast(child, lexical) for child in tree.children)
-    starts = [child.start for child in children]
-    ends = [child.end for child in children]
-    return AstNode(str(tree.data), start=min(starts, default=0), end=max(ends, default=0),
-                   children=children)
+_INVALID_PARSE_PREFIX = object()
 
 
 class ReferenceAnalyzer:
@@ -237,9 +104,14 @@ class ReferenceAnalyzer:
 
     def __init__(self, law_aliases: Mapping[str, Sequence[str]], morphology: MorphAnalyzer | None = None):
         self._morphology = morphology or MorphAnalyzer()
+        self._numbers = NumberNormalizer(self._morphology)
         self._alias_trie: dict = {}
+        self._alias_form_dispatch: dict[int, dict[str, frozenset[frozenset[str]]]] = {}
+        self._alias_compact_nodes: set[int] = set()
+        self._alias_dispatch_root: int | None = None
         self._fuzzy_aliases: dict[int, list[_FullLawAlias]] = defaultdict(list)
         self._fuzzy_form_indexes: dict[int, tuple[_FuzzyFormIndexNode | None, ...]] = {}
+        self._fuzzy_first_index: _FuzzyFormIndexNode | None = None
         self._fuzzy_form_cache: OrderedDict[
             tuple[int, int, tuple[str, ...]], frozenset[int]
         ] = OrderedDict()
@@ -251,13 +123,11 @@ class ReferenceAnalyzer:
         self._singular_marker_forms: set[str] = set()
         self._plural_marker_forms: set[str] = set()
         self._fuzzy_marker_forms: tuple[tuple[str, str], ...] = ()
+        self._fuzzy_marker_deletions: dict[str, frozenset[tuple[str, str]]] = {}
         self._build_marker_index()
         self._build_alias_index(law_aliases)
-        rules, terminals = _read_grammar(GRAMMAR_PATH)
-        self._parser = Lark(_to_lark_grammar(rules, terminals), parser="earley",
-                            lexer=_CandidateLexer, ambiguity="explicit", keep_all_tokens=True,
-                            propagate_positions=True)
-        self._parse_shapes: OrderedDict[tuple[str, ...], _ParseShape | None] = OrderedDict()
+        self._parser = create_parser()
+        self._parse_shapes: OrderedDict[tuple[str, ...], _ParseShape | None | object] = OrderedDict()
         self._parse_cache_hits = 0
         self._parse_cache_misses = 0
 
@@ -266,7 +136,8 @@ class ReferenceAnalyzer:
         """Return bounded grammar-shape cache counters for profiling."""
         return {"hits": self._parse_cache_hits, "misses": self._parse_cache_misses,
                 "size": len(self._parse_shapes), "maxsize": _PARSE_CACHE_MAXSIZE,
-                "failures": sum(shape is None for shape in self._parse_shapes.values())}
+                "failures": sum(shape is None or shape is _INVALID_PARSE_PREFIX
+                                for shape in self._parse_shapes.values())}
 
     @property
     def fuzzy_cache_info(self) -> dict[str, int]:
@@ -278,12 +149,15 @@ class ReferenceAnalyzer:
     def _build_fuzzy_form_indexes(self) -> None:
         """Build one BK-tree per token position and alias token count."""
         indexes = {}
+        first_forms: dict[str, set[int]] = defaultdict(set)
         for token_count, aliases in self._fuzzy_aliases.items():
             roots: list[_FuzzyFormIndexNode | None] = [None] * token_count
             forms_by_position: list[dict[str, set[int]]] = [
                 defaultdict(set) for _ in range(token_count)
             ]
             for alias_position, alias in enumerate(aliases):
+                for form in alias.forms[0]:
+                    first_forms[form].add(token_count)
                 for token_position, forms in enumerate(alias.forms):
                     for form in forms:
                         forms_by_position[token_position][form].add(alias_position)
@@ -306,10 +180,44 @@ class ReferenceAnalyzer:
                 roots[token_position] = root
             indexes[token_count] = tuple(roots)
         self._fuzzy_form_indexes = indexes
+        first_root = None
+        for form, token_counts in first_forms.items():
+            if first_root is None:
+                first_root = _FuzzyFormIndexNode(form, token_counts, {})
+                continue
+            node = first_root
+            while True:
+                distance = Levenshtein.distance(form, node.form)
+                child = node.children.get(distance)
+                if child is None:
+                    node.children[distance] = _FuzzyFormIndexNode(form, token_counts, {})
+                    break
+                node = child
+        self._fuzzy_first_index = first_root
+        self._fuzzy_first_alias_lengths.cache_clear()
         self._fuzzy_form_cache.clear()
         self._fuzzy_cache_hits = 0
         self._fuzzy_cache_misses = 0
         self._fuzzy_aliases_checked = 0
+
+    @lru_cache(maxsize=32768)
+    def _fuzzy_first_alias_lengths(self, source_forms: tuple[str, ...]) -> frozenset[int]:
+        """Find possible alias lengths from the first source word alone."""
+        root = self._fuzzy_first_index
+        if root is None:
+            return frozenset()
+        lengths = set()
+        for source_form in source_forms:
+            pending = [root]
+            while pending:
+                node = pending.pop()
+                distance = Levenshtein.distance(source_form, node.form)
+                if distance <= 2:
+                    lengths.update(node.alias_positions)
+                lower, upper = distance - 2, distance + 2
+                pending.extend(child for edge, child in node.children.items()
+                               if lower <= edge <= upper)
+        return frozenset(lengths)
 
     def _fuzzy_form_alias_candidates(self, token_count: int, token_position: int,
                                      source_forms: tuple[str, ...]) -> frozenset[int]:
@@ -342,8 +250,8 @@ class ReferenceAnalyzer:
             self._fuzzy_form_cache.popitem(last=False)
         return result
 
-    def _parse_shape(self, path):
-        """Return cached grammar structure, rebinding its terminals to this path."""
+    def _parse_shape(self, path, *, materialize=True):
+        """Return a cached grammar shape, optionally binding its terminals."""
         key = tuple(item.kind for item in path)
         if key in self._parse_shapes:
             self._parse_cache_hits += 1
@@ -353,6 +261,9 @@ class ReferenceAnalyzer:
             self._parse_cache_misses += 1
             try:
                 parsed = self._parser.parse(path)
+            except UnexpectedToken:
+                # The grammar cannot accept this prefix with any continuation.
+                shape = _INVALID_PARSE_PREFIX
             except UnexpectedInput:
                 shape = None
             else:
@@ -373,19 +284,10 @@ class ReferenceAnalyzer:
             self._parse_shapes[key] = shape
             if len(self._parse_shapes) > _PARSE_CACHE_MAXSIZE:
                 self._parse_shapes.popitem(last=False)
-        if shape is None:
-            return None
+        if shape is None or shape is _INVALID_PARSE_PREFIX or not materialize:
+            return shape
 
-        def materialize(node):
-            kind, value, children = node
-            if kind == "token":
-                assert isinstance(value, int)
-                item = path[value]
-                return Token(item.kind, item.value, start_pos=item.start, end_pos=item.end)
-            assert isinstance(value, str)
-            return Tree(value, [materialize(child) for child in children])
-
-        return materialize(shape)
+        return materialize_shape(shape, path)
 
     @classmethod
     def from_alias_file(cls, path: str | Path) -> ReferenceAnalyzer:
@@ -395,9 +297,17 @@ class ReferenceAnalyzer:
 
     def analyze(self, text: str) -> Analysis:
         """Return all recognized token candidates, candidate spans, and parse alternatives."""
+        return self._analyze(text, selected_only=False)
+
+    def analyze_for_service(self, text: str) -> Analysis:
+        """Retain the candidate spans used by semantic selection in /detect."""
+        return self._analyze(text, selected_only=True)
+
+    def _analyze(self, text: str, selected_only: bool) -> Analysis:
         raw_tokens = self._tokenize(text)
         edges = self._recognize_edges(raw_tokens, text)
-        candidates, diagnostics = self._parse_candidates(raw_tokens, edges, text)
+        candidates, diagnostics = self._parse_candidates(
+            raw_tokens, edges, text, selected_only=selected_only)
         lexical = tuple(sorted({edge.token for outgoing in edges.values() for edge in outgoing},
                                key=lambda token: (token.start, token.end, token.kind, token.value)))
         return Analysis(lexical, tuple(candidates), tuple(diagnostics))
@@ -443,6 +353,30 @@ class ReferenceAnalyzer:
                         if len(matching_form) >= 4:
                             fuzzy_forms.append((matching_form, kind))
         self._fuzzy_marker_forms = tuple(sorted(set(fuzzy_forms)))
+        deletions: dict[str, set[tuple[str, str]]] = defaultdict(set)
+        for form, kind in self._fuzzy_marker_forms:
+            candidate = (form, kind)
+            deletions[form].add(candidate)
+            for index in range(len(form)):
+                deletions[form[:index] + form[index + 1:]].add(candidate)
+        self._fuzzy_marker_deletions = {
+            deletion: frozenset(candidates)
+            for deletion, candidates in deletions.items()
+        }
+        self._fuzzy_marker_kinds.cache_clear()
+
+    @lru_cache(maxsize=32768)
+    def _fuzzy_marker_kinds(self, word: str) -> frozenset[str]:
+        """Return all marker kinds within one edit using deletion-index candidates."""
+        keys = {word}
+        keys.update(word[:index] + word[index + 1:] for index in range(len(word)))
+        candidates = {candidate for key in keys
+                      for candidate in self._fuzzy_marker_deletions.get(key, ())}
+        return frozenset(
+            kind for form, kind in candidates
+            if not (len(word) > len(form) and word.endswith(form))
+            and Levenshtein.distance(word, form, score_cutoff=1) <= 1
+        )
 
     def _build_alias_index(self, law_aliases: Mapping[str, Sequence[str]]) -> None:
         """Build a morphology-aware trie retaining every ID for each alias."""
@@ -472,7 +406,29 @@ class ReferenceAnalyzer:
             alias = _FullLawAlias(forms, surface, tuple(sorted(law_ids)))
             self._fuzzy_aliases[len(forms)].append(alias)
             self._max_fuzzy_alias_chars = max(self._max_fuzzy_alias_chars, len(surface))
+        self._build_alias_dispatch()
         self._build_fuzzy_form_indexes()
+
+    def _build_alias_dispatch(self) -> None:
+        """Index each trie node's outgoing forms for direct and dirty lookup."""
+        self._alias_form_dispatch.clear()
+        self._alias_compact_nodes.clear()
+        pending = [self._alias_trie]
+        while pending:
+            node = pending.pop()
+            by_form: dict[str, set[frozenset[str]]] = defaultdict(set)
+            for expected, child in node.items():
+                if expected is None:
+                    continue
+                for form in expected:
+                    by_form[form].add(expected)
+                    if form.isalpha() and 2 <= len(form) <= 6:
+                        self._alias_compact_nodes.add(id(node))
+                pending.append(child)
+            self._alias_form_dispatch[id(node)] = {
+                form: frozenset(keys) for form, keys in by_form.items()
+            }
+        self._alias_dispatch_root = id(self._alias_trie)
 
     @staticmethod
     def _tokenize(text: str) -> tuple[_RawToken, ...]:
@@ -482,6 +438,8 @@ class ReferenceAnalyzer:
 
     def _recognize_edges(self, raw: tuple[_RawToken, ...], text: str) -> dict[int, list[_Edge]]:
         """Recognize hierarchy markers, identifiers, conjunctions, and law aliases."""
+        if self._alias_dispatch_root != id(self._alias_trie):
+            self._build_alias_dispatch()
         edges: dict[int, list[_Edge]] = defaultdict(list)
         by_span: dict[tuple[int, int, str, str], set[int]] = defaultdict(set)
         fuzzy_starts = []
@@ -501,17 +459,8 @@ class ReferenceAnalyzer:
                                          forms)
             edges[first].append(_Edge(candidate, first, after))
 
-        def alias_token_ends(expected: frozenset[str], cursor: int) -> tuple[int, ...]:
-            """Match one alias word directly or across dirty non-alphanumeric splits."""
-            if cursor >= len(raw):
-                return ()
-            if expected.intersection(self._word_forms(raw[cursor].value)):
-                return (cursor + 1,)
-
-            compact_forms = {form for form in expected
-                             if form.isalpha() and 2 <= len(form) <= 6}
-            if not compact_forms or not raw[cursor].value.isalpha():
-                return ()
+        def dirty_forms(cursor: int) -> dict[str, tuple[int, ...]]:
+            """Join short split spellings once per source position."""
             by_form = dirty_alias_ends.get(cursor)
             if by_form is None:
                 ends_by_form: dict[str, list[int]] = defaultdict(list)
@@ -530,6 +479,16 @@ class ReferenceAnalyzer:
                         break
                 by_form = {form: tuple(ends) for form, ends in ends_by_form.items()}
                 dirty_alias_ends[cursor] = by_form
+            return by_form
+
+        def alias_token_ends(expected: frozenset[str], cursor: int,
+                             forms: frozenset[str],
+                             by_form: dict[str, tuple[int, ...]]) -> tuple[int, ...]:
+            """Match one alias word directly or across dirty splits."""
+            if expected.intersection(forms):
+                return (cursor + 1,)
+            compact_forms = {form for form in expected
+                             if form.isalpha() and 2 <= len(form) <= 6}
             return tuple(sorted({after for form in compact_forms
                                  for after in by_form.get(form, ())}))
 
@@ -652,36 +611,25 @@ class ReferenceAnalyzer:
                     return "ambiguous"
             return "ambiguous"
 
-        def begins_numbered_heading(index: int) -> bool:
-            """Detect a dotted number at the start of a new source line."""
-            if index + 1 >= len(raw) or not _INTEGER_ID_RE.fullmatch(raw[index].value):
-                return False
-            line_start = text.rfind("\n", 0, raw[index].start) + 1
-            if text[line_start:raw[index].start].strip():
-                return False
-            return raw[index].end == raw[index + 1].start and raw[index + 1].value == "."
-
         for index, token in enumerate(raw):
             word = self._matching_form(token.value)
             if word in {key.rstrip(".") for key in _SHORT_MARKERS}:
                 marker_end = index + 2 if index + 1 < len(raw) and raw[index + 1].value == "." else index + 1
                 if marker_end > index + 1 and raw[marker_end - 1].start == token.end:
                     marker_kind = _SHORT_MARKERS[word][0]
-                    heading_follows = (
-                        marker_kind == "POINT" and marker_end < len(raw)
-                        and "\n" in text[raw[marker_end - 1].end:raw[marker_end].start]
-                        and begins_numbered_heading(marker_end))
-                    if not heading_follows:
+                    is_t_p_abbreviation = (
+                        marker_kind == "POINT" and index >= 2
+                        and self._matching_form(raw[index - 2].value) == "т"
+                        and raw[index - 1].value == "."
+                        and raw[index - 2].end == raw[index - 1].start)
+                    if not is_t_p_abbreviation:
                         add(index, marker_end, marker_kind, evidence="exact_abbreviation")
                 else:
                     add(index, index + 1, _SHORT_MARKERS[word][0], evidence="exact_abbreviation")
             elif word in self._marker_forms:
                 add(index, index + 1, self._marker_forms[word], evidence="exact_marker")
             elif word not in {value for value, _ in _SHORT_MARKERS.items()} and len(word) >= 4:
-                kinds = {kind for form, kind in self._fuzzy_marker_forms
-                         if not (len(word) > len(form) and word.endswith(form))
-                         and Levenshtein.distance(word, form, score_cutoff=1) <= 1}
-                for kind in kinds:
+                for kind in self._fuzzy_marker_kinds(word):
                     add(index, index + 1, kind, evidence="fuzzy_marker")
 
             if word in _WORD_CONJUNCTIONS and index not in compound_conjunction_tokens:
@@ -835,11 +783,25 @@ class ReferenceAnalyzer:
                     and any(edge.token.kind in {"ID", "ORDINAL"}
                             for edge in edges.get(index - 1, ()))):
                 fuzzy_starts.append(index)
-            if self._is_ordinal(token.value):
-                ordinal_value = self._ordinal_number(token.value)
+            if self._numbers.is_ordinal(token.value):
+                ordinal_value = self._numbers.ordinal_number(token.value)
                 evidence = (f"ordinal_value:{ordinal_value}" if ordinal_value is not None
                             else "morphological_ordinal")
                 add(index, index + 1, "ORDINAL", evidence=evidence)
+            # A written ordinal can have a cardinal prefix: "сто двадцать
+            # первого". Keep the whole phrase as one terminal with its original
+            # source span so the grammar and semantic projection see one value.
+            if (token.value.isalpha()
+                    and self._numbers.cardinal_number(token.value) is not None):
+                for after in range(index + 2, min(len(raw), index + 8) + 1):
+                    phrase_tokens = raw[index:after]
+                    if any(not item.value.isalpha() for item in phrase_tokens):
+                        break
+                    phrase_value = self._numbers.ordinal_phrase_number(
+                        tuple(item.value for item in phrase_tokens))
+                    if phrase_value is not None:
+                        add(index, after, "ORDINAL",
+                            evidence=f"ordinal_value:{phrase_value}")
 
             modifier_forms = self._word_forms(token.value)
             if modifier_forms & {"настоящий", "указанный", "этот"} and index + 1 < len(raw):
@@ -862,10 +824,18 @@ class ReferenceAnalyzer:
                 if state in visited or cursor >= len(raw):
                     continue
                 visited.add(state)
-                for expected, child in node.items():
-                    if expected is None:
-                        continue
-                    for after in alias_token_ends(expected, cursor):
+                forms = self._word_forms(raw[cursor].value)
+                dispatch = self._alias_form_dispatch[id(node)]
+                candidates = {expected for form in forms
+                              for expected in dispatch.get(form, ())}
+                by_form = {}
+                if id(node) in self._alias_compact_nodes and raw[cursor].value.isalpha():
+                    by_form = dirty_forms(cursor)
+                    candidates.update(expected for form in by_form
+                                      for expected in dispatch.get(form, ()))
+                for expected in candidates:
+                    child = node[expected]
+                    for after in alias_token_ends(expected, cursor, forms, by_form):
                         ids = child.get(None, ())
                         if ids:
                             by_span[(index, after, "LAW",
@@ -906,9 +876,31 @@ class ReferenceAnalyzer:
             source = LexicalCandidate(kind, value, raw[first].start, raw[after - 1].end,
                                       tuple(sorted(ids)), ("law_alias",), forms)
             edges[first].append(_Edge(source, first, after))
-        for index in fuzzy_starts:
-            if not any(edge.token.kind == "LAW" for edge in edges.get(index, ())):
-                edges[index].extend(self._fuzzy_law_edges(raw, index, text))
+        # Fuzzy law names can contribute to a reference only at a position
+        # reached from a structural marker through recognized lexical edges.
+        # Plain prose often contains one-letter ID candidates followed by a
+        # word; searching law aliases at every such position is wasted work.
+        reference_starts = {"ARTICLE", "PART", "POINT", "SUBPOINT", "PP", "PARAGRAPH",
+                            "SELF_ARTICLE", "SELF_PART", "SELF_POINT", "SELF_SUBPOINT",
+                            "SELF_PARAGRAPH"}
+        fuzzy_positions = set(fuzzy_starts)
+        reachable = [False] * (len(raw) + 1)
+        for index in range(len(raw)):
+            outgoing = edges.get(index, ())
+            if any(edge.token.kind in reference_starts for edge in outgoing):
+                reachable[index] = True
+            if reachable[index] and index in fuzzy_positions:
+                exact_law_ends = [edge.after for edge in outgoing
+                                  if edge.token.kind == "LAW" and edge.token.law_ids]
+                fuzzy_edges = self._fuzzy_law_edges(raw, index, text)
+                if exact_law_ends:
+                    longest_exact_law_end = max(exact_law_ends)
+                    fuzzy_edges = tuple(edge for edge in fuzzy_edges
+                                        if edge.after > longest_exact_law_end)
+                edges[index].extend(fuzzy_edges)
+            if reachable[index]:
+                for edge in edges.get(index, ()):
+                    reachable[edge.after] = True
         merged = {}
         for first, outgoing in edges.items():
             unique = {}
@@ -933,18 +925,27 @@ class ReferenceAnalyzer:
                          text: str) -> tuple[_Edge, ...]:
         """Match full law-name spans within two character edits of an alias."""
         matches: dict[int, set[int]] = defaultdict(set)
-        for after in range(start + 2, len(raw) + 1):
+        lengths = self._fuzzy_first_alias_lengths(tuple(sorted(
+            self._word_forms(raw[start].value))))
+        if not lengths:
+            return ()
+        source_forms = [self._word_forms(raw[start].value)]
+        surface_length = len(self._matching_form(raw[start].value))
+        for after in range(start + 2, min(len(raw) + 1, start + max(lengths) + 1)):
             if "\n" in text[raw[after - 2].end:raw[after - 1].start]:
                 break
-            surface = " ".join(self._matching_form(item.value) for item in raw[start:after])
-            if len(surface) < 20:
+            value = raw[after - 1].value
+            source_forms.append(self._word_forms(value))
+            surface_length += 1 + len(self._matching_form(value))
+            if surface_length < 20:
                 continue
-            if len(surface) > self._max_fuzzy_alias_chars + 2:
+            if surface_length > self._max_fuzzy_alias_chars + 2:
                 break
             token_count = after - start
-            source_token_forms = tuple(self._word_forms(item.value) for item in raw[start:after])
+            if token_count not in lengths:
+                continue
             candidate_positions = None
-            for token_position, forms in enumerate(source_token_forms):
+            for token_position, forms in enumerate(source_forms):
                 indexed_positions = self._fuzzy_form_alias_candidates(
                     token_count, token_position, tuple(sorted(forms)))
                 candidate_positions = (set(indexed_positions) if candidate_positions is None
@@ -954,10 +955,10 @@ class ReferenceAnalyzer:
             for alias_position in candidate_positions or ():
                 alias = self._fuzzy_aliases[token_count][alias_position]
                 self._fuzzy_aliases_checked += 1
-                if abs(len(surface) - len(alias.surface)) > 2:
+                if abs(surface_length - len(alias.surface)) > 2:
                     continue
                 remaining = 2
-                for word_forms, alias_forms in zip(source_token_forms, alias.forms):
+                for word_forms, alias_forms in zip(source_forms, alias.forms):
                     if word_forms.intersection(alias_forms):
                         continue
                     best = min((Levenshtein.distance(source, target,
@@ -988,6 +989,7 @@ class ReferenceAnalyzer:
                 or (len(value) == 1 and value.isalpha()
                     and ("а" <= value.casefold() <= "я" or value.casefold() == "ё")))
 
+    @lru_cache(maxsize=32768)
     def _alias_forms(self, value: str) -> frozenset[str]:
         """Add visual-script alternatives only for short supplied law aliases."""
         forms = set(self._word_forms(value))
@@ -998,33 +1000,19 @@ class ReferenceAnalyzer:
         return frozenset(forms)
 
     @lru_cache(maxsize=32768)
-    def _is_ordinal(self, value: str) -> bool:
-        """Recognize ordinal word forms without choosing a ranked parse."""
-        return any(parse.tag.POS == "NUMR" or "Anum" in str(parse.tag)
-                   for parse in self._morphology.parse(value))
-
-    @lru_cache(maxsize=32768)
-    def _ordinal_number(self, value: str) -> int | None:
-        """Return a supported ordinal's numeric value from its morphological lemma."""
-        for parse in self._morphology.parse(value):
-            if parse.tag.POS == "NUMR" or "Anum" in str(parse.tag):
-                number = _ORDINAL_NUMBERS.get(parse.normal_form.replace("ё", "е"))
-                if number is not None:
-                    return number
-        return None
-
-    @lru_cache(maxsize=32768)
     def _can_precede_code_name(self, value: str) -> bool:
         """Allow inflected names and modifiers before an unknown code-name head."""
         return any(parse.tag.POS in {"ADJF", "NOUN", "PRTF", "PRTS"}
                    for parse in self._morphology.parse(value))
 
-    def _parse_candidates(self, raw, edges, text):
+    def _parse_candidates(self, raw, edges, text, selected_only=False):
         """Parse every complete lexical path and retain malformed continuations."""
         starts = {"ARTICLE", "PART", "POINT", "SUBPOINT", "PP", "PARAGRAPH",
                   "SELF_ARTICLE", "SELF_PART", "SELF_POINT", "SELF_SUBPOINT",
                   "SELF_PARAGRAPH"}
         grouped: dict[tuple[int, int], dict[AstNode, None]] = defaultdict(dict)
+        deferred: dict[tuple[int, int], list[tuple[Tree, tuple[LexicalCandidate, ...]]]] = (
+            defaultdict(list))
         incomplete_spans: dict[tuple[int, int], int] = {}
         starts_at = [item.start for item in raw]
 
@@ -1047,15 +1035,20 @@ class ReferenceAnalyzer:
                                          "ANAPHORIC_ARTICLE",
                                          "SELF_ARTICLE", "SELF_PART", "SELF_POINT",
                                          "SELF_SUBPOINT", "SELF_PARAGRAPH"}:
-                        tree = self._parse_shape(path)
+                        tree = self._parse_shape(path, materialize=not selected_only)
+                    if tree is _INVALID_PARSE_PREFIX:
+                        continue
                     if tree is not None:
-                        lexical = {(item.kind, item.start, item.end, item.value): item
-                                   for item in path}
                         span = (path[0].start, path[-1].end)
-                        for expanded in self._expand_trees(tree):
-                            ast = _tree_to_ast(expanded, lexical)
-                            if isinstance(ast, AstNode):
-                                grouped[span][ast] = None
+                        if selected_only:
+                            deferred[span].append((tree, path))
+                        else:
+                            lexical = {(item.kind, item.start, item.end, item.value): item
+                                       for item in path}
+                            for expanded in expand_trees(tree):
+                                ast = tree_to_ast(expanded, lexical)
+                                if isinstance(ast, AstNode):
+                                    grouped[span][ast] = None
                         next_index = bisect_left(starts_at, span[1])
                         next_piece = raw[next_index] if next_index < len(raw) else None
                         if next_piece is not None:
@@ -1109,30 +1102,41 @@ class ReferenceAnalyzer:
 
         candidates = []
         diagnostics = []
-        for (start, end), alternatives in sorted(grouped.items()):
+        if selected_only:
+            chosen: dict[int, tuple[int, int]] = {}
+            for span in deferred:
+                start, end = span
+                if span not in incomplete_spans and (
+                        start not in chosen or end > chosen[start][1]):
+                    chosen[start] = span
+            chosen_spans = set(chosen.values())
+            spans = sorted(deferred)
+        else:
+            chosen_spans = None
+            spans = sorted(grouped)
+        for start, end in spans:
             incomplete = (start, end) in incomplete_spans
             candidate_diagnostics = ((Diagnostic("unfinished_continuation", end,
                                                  incomplete_spans[(start, end)]),)
                                       if incomplete else ())
             diagnostics.extend(candidate_diagnostics)
+            if selected_only:
+                if (start, end) not in chosen_spans:
+                    continue
+                alternatives: dict[AstNode, None] = {}
+                for shape, path in deferred[start, end]:
+                    tree = materialize_shape(shape, path)
+                    lexical = {(item.kind, item.start, item.end, item.value): item
+                               for item in path}
+                    for expanded in expand_trees(tree):
+                        ast = tree_to_ast(expanded, lexical)
+                        if isinstance(ast, AstNode):
+                            alternatives[ast] = None
+            else:
+                alternatives = grouped[start, end]
             candidates.append(CandidateSpan(start, end, tuple(alternatives), not incomplete,
                                             candidate_diagnostics))
         return candidates, diagnostics
-
-    @classmethod
-    def _expand_trees(cls, tree: Tree | Token):
-        """Yield complete trees while retaining each explicit Earley alternative."""
-        if isinstance(tree, Token):
-            yield tree
-            return
-        child_options = [tuple(cls._expand_trees(child)) for child in tree.children]
-        if str(tree.data) == "_ambig":
-            for alternatives in child_options:
-                yield from alternatives
-            return
-        from itertools import product
-        for children in product(*child_options):
-            yield Tree(tree.data, list(children), meta=tree.meta)
 
     @staticmethod
     def _is_unfinished_connector(value: str) -> bool:

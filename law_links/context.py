@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from dataclasses import replace
 
-from semantic_analyzer import (ProvisionPath, SemanticAnalysis,
-                               SemanticDiagnostic, SemanticReference)
+from law_links.semantic import (ProvisionPath, SemanticAnalysis,
+                                SemanticDiagnostic, SemanticReference)
 
 
 class ContextualResolver:

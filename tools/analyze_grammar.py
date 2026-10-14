@@ -200,7 +200,8 @@ def compact_tree(tree: Tree) -> str:
 def main() -> int:
     root = Path(__file__).resolve().parents[1]
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--grammar', type=Path, default=root / 'docs/reference-grammar.bnf')
+    parser.add_argument('--grammar', type=Path,
+                        default=root / 'law_links/resources/reference-grammar.bnf')
     parser.add_argument('--examples', type=Path, default=root / 'docs/grammar-examples.json')
     parser.add_argument('--output', type=Path, default=root / 'docs/grammar-analysis.md')
     args = parser.parse_args()

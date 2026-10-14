@@ -45,13 +45,13 @@ def main() -> int:
         'status': 'running',
     }
     snapshot_paths = [
-        'docs/reference-grammar.bnf', 'docs/grammar-examples.json',
+        'law_links/resources/reference-grammar.bnf', 'docs/grammar-examples.json',
         'requirements-grammar.txt', 'tools/analyze_grammar.py',
         'tools/analyze_with_lark.py', 'tools/run_grammar_experiments.py',
     ]
     for relative in snapshot_paths:
         source = root / relative
-        destination = run_dir / (source.name if relative.startswith('docs/') else relative)
+        destination = run_dir / (relative if relative.startswith('tools/') else source.name)
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(source, destination)
         metadata['files'][str(destination.relative_to(run_dir))] = {

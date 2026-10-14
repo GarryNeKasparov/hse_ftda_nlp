@@ -17,11 +17,11 @@ sys.path.insert(0, str(ROOT))
 
 from fastapi.testclient import TestClient
 
-from law_link_mapper import map_semantic_analysis
+from law_links.projection import map_semantic_analysis
 from main import app
-from reference_parser import ReferenceAnalyzer
-from semantic_analyzer import SemanticAnalysis, SemanticAnalyzer
-from contextual_resolver import ContextualResolver
+from law_links.syntax.analyzer import ReferenceAnalyzer
+from law_links.semantic import SemanticAnalysis, SemanticAnalyzer
+from law_links.context import ContextualResolver
 
 
 DATASETS = {
@@ -71,7 +71,7 @@ def main() -> int:
         raise ValueError("Every gold suite must contain at least one example")
 
     init_started = perf_counter()
-    analyzer = ReferenceAnalyzer.from_alias_file(ROOT / "law_aliases.json")
+    analyzer = ReferenceAnalyzer.from_alias_file(ROOT / "data/law_aliases.json")
     semantic_analyzer = SemanticAnalyzer()
     resolver = ContextualResolver()
     resource_init_seconds = perf_counter() - init_started

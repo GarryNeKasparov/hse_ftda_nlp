@@ -17,9 +17,9 @@ sys.path.insert(0, str(ROOT))
 
 from fastapi.testclient import TestClient
 
-from law_link_mapper import map_semantic_analysis
+from law_links.projection import map_semantic_analysis
 from main import app
-from semantic_analyzer import SemanticAnalysis
+from law_links.semantic import SemanticAnalysis
 
 FIELDS = ("law_id", "article", "point_article", "subpoint_article")
 
@@ -124,8 +124,8 @@ def main():
     extra_refs = [p for p in predicted_refs
                   if not any(p["start"] < g["end"] and g["start"] < p["end"]
                              for g in gold_refs)]
-    code_paths = ("reference_parser.py", "semantic_analyzer.py", "contextual_resolver.py",
-                  "law_link_mapper.py", "main.py", "law_aliases.json", "docs/reference-grammar.bnf")
+    code_paths = ("law_links/syntax/analyzer.py", "law_links/semantic.py", "law_links/context.py",
+                  "law_links/projection.py", "main.py", "data/law_aliases.json", "law_links/resources/reference-grammar.bnf")
     report = {
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
         "source": document["source"], "dataset": str(args.dataset),

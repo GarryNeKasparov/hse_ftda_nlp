@@ -37,5 +37,18 @@
     "raw_snapshot": "logs/experiments/real-corpus-20261005T134149.958158Z/vsrf-12452.html",
     "raw_sha256": "2940b282b36d8367ad1f0534a87d87f7fb9b266ea4cf1f7550c32d82411b9c6e",
     "transformation": "Decode UTF-8, extract PRE text, remove HTML tags, decode entities, collapse whitespace. No spelling or provision-number corrections. Superscript layout is not reconstructed."
+  },
+  {
+    "id": "vsrf-13975",
+    "url": "https://www.vsrf.ru/files/13975/",
+    "title": "Постановление Пленума Верховного Суда Российской Федерации № 13 от 19 июня 2012 г. О применении судами норм гражданского процессуального законодательства, регламентирующих производство в суде апелляционной инстанции",
+    "document_date": "2012-06-19",
+    "retrieved_at_utc": "2026-10-09T11:08:10.384938+00:00",
+    "source_kind": "official_judicial_document",
+    "exact_snapshot": "data/sources/vsrf-13975.txt",
+    "exact_sha256": "ef09afbbdb7b3982f787c4bb8e1c4009fcc0cc42bae27a7f071ec03871ea1a87",
+    "raw_snapshot": "logs/experiments/text2result-vsrf-13975-20261009T110810Z/vsrf-13975.html",
+    "raw_sha256": "5baa2538f34cf30a3adcb6c79d9ceb2aa9797485a121e93ee1f3be341efcfcd7",
+    "transformation": "Extract the sole PRE block, remove HTML tags, decode HTML entities, preserve all PRE whitespace and wording; normalize only CRLF/CR line endings to LF."
   }
 ]
