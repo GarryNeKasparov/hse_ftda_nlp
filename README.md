@@ -1,32 +1,58 @@
 # Сервис извлечения юридических ссылок
 
-FastAPI-сервис находит в русском тексте ссылки на статьи и другие положения
-законов и возвращает их в формате `LawLink`. Распознавание использует грамматику
-и словарь вариантов названий законов.
+Сервис находит в русском тексте ссылки на статьи и другие положения законов и
+возвращает их в формате `LawLink`. Он использует грамматику ссылок и словарь
+вариантов названий законов.
 
-## Запуск
+## Установка и запуск локально
 
-Установите зависимости проекта и запустите приложение:
+Получите проект:
 
 ```bash
-.venv/bin/pip install -r requirements.txt
+git clone --branch homework_1 https://github.com/GarryNeKasparov/hse_ftda_nlp.git
+cd hse_ftda_nlp
+```
+
+Создайте виртуальное окружение и установите зависимости приложения:
+
+```bash
+python3 -m venv .venv
+.venv/bin/python -m pip install --upgrade pip
+.venv/bin/python -m pip install -r requirements.txt
+```
+
+Запустите сервер:
+
+```bash
 .venv/bin/python main.py
 ```
 
-Сервис будет доступен на `http://localhost:8978`. Документация OpenAPI находится
-по адресу `http://localhost:8978/docs`.
+Сервер доступен по адресу `http://127.0.0.1:8978`, интерактивная документация
+API — по адресу `http://127.0.0.1:8978/docs`.
 
-## API
-
-Отправьте текст на `POST /detect`:
+Проверка состояния:
 
 ```bash
-curl -X POST http://localhost:8978/detect \
-  -H 'Content-Type: application/json' \
-  -d '{"text":"пп. 1 п. 1 ст. 374 НК РФ"}'
+curl http://127.0.0.1:8978/health
 ```
 
-Ответ содержит одну запись на каждое распознанное положение:
+При успешном запуске сервис вернёт:
+
+```json
+{"status":"healthy"}
+```
+
+## Проверка распознавания
+
+Отправьте текст на `POST /detect`. Например:
+
+```bash
+curl -X POST http://127.0.0.1:8978/detect \
+  -H 'Content-Type: application/json' \
+  -d '{"text":"В соответствии с пп. 1 п. 1 ст. 374 НК РФ организация признаётся плательщиком налога на имущество. Это правило применяется к указанным в статье объектам."}'
+```
+
+Ответ содержит найденные положения закона:
 
 ```json
 {
@@ -41,32 +67,45 @@ curl -X POST http://localhost:8978/detect \
 }
 ```
 
-`GET /health` возвращает состояние сервиса. Если закон не удалось определить,
-`law_id` будет `null`; отсутствующие уровни ссылки также представлены как
-`null`.
+Если закон не удалось определить, `law_id` будет `null`. Отсутствующие уровни
+ссылки также представлены как `null`.
 
-## Docker
+## Запуск тестов
 
-Соберите и запустите контейнер:
-
-```bash
-docker build -t law-links-service .
-docker run --rm -p 8978:8978 law-links-service
-```
-
-## Проверки
-
-Запустите тесты и статическую проверку файлов Docker-образа:
+Установите тестовые зависимости и запустите проверки:
 
 ```bash
+.venv/bin/python -m pip install -r requirements-test.txt
 .venv/bin/python -m pytest -p no:cacheprovider tests
 .venv/bin/python tools/check_docker_contract.py
 ```
 
-## Структура
+Последняя команда проверяет, что Dockerfile копирует необходимые файлы и
+открывает нужный порт.
 
-- `law_links/syntax/` — лексические кандидаты, грамматика и синтаксические модели.
-- `law_links/semantic.py`, `context.py`, `projection.py` — интерпретация, контекст и формат `LawLink`.
-- `law_links/application.py` и `http.py` — сборка конвейера и FastAPI-адаптер.
-- `law_links/resources/` — грамматика; `data/law_aliases.json` — словарь законов.
-- `tests/` и `data/golden_*.jsonl` — регрессионные тесты и размеченные примеры.
+## Запуск через Docker
+
+Соберите образ:
+
+```bash
+docker build -t law-links-service .
+```
+
+Запустите контейнер:
+
+```bash
+docker run --rm --name law-links-service -p 8978:8978 law-links-service
+```
+
+Проверить контейнер можно запросами к `/health` и `/detect`, приведёнными выше.
+
+## Структура проекта
+
+- `law_links/syntax/` — лексический и синтаксический анализ, модели разбора и
+  грамматика;
+- `law_links/semantic.py`, `context.py`, `projection.py` — интерпретация ссылки,
+  разрешение контекста и подготовка результата;
+- `law_links/application.py` и `http.py` — сборка анализатора и HTTP API;
+- `law_links/resources/reference-grammar.bnf` — грамматика;
+- `data/law_aliases.json` — словарь названий и сокращений законов;
+- `tests/` — проверки корректности и регрессии.
